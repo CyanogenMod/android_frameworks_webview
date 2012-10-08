@@ -36,10 +36,8 @@ THIRD_PARTY_PROJECTS = [
     'third_party/freetype',
     'third_party/hunspell',
     'third_party/hunspell_dictionaries',
-    'third_party/icu',
     'third_party/leveldatabase/src',
     'third_party/libjingle/source',
-    'third_party/libjpeg_turbo',
     'third_party/libphonenumber/src/phonenumbers',
     'third_party/libphonenumber/src/resources',
     'third_party/libphonenumber/src/test',
@@ -50,18 +48,18 @@ THIRD_PARTY_PROJECTS = [
     'third_party/skia/gyp',
     'third_party/skia/src',
     'third_party/smhasher/src',
-    'third_party/v8-i18n',
     'tools/grit',
     'tools/gyp',
     'v8',
 ]
 
 # Based on clank/tools/merge/deps.py but updated to use .DEPS.git
-def _ParseDEPS(git_url, sha1):
+def _ParseDEPS(git_url, git_branch, sha1):
   """Parses the .DEPS.git file from the specified Chromium branch at the
 specified SHA1 and returns a dictonary of its contents.
   Args:
     git_url: The URL of the git server for the Chromium branch to merge to
+    git_branch: The branch name to merge to
     sha1: The SHA1 to merge to
   Returns:
     A dictionary of the contents of .DEPS.git at the specified revision
@@ -92,7 +90,7 @@ specified SHA1 and returns a dictonary of its contents.
   tmp_locals = {}
   var = _VarImpl({}, tmp_locals)
   tmp_globals = {'From': FromImpl, 'Var': var.Lookup, 'deps_os': {}}
-  deps_content = _ReadGitFile(git_url, sha1, '.DEPS.git')
+  deps_content = _ReadGitFile(git_url, git_branch, sha1, '.DEPS.git')
   exec(deps_content) in tmp_globals, tmp_locals
   return tmp_locals
 
@@ -117,11 +115,12 @@ def _GetCommandStdout(args, ignore_errors=False):
     raise Exception('Command execution failed')
 
 
-def _ReadGitFile(git_url, sha1, path):
+def _ReadGitFile(git_url, git_branch, sha1, path):
   """Reads the specified file from the specified git project at the specified
   SHA1
   Args:
     git_url: The URL of the git server
+    git_branch: The branch name to read
     sha1: The SHA1 at which to read
     path: The relative path of the file to read
   Returns:
@@ -130,7 +129,7 @@ def _ReadGitFile(git_url, sha1, path):
 
   # TODO: We should set up a ref to the main repository's FETCH_HEAD to avoid
   # fetching it multiple times.
-  _GetCommandStdout(['git', 'fetch', git_url])
+  _GetCommandStdout(['git', 'fetch', git_url, git_branch])
 
   args = ['git', 'show', '%s:%s' % (sha1, path)]
   return _GetCommandStdout(args)
@@ -216,13 +215,14 @@ def _CheckNoConflictsAndCommitMerge(commit_message):
   _GetCommandStdout(['git', 'commit', '-m', commit_message])
 
 
-def _MergeProjects(git_url, svn_revision, root_sha1):
+def _MergeProjects(git_url, git_branch, svn_revision, root_sha1):
   """Merges into this repository all projects required by the specified branch
   of Chromium, at the SVN revision. Uses a git subtree merge for each project.
   Directories in the main Chromium repository which are not needed by Clank are
   not merged.
   Args:
     git_url: The URL of the git server for the Chromium branch to merge to
+    git_branch: The branch name to merge to
     svn_revision: The SVN revision for the main Chromium repository
     root_sha1: The git SHA1 for the main Chromium repository
   """
@@ -231,7 +231,7 @@ def _MergeProjects(git_url, svn_revision, root_sha1):
   # sense for a Chromium tree to know about this merge.
 
   print 'Parsing DEPS ...'
-  deps_vars = _ParseDEPS(git_url, root_sha1)
+  deps_vars = _ParseDEPS(git_url, git_branch, root_sha1)
 
   merge_info = _GetThirdPartyProjectMergeInfo(THIRD_PARTY_PROJECTS, deps_vars)
 
@@ -258,21 +258,23 @@ def _MergeProjects(git_url, svn_revision, root_sha1):
 
   # Handle root repository separately.
   print 'Fetching Chromium at %s ...' % root_sha1
-  _GetCommandStdout(['git', 'fetch', git_url])
+  _GetCommandStdout(['git', 'fetch', git_url, git_branch])
   print 'Merging Chromium at %s ...' % root_sha1
   # Merge conflicts make git merge return 1, so ignore errors
   _GetCommandStdout(['git', 'merge', '--no-commit', root_sha1],
                     ignore_errors=True)
   _CheckNoConflictsAndCommitMerge(
-      'Merge Chromium from %s at r%s (%s)\n\n%s'
-      % (git_url, svn_revision, root_sha1, AUTOGEN_MESSAGE))
+      'Merge Chromium from %s branch %s at r%s (%s)\n\n%s'
+      % (git_url, git_branch, svn_revision, root_sha1, AUTOGEN_MESSAGE))
 
   print 'Getting directories to exclude ...'
   directories_to_exclude = webview_licenses.GetIncompatibleDirectories()
   print '  %s' % '\n  '.join(directories_to_exclude)
-  _GetCommandStdout(['git', 'rm', '-rf', '--ignore-unmatch'] +
-                    directories_to_exclude)
-  _GetCommandStdout(['git', 'commit', '-m', 'Exclude incompatible directories'])
+  if directories_to_exclude:
+    _GetCommandStdout(['git', 'rm', '-rf', '--ignore-unmatch'] +
+                      directories_to_exclude)
+    _GetCommandStdout(['git', 'commit', '-m',
+                       'Exclude incompatible directories'])
 
   return True
 
@@ -334,9 +336,9 @@ def _GenerateNoticeFile(svn_revision):
         % (svn_revision, AUTOGEN_MESSAGE)])
 
 
-def _GetSVNRevisionAndSHA1(git_url, svn_revision):
+def _GetSVNRevisionAndSHA1(git_url, git_branch, svn_revision):
   print 'Getting SVN revision and SHA1 ...'
-  _GetCommandStdout(['git', 'fetch', git_url])
+  _GetCommandStdout(['git', 'fetch', git_url, git_branch])
   if svn_revision:
     # Sometimes, we see multiple commits with the same git SVN ID. No idea why.
     # We take the most recent.
@@ -358,7 +360,7 @@ def _GetSVNRevisionAndSHA1(git_url, svn_revision):
   return (svn_revision, sha1)
 
 
-def _Snapshot(git_url, svn_revision):
+def _Snapshot(git_url, git_branch, svn_revision):
   """Takes a snapshot of the specified Chromium tree at the specified SVN
   revision and merges it into this repository. Also generates Android makefiles
   and generates a top-level NOTICE file suitable for use in the Android build.
@@ -367,18 +369,18 @@ def _Snapshot(git_url, svn_revision):
     svn_revision: The SVN revision for the main Chromium repository
   """
 
-  (svn_revision, root_sha1) = _GetSVNRevisionAndSHA1(git_url, svn_revision)
+  (svn_revision, root_sha1) = _GetSVNRevisionAndSHA1(git_url, git_branch,
+                                                     svn_revision)
   if not _GetCommandStdout(['git', 'rev-list', '-1', 'HEAD..' + root_sha1]):
-    print 'No new commits to merge from branch %s at r%s (%s)' % (git_url,
-                                                                  svn_revision,
-                                                                  root_sha1)
+    print ('No new commits to merge from %s branch %s at r%s (%s)' %
+        (git_url, git_branch, svn_revision, root_sha1))
     return
 
-  print 'Snapshotting Chromium branch %s at r%s (%s)' % (git_url, svn_revision,
-                                                         root_sha1)
+  print ('Snapshotting Chromium from %s branch %s at r%s (%s)' %
+         (git_url, git_branch, svn_revision, root_sha1))
 
   # 1. Merge, accounting for excluded directories
-  _MergeProjects(git_url, svn_revision, root_sha1)
+  _MergeProjects(git_url, git_branch, svn_revision, root_sha1)
 
   # 2. Generate Android makefiles
   _GenerateMakefiles(svn_revision)
@@ -398,9 +400,13 @@ def main():
   parser.add_option(
       '', '--git_url',
       # TODO: This will be our internal Chromium branch. For now use upstream.
-      default='https://git.chromium.org/git/chromium.git',
+      default='http://git.chromium.org/chromium/src.git',
       help=('The URL of the git server for the Chromium branch to merge. '
-            'Defaults to upstream trunk.'))
+            'Defaults to upstream.'))
+  parser.add_option(
+      '', '--git_branch',
+      default='git-svn',
+      help=('The name of the branch to merge. Defaults to git-svn.'))
   parser.add_option(
       '', '--svn_revision',
       default=None,
@@ -415,7 +421,7 @@ def main():
     print >>sys.stderr, 'You need to run the Android envsetup.sh and lunch.'
     return 1
 
-  if not _Snapshot(options.git_url, options.svn_revision):
+  if not _Snapshot(options.git_url, options.git_branch, options.svn_revision):
     return 1
 
   return 0
