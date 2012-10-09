@@ -368,6 +368,24 @@ def _GenerateNoticeFile(svn_revision):
         % (svn_revision, AUTOGEN_MESSAGE)])
 
 
+def _GenerateLastChange(svn_revision):
+  """Write a build/util/LASTCHANGE file containing the current revision. This is
+  used in the Chromium build to include the version number.
+  Args:
+    svn_revision: The SVN revision for the main Chromium repository
+  """
+
+  print 'Updating LASTCHANGE ...'
+  with open(os.path.join(REPOSITORY_ROOT, 'build/util/LASTCHANGE'), 'w') as f:
+    f.write("LASTCHANGE=%s\n" % svn_revision)
+  _GetCommandStdout(['git', 'add', '-f', 'build/util/LASTCHANGE'])
+  if _ModifiedFilesInIndex():
+    _GetCommandStdout([
+        'git', 'commit', '-m',
+        'Update LASTCHANGE file after merge of Chromium at r%s\n\n%s'
+        % (svn_revision, AUTOGEN_MESSAGE)])
+
+
 def _GetSVNRevisionAndSHA1(git_url, git_branch, svn_revision):
   print 'Getting SVN revision and SHA1 ...'
   _GetCommandStdout(['git', 'fetch', '-f', git_url,
@@ -414,7 +432,10 @@ def _Snapshot(git_url, git_branch, svn_revision):
   # 2. Generate Android NOTICE file
   _GenerateNoticeFile(svn_revision)
 
-  # 3. Generate Android makefiles
+  # 3. Generate LASTCHANGE file
+  _GenerateLastChange(svn_revision)
+
+  # 4. Generate Android makefiles
   _GenerateMakefiles(svn_revision)
 
 
