@@ -49,6 +49,7 @@ THIRD_PARTY_PROJECTS = [
     'third_party/freetype',
     'third_party/hunspell',
     'third_party/hunspell_dictionaries',
+    'third_party/icu',
     'third_party/leveldatabase/src',
     'third_party/libjingle/source',
     'third_party/libphonenumber/src/phonenumbers',
@@ -281,17 +282,19 @@ def _MergeProjects(git_url, git_branch, svn_revision, root_sha1):
   import webview_licenses
   import known_incompatible
 
-  directories_to_exclude = known_incompatible.KNOWN_INCOMPATIBLE
-  print '  %s' % '\n  '.join(directories_to_exclude)
-  _GetCommandStdout(['git', 'rm', '-rf', '--ignore-unmatch'] +
-                    directories_to_exclude)
-  if _ModifiedFilesInIndex():
-    _GetCommandStdout(['git', 'commit', '-m',
-                       'Exclude incompatible directories'])
+  for path, exclude_list in known_incompatible.KNOWN_INCOMPATIBLE.iteritems():
+    print '  %s' % '\n  '.join(os.path.join(path, x) for x in exclude_list)
+    dest_dir = os.path.join(REPOSITORY_ROOT, path)
+    _GetCommandStdout(['git', 'rm', '-rf', '--ignore-unmatch'] + exclude_list,
+                      cwd=dest_dir)
+    if _ModifiedFilesInIndex(dest_dir):
+      _GetCommandStdout(['git', 'commit', '-m',
+                         'Exclude incompatible directories'], cwd=dest_dir)
+
   directories_left_over = webview_licenses.GetIncompatibleDirectories()
   if directories_left_over:
     raise RuntimeError('Incompatibly licensed directories remain: ' +
-                       directories_left_over)
+                       '\n'.join(directories_left_over))
   return True
 
 
