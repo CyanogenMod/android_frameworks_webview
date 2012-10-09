@@ -276,8 +276,9 @@ def _MergeProjects(git_url, git_branch, svn_revision, root_sha1):
 
   # We import this now that we have merged the latest version.
   # It imports to a global in order that it can be used to generate NOTICE
-  # later.
+  # later. We also disable writing bytecode to keep the source tree clean.
   sys.path.append(os.path.join(REPOSITORY_ROOT, 'android_webview', 'tools'))
+  sys.dont_write_bytecode = True
   global webview_licenses
   import webview_licenses
   import known_incompatible
@@ -315,6 +316,7 @@ def _GenerateMakefiles(svn_revision):
 
   _GetCommandStdout(['bash', '-c', 'export CHROME_ANDROID_BUILD_WEBVIEW=1 && '
                                    'export CHROME_SRC=`pwd` && '
+                                   'export PYTHONDONTWRITEBYTECODE=1 && '
                                    '. build/android/envsetup.sh && '
                                    'android_gyp'])
 
