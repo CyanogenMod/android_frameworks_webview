@@ -45,7 +45,7 @@ THIRD_PARTY_PROJECTS = [
     'testing/gtest',
     'third_party/WebKit',
     'third_party/angle',
-    'third_party/cacheinvalidation/files/src/google',
+    'third_party/cacheinvalidation/src',
     'third_party/freetype',
     'third_party/hunspell',
     'third_party/hunspell_dictionaries',
@@ -176,7 +176,8 @@ def _GetThirdPartyProjectMergeInfo(third_party_projects, deps_vars):
     else:
       raise RuntimeError(
           ('Could not find .DEPS.git entry for project %s. This probably '
-           'means that the project list in snapshot.py needs to be updated.') %
+           'means that the project list in merge-from-chromium.py needs to be '
+           'updated.') %
           path)
     match = re.match('(.*?)@(.*)', url_plus_sha1)
     url = match.group(1)
