@@ -195,14 +195,24 @@ def _CheckNoConflictsAndCommitMerge(commit_message, cwd=REPOSITORY_ROOT):
   """
 
   status = _GetCommandStdout(['git', 'status', '--porcelain'], cwd=cwd)
-  conflicts_deleted_by_us = [x[1] for x in re.findall(r'^(DD|DU) ([^\n]+)$',
-                                                      status,
-                                                      flags=re.MULTILINE)]
+  conflicts_deleted_by_us = re.findall(r'^(?:DD|DU) ([^\n]+)$', status,
+                                       flags=re.MULTILINE)
   if conflicts_deleted_by_us:
     print 'Keeping ours for the following locally deleted files.\n  %s' % \
         '\n  '.join(conflicts_deleted_by_us)
     _GetCommandStdout(['git', 'rm', '-rf', '--ignore-unmatch'] +
                       conflicts_deleted_by_us, cwd=cwd)
+
+  # If upstream renames a file we have deleted then it will conflict, but
+  # we shouldn't just blindly delete these files as they may have been renamed
+  # into a directory we don't delete. Let them get re-added; they will get
+  # re-deleted if they are still in a directory we delete.
+  conflicts_renamed_by_them = re.findall(r'^UA ([^\n]+)$', status,
+                                         flags=re.MULTILINE)
+  if conflicts_renamed_by_them:
+    print 'Adding theirs for the following locally deleted files.\n  %s' % \
+        '\n  '.join(conflicts_renamed_by_them)
+    _GetCommandStdout(['git', 'add', '-f'] + conflicts_renamed_by_them, cwd=cwd)
 
   while True:
     status = _GetCommandStdout(['git', 'status', '--porcelain'], cwd=cwd)
