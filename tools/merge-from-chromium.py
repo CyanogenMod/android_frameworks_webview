@@ -397,6 +397,17 @@ def _GenerateLastChange(svn_revision):
         % (svn_revision, AUTOGEN_MESSAGE)])
 
 
+def _PushToServer():
+  """Push each merge branch to the server's master-chromium branch."""
+
+  print 'Pushing to server ...'
+  for path in ALL_PROJECTS:
+    print path
+    dest_dir = os.path.join(REPOSITORY_ROOT, path)
+    _GetCommandStdout(['git', 'push', 'goog',
+                       'merge-from-chromium:master-chromium'], cwd=dest_dir)
+
+
 def _GetSVNRevisionAndSHA1(git_url, git_branch, svn_revision):
   print 'Getting SVN revision and SHA1 ...'
   _GetCommandStdout(['git', 'fetch', '-f', git_url,
@@ -418,7 +429,7 @@ def _GetSVNRevisionAndSHA1(git_url, git_branch, svn_revision):
   return (svn_revision, sha1)
 
 
-def _Snapshot(git_url, git_branch, svn_revision):
+def _Snapshot(git_url, git_branch, svn_revision, autopush):
   """Takes a snapshot of the specified Chromium tree at the specified SVN
   revision and merges it into this repository. Also generates Android makefiles
   and generates a top-level NOTICE file suitable for use in the Android build.
@@ -449,6 +460,16 @@ def _Snapshot(git_url, git_branch, svn_revision):
   # 4. Generate Android makefiles
   _GenerateMakefiles(svn_revision)
 
+  # 5. Push result to server
+  if not autopush:
+    print 'Merge complete; push to server? [y|n]: ',
+    answer = sys.stdin.readline()
+    if not answer.lower().startswith('y'):
+      return True
+  _PushToServer()
+
+  return True
+
 
 def main():
   parser = optparse.OptionParser(usage='%prog [options]')
@@ -472,6 +493,11 @@ def main():
       default=None,
       help=('Merge to the specified chromium SVN revision, rather than using '
             'the current latest revision.'))
+  parser.add_option(
+      '', '--autopush',
+      default=False, action='store_true',
+      help=('Automatically push the result to the server without prompting if'
+            'the merge was successful.'))
   (options, args) = parser.parse_args()
   if args:
     parser.print_help()
@@ -481,7 +507,8 @@ def main():
     print >>sys.stderr, 'You need to run the Android envsetup.sh and lunch.'
     return 1
 
-  if not _Snapshot(options.git_url, options.git_branch, options.svn_revision):
+  if not _Snapshot(options.git_url, options.git_branch, options.svn_revision,
+                   options.autopush):
     return 1
 
   return 0
