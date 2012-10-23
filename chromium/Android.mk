@@ -28,6 +28,12 @@ LOCAL_STATIC_JAVA_LIBRARIES += google-common \
 
 LOCAL_SRC_FILES := $(call all-java-files-under, java)
 
+LOCAL_REQUIRED_MODULES := \
+	libwebviewchromium \
+	webviewchromium_res_chrome \
+	webviewchromium_res_chrome_100_percent \
+	webviewchromium_res_en-US \
+
 LOCAL_PROGUARD_ENABLED := disabled
 
 include $(BUILD_JAVA_LIBRARY)
