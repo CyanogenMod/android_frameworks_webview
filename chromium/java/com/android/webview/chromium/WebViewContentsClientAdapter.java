@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.graphics.Picture;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.provider.Browser;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -421,6 +422,11 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     public void onReceivedHttpAuthRequest(AwHttpAuthHandler handler, String host, String realm) {
         mWebViewClient.onReceivedHttpAuthRequest(mWebView,
                 new AwHttpAuthHandlerAdapter(handler), host, realm);
+    }
+
+    @Override
+    public void onFormResubmission(Message dontResend, Message resend) {
+        mWebViewClient.onFormResubmission(mWebView, dontResend, resend);
     }
 
     private static class AwHttpAuthHandlerAdapter extends android.webkit.HttpAuthHandler {
