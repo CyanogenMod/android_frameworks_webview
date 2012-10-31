@@ -506,13 +506,12 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     @Override
     public synchronized void setJavaScriptCanOpenWindowsAutomatically(boolean flag) {
-        UnimplementedWebViewApi.invoke();
+        mContentSettings.setJavaScriptCanOpenWindowsAutomatically(flag);
     }
 
     @Override
     public synchronized boolean getJavaScriptCanOpenWindowsAutomatically() {
-        UnimplementedWebViewApi.invoke();
-        return false;
+        return mContentSettings.getJavaScriptCanOpenWindowsAutomatically();
     }
 
     @Override
