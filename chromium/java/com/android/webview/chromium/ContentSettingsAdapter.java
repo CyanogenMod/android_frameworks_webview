@@ -231,13 +231,12 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     @Override
     public synchronized void setSupportMultipleWindows(boolean support) {
-        UnimplementedWebViewApi.invoke();
+        mContentSettings.setSupportMultipleWindows(support);
     }
 
     @Override
     public synchronized boolean supportMultipleWindows() {
-        UnimplementedWebViewApi.invoke();
-        return false;
+        return mContentSettings.supportMultipleWindows();
     }
 
     @Override
