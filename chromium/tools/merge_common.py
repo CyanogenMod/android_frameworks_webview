@@ -29,11 +29,14 @@ REPOSITORY_ROOT = os.path.join(os.environ['ANDROID_BUILD_TOP'],
 
 # Whitelist of projects that need to be merged to build WebView. We don't need
 # the other upstream repositories used to build the actual Chrome app.
-THIRD_PARTY_PROJECTS = [
+THIRD_PARTY_PROJECTS_WITH_FLAT_HISTORY = [
+    'third_party/WebKit',
+]
+
+THIRD_PARTY_PROJECTS_WITH_FULL_HISTORY = [
     'googleurl',
     'sdch/open-vcdiff',
     'testing/gtest',
-    'third_party/WebKit',
     'third_party/angle',
     'third_party/freetype',
     'third_party/icu',
@@ -52,7 +55,24 @@ THIRD_PARTY_PROJECTS = [
 ]
 
 
+PROJECTS_WITH_FLAT_HISTORY = ['.'] + THIRD_PARTY_PROJECTS_WITH_FLAT_HISTORY
+PROJECTS_WITH_FULL_HISTORY = THIRD_PARTY_PROJECTS_WITH_FULL_HISTORY
+
+THIRD_PARTY_PROJECTS = (THIRD_PARTY_PROJECTS_WITH_FLAT_HISTORY +
+                        THIRD_PARTY_PROJECTS_WITH_FULL_HISTORY)
+
 ALL_PROJECTS = ['.'] + THIRD_PARTY_PROJECTS
+
+
+# Directories to be removed when flattening history.
+PRUNE_WHEN_FLATTENING = {
+    'third_party/WebKit': [
+        'LayoutTests',
+    ],
+}
+
+
+assert all(p in PROJECTS_WITH_FLAT_HISTORY for p in PRUNE_WHEN_FLATTENING)
 
 
 def GetCommandStdout(args, cwd=REPOSITORY_ROOT, ignore_errors=False):
