@@ -74,6 +74,10 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     // The listener receiving notifications of screen updates.
     private WebView.PictureListener mPictureListener;
 
+    private Handler mUiThreadHandler;
+
+    private static final int NEW_WEBVIEW_CREATED = 100;
+
     /**
      * Adapter constructor.
      *
@@ -87,6 +91,22 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
         mWebView = webView;
         setWebViewClient(null);
         setWebChromeClient(null);
+
+        mUiThreadHandler = new Handler() {
+
+            @Override
+            public void handleMessage(Message msg) {
+                switch(msg.what) {
+                    case NEW_WEBVIEW_CREATED:
+                        // TODO: Support the user providing us with a new
+                        // WebView to host the pop up window.
+                        break;
+                    default:
+                        throw new IllegalStateException();
+                }
+            }
+        };
+
     }
 
     // WebViewClassic is coded in such a way that even if a null WebViewClient is set,
@@ -240,6 +260,15 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     @Override
     public void onLoadResource(String url) {
         mWebViewClient.onLoadResource(mWebView, url);
+    }
+
+    @Override
+    public boolean onCreateWindow(boolean isDialog, boolean isUserGesture) {
+        Message m = mUiThreadHandler.obtainMessage(
+                NEW_WEBVIEW_CREATED, mWebView.new WebViewTransport());
+        mWebChromeClient.onCreateWindow(mWebView, isDialog, isUserGesture, m);
+        // TODO: Support the user returning true from the onCreateWindow callback.
+        return false;
     }
 
     //--------------------------------------------------------------------------------------------
