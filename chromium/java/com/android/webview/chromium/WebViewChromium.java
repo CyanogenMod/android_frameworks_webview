@@ -27,6 +27,7 @@ import android.net.http.SslCertificate;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
+import android.view.HardwareCanvas;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -80,6 +81,8 @@ class WebViewChromium implements WebViewProvider,
     private WebSettings mWebSettings;
     // The WebView wrapper for ContentViewCore and required browser compontents.
     private AwContents mAwContents;
+    // Non-null if this webview is using the GL accelerated draw path.
+    private DrawGLFunctor mGLfunctor;
 
     public WebViewChromium(WebView webView, WebView.PrivateAccess webViewPrivate) {
         mWebView = webView;
@@ -162,6 +165,10 @@ class WebViewChromium implements WebViewProvider,
     @Override
     public void destroy() {
         mAwContents.destroy();
+        if (mGLfunctor != null) {
+            mGLfunctor.destroy();
+            mGLfunctor = null;
+        }
     }
 
     @Override
@@ -676,7 +683,14 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void onDraw(Canvas canvas) {
-        UnimplementedWebViewApi.invoke();
+        if (canvas.isHardwareAccelerated() && mAwContents.onPrepareDrawGL(canvas)) {
+            if (mGLfunctor == null) {
+                mGLfunctor = new DrawGLFunctor(mAwContents.getAwDrawGLViewContext());
+            }
+            mGLfunctor.requestDrawGL((HardwareCanvas) canvas, mWebView.getViewRootImpl());
+        } else {
+          mAwContents.onDraw(canvas);
+        }
     }
 
     @Override
@@ -728,6 +742,9 @@ class WebViewChromium implements WebViewProvider,
     @Override
     public void onDetachedFromWindow() {
         mAwContents.getContentViewCore().onDetachedFromWindow();
+        if (mGLfunctor != null) {
+            mGLfunctor.detach();
+        }
     }
 
     @Override
