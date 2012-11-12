@@ -81,9 +81,12 @@ class WebViewChromium implements WebViewProvider,
     // The WebView wrapper for ContentViewCore and required browser compontents.
     private AwContents mAwContents;
 
+    private final WebView.HitTestResult mHitTestResult;
+
     public WebViewChromium(WebView webView, WebView.PrivateAccess webViewPrivate) {
         mWebView = webView;
         mWebViewPrivate = webViewPrivate;
+        mHitTestResult = new WebView.HitTestResult();
     }
 
     // WebViewProvider methods --------------------------------------------------------------------
@@ -324,18 +327,20 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public WebView.HitTestResult getHitTestResult() {
-        UnimplementedWebViewApi.invoke();
-        return null;
+        AwContents.HitTestData data = mAwContents.getLastHitTestResult();
+        mHitTestResult.setType(data.hitTestResultType);
+        mHitTestResult.setExtra(data.hitTestResultExtraData);
+        return mHitTestResult;
     }
 
     @Override
     public void requestFocusNodeHref(Message hrefMsg) {
-        UnimplementedWebViewApi.invoke();
+        mAwContents.requestFocusNodeHref(hrefMsg);
     }
 
     @Override
     public void requestImageRef(Message msg) {
-        UnimplementedWebViewApi.invoke();
+        mAwContents.requestImageRef(msg);
     }
 
     @Override
@@ -769,19 +774,17 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        return mAwContents.getContentViewCore().onTouchEvent(ev);
+        return mAwContents.onTouchEvent(ev);
     }
 
     @Override
     public boolean onHoverEvent(MotionEvent event) {
-        UnimplementedWebViewApi.invoke();
-        return false;
+        return mAwContents.onHoverEvent(event);
     }
 
     @Override
     public boolean onGenericMotionEvent(MotionEvent event) {
-        UnimplementedWebViewApi.invoke();
-        return false;
+        return mAwContents.onGenericMotionEvent(event);
     }
 
     @Override
