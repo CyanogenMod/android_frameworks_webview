@@ -89,6 +89,12 @@ class WebViewChromium implements WebViewProvider,
         mHitTestResult = new WebView.HitTestResult();
     }
 
+    static void completeWindowCreation(WebView parent, WebView child) {
+        AwContents parentContents = ((WebViewChromium) parent.getWebViewProvider()).mAwContents;
+        AwContents childContents = ((WebViewChromium) child.getWebViewProvider()).mAwContents;
+        parentContents.supplyContentsForPopup(childContents);
+    }
+
     // WebViewProvider methods --------------------------------------------------------------------
 
     @Override

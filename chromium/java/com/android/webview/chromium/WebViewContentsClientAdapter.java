@@ -98,8 +98,25 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
             public void handleMessage(Message msg) {
                 switch(msg.what) {
                     case NEW_WEBVIEW_CREATED:
-                        // TODO: Support the user providing us with a new
-                        // WebView to host the pop up window.
+                        WebView.WebViewTransport t = (WebView.WebViewTransport) msg.obj;
+                        WebView newWebView = t.getWebView();
+                        if (newWebView == null) {
+                            throw new IllegalArgumentException(
+                                    "Must provide a new WebView for the new window.");
+                        }
+                        if (newWebView == mWebView) {
+                            throw new IllegalArgumentException(
+                                    "Parent WebView cannot host it's own popup window. Please " +
+                                    "use WebSettings.setSupportMultipleWindows(false)");
+                        }
+
+                        if (newWebView.copyBackForwardList().getSize() != 0) {
+                            throw new IllegalArgumentException(
+                                    "New WebView for popup window must not have been previously " +
+                                    "navigated.");
+                        }
+
+                        WebViewChromium.completeWindowCreation(mWebView, newWebView);
                         break;
                     default:
                         throw new IllegalStateException();
@@ -266,9 +283,7 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     public boolean onCreateWindow(boolean isDialog, boolean isUserGesture) {
         Message m = mUiThreadHandler.obtainMessage(
                 NEW_WEBVIEW_CREATED, mWebView.new WebViewTransport());
-        mWebChromeClient.onCreateWindow(mWebView, isDialog, isUserGesture, m);
-        // TODO: Support the user returning true from the onCreateWindow callback.
-        return false;
+        return mWebChromeClient.onCreateWindow(mWebView, isDialog, isUserGesture, m);
     }
 
     //--------------------------------------------------------------------------------------------
