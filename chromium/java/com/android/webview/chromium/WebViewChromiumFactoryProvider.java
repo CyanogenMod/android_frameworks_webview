@@ -28,6 +28,7 @@ import android.webkit.WebViewDatabase;
 import android.webkit.WebViewFactoryProvider;
 import android.webkit.WebViewProvider;
 
+import org.chromium.android_webview.AwContents;
 import org.chromium.base.PathService;
 import org.chromium.base.PathUtils;
 import org.chromium.base.ThreadUtils;
@@ -50,6 +51,13 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     // Read/write protected by mLock.
     private boolean mInitialized;
 
+    private void loadPlatSupportLibrary() {
+        // Load glue-layer support library.
+        System.loadLibrary("webviewchromium_plat_support");
+        DrawGLFunctor.setChromiumAwDrawGLFunction(AwContents.getAwDrawGLFunction());
+    }
+
+    // TODO(joth): Much of this initialization logic could be moved into the chromium tree.
     private void ensureChromiumNativeInitializedLocked() {
         assert Thread.holdsLock(mLock);
 
@@ -87,6 +95,8 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
 
                 AndroidBrowserProcess.initContentViewProcess(ActivityThread.currentApplication(),
                         AndroidBrowserProcess.MAX_RENDERERS_SINGLE_PROCESS);
+
+                loadPlatSupportLibrary();
             }
         });
         mInitialized = true;
