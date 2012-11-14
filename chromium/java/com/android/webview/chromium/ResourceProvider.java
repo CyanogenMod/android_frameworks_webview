@@ -21,7 +21,6 @@ import android.content.res.Resources;
 import android.util.TypedValue;
 
 import org.chromium.android_webview.AwResource;
-import org.chromium.content.app.AppResource;
 
 public class ResourceProvider {
     private static boolean sInitialized;
@@ -32,16 +31,6 @@ public class ResourceProvider {
         }
 
         Resources.Theme theme = context.getTheme();
-
-        // TODO(newt): remove references to AppResource after
-        // http://codereview.chromium.org/11360207/ lands.
-        AppResource.DRAWABLE_ICON_ACTION_BAR_SHARE =
-                resolveThemeAttr(theme, com.android.internal.R.attr.actionModeShareDrawable);
-        AppResource.DRAWABLE_ICON_ACTION_BAR_WEB_SEARCH =
-                resolveThemeAttr(theme, com.android.internal.R.attr.actionModeWebSearchDrawable);
-
-        AppResource.STRING_ACTION_BAR_SHARE = com.android.internal.R.string.share;
-        AppResource.STRING_ACTION_BAR_WEB_SEARCH = com.android.internal.R.string.websearch;
 
         org.chromium.content.R.drawable.ic_menu_share_holo_light =
                 resolveThemeAttr(theme, com.android.internal.R.attr.actionModeShareDrawable);
