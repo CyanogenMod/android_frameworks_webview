@@ -17,8 +17,7 @@
 # This package provides the 'glue' layer between Chromium and WebView.
 
 LOCAL_PATH := $(call my-dir)
-# TODO: Change to  external/chromium_org when we start building from there.
-CHROMIUM_PATH := external/chrome
+CHROMIUM_PATH := external/chromium_org
 
 # Java glue layer JAR, calls directly into the chromium AwContents Java API.
 include $(CLEAR_VARS)
@@ -30,12 +29,11 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_STATIC_JAVA_LIBRARIES += google-common \
                                android_webview_java
 
-LOCAL_REQUIRED_MODULES := libwebviewchromium_plat_support
-
 LOCAL_SRC_FILES := $(call all-java-files-under, java)
 
 LOCAL_REQUIRED_MODULES := \
 	libwebviewchromium \
+	libwebviewchromium_plat_support \
 	webviewchromium_res_chrome \
 	webviewchromium_res_chrome_100_percent \
 	webviewchromium_res_en-US \
@@ -64,4 +62,3 @@ LOCAL_SHARED_LIBRARIES += \
 LOCAL_MODULE_TAGS := optional
 
 include $(BUILD_SHARED_LIBRARY)
-
