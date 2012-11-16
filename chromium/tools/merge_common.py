@@ -49,6 +49,7 @@ THIRD_PARTY_PROJECTS_WITH_FULL_HISTORY = [
     'third_party/skia/include',
     'third_party/skia/gyp',
     'third_party/skia/src',
+    'third_party/smhasher/src',
     'third_party/v8-i18n',
     'tools/grit',
     'tools/gyp',

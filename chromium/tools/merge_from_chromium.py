@@ -194,9 +194,9 @@ def _MergeProjects(git_url, git_branch, svn_revision, root_sha1):
   sys.dont_write_bytecode = True
   global webview_licenses
   import webview_licenses
-  import known_incompatible
+  import known_issues
 
-  for path, exclude_list in known_incompatible.KNOWN_INCOMPATIBLE.iteritems():
+  for path, exclude_list in known_issues.KNOWN_INCOMPATIBLE.iteritems():
     print '  %s' % '\n  '.join(os.path.join(path, x) for x in exclude_list)
     dest_dir = os.path.join(merge_common.REPOSITORY_ROOT, path)
     merge_common.GetCommandStdout(['git', 'rm', '-rf', '--ignore-unmatch'] +
