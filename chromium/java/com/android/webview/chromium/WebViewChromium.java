@@ -59,11 +59,10 @@ import java.util.Map;
 /**
  * This class is the delegate to which WebViewProxy forwards all API calls.
  *
- * Most of the actual functionality is implemented by ContentViewCore. This
- * class also contains WebView-specific APIs that require the creation of other
- * adapters (otherwise org.chromium.content would depend on the webview.chromium
- * package) some simple APIs (like is Paused) and a small set of no-op
- * deprecated APIs.
+ * Most of the actual functionality is implemented by AwContents (or ContentViewCore within
+ * it). This class also contains WebView-specific APIs that require the creation of other
+ * adapters (otherwise org.chromium.content would depend on the webview.chromium package)
+ * and a small set of no-op deprecated APIs.
  */
 class WebViewChromium implements WebViewProvider,
           WebViewProvider.ScrollDelegate, WebViewProvider.ViewDelegate {
@@ -75,8 +74,6 @@ class WebViewChromium implements WebViewProvider,
     private WebViewContentsClientAdapter mContentsClientAdapter;
 
     // Variables for functionality provided by this adapter ---------------------------------------
-    // Is the WebView paused?
-    private boolean mIsPaused;
     // WebSettings adapter, lazily initialized in the getter
     private WebSettings mWebSettings;
     // The WebView wrapper for ContentViewCore and required browser compontents.
@@ -398,29 +395,27 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void pauseTimers() {
-        mAwContents.getContentViewCore().onActivityPause();
+        mAwContents.pauseTimers();
     }
 
     @Override
     public void resumeTimers() {
-        mAwContents.getContentViewCore().onActivityResume();
+        mAwContents.resumeTimers();
     }
 
     @Override
     public void onPause() {
-        mIsPaused = true;
-        mAwContents.getContentViewCore().onHide();
+        mAwContents.onPause();
     }
 
     @Override
     public void onResume() {
-        mAwContents.getContentViewCore().onShow();
-        mIsPaused = false;
+        mAwContents.onResume();
     }
 
     @Override
     public boolean isPaused() {
-        return mIsPaused;
+        return mAwContents.isPaused();
     }
 
     @Override
@@ -683,7 +678,7 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void onWindowVisibilityChanged(int visibility) {
-        UnimplementedWebViewApi.invoke();
+        mAwContents.onWindowVisibilityChanged(visibility);
     }
 
     @Override
@@ -714,7 +709,7 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        mAwContents.getContentViewCore().onConfigurationChanged(newConfig);
+        mAwContents.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -741,12 +736,12 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void onAttachedToWindow() {
-        mAwContents.getContentViewCore().onAttachedToWindow();
+        mAwContents.onAttachedToWindow();
     }
 
     @Override
     public void onDetachedFromWindow() {
-        mAwContents.getContentViewCore().onDetachedFromWindow();
+        mAwContents.onDetachedFromWindow();
         if (mGLfunctor != null) {
             mGLfunctor.detach();
         }
@@ -754,30 +749,31 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void onVisibilityChanged(View changedView, int visibility) {
-        UnimplementedWebViewApi.invoke();
+        mAwContents.onVisibilityChanged(changedView, visibility);
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasWindowFocus) {
-        UnimplementedWebViewApi.invoke();
+        mAwContents.onWindowFocusChanged(hasWindowFocus);
     }
 
     @Override
     public void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
-        mAwContents.getContentViewCore().onFocusChanged(focused, direction, previouslyFocusedRect);
+        mAwContents.onFocusChanged(focused, direction, previouslyFocusedRect);
     }
 
     @Override
     public boolean setFrame(int left, int top, int right, int bottom) {
-        // TODO(benm): This is the minimum implementation for HTMLViewer
-        // bringup. Likely will need to go up to ContentViewCore for
-        // a complete implementation.
+        // TODO(joth): This is the minimum implementation for initial
+        // bringup. Likely will need to go up to AwContents for a complete
+        // implementation, e.g. setting the compositor visible region (to
+        // avoid painting tiles that are offscreen due to the view's position).
         return mWebViewPrivate.super_setFrame(left, top, right, bottom);
     }
 
     @Override
     public void onSizeChanged(int w, int h, int ow, int oh) {
-        mAwContents.getContentViewCore().onSizeChanged(w, h, ow, oh);
+        mAwContents.onSizeChanged(w, h, ow, oh);
     }
 
     @Override
