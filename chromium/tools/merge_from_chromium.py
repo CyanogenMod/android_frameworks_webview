@@ -226,24 +226,19 @@ def _GenerateMakefiles(svn_revision):
   for path in merge_common.ALL_PROJECTS:
     dest_dir = os.path.join(merge_common.REPOSITORY_ROOT, path)
     merge_common.GetCommandStdout(['git', 'rm', '--ignore-unmatch',
-                                   'GypAndroid.mk', '*.target.mk', '*.host.mk',
-                                   '*.tmp'], cwd=dest_dir)
+                                   'GypAndroid.*.mk', '*.target.*.mk',
+                                   '*.host.*.mk', '*.tmp'], cwd=dest_dir)
 
-  merge_common.GetCommandStdout(['bash', '-c',
-                                 'export CHROME_ANDROID_BUILD_WEBVIEW=1 && '
-                                 'export CHROME_SRC=`pwd` && '
-                                 'export PYTHONDONTWRITEBYTECODE=1 && '
-                                 '. build/android/envsetup.sh && '
-                                 'android_gyp'])
+  merge_common.GetCommandStdout(['android_webview/tools/gyp_webview'])
 
   for path in merge_common.ALL_PROJECTS:
     dest_dir = os.path.join(merge_common.REPOSITORY_ROOT, path)
     # git add doesn't have an --ignore-unmatch so we have to do this instead:
-    merge_common.GetCommandStdout(['git', 'add', '-f', 'GypAndroid.mk'],
+    merge_common.GetCommandStdout(['git', 'add', '-f', 'GypAndroid.*.mk'],
                                   ignore_errors=True, cwd=dest_dir)
-    merge_common.GetCommandStdout(['git', 'add', '-f', '*.target.mk'],
+    merge_common.GetCommandStdout(['git', 'add', '-f', '*.target.*.mk'],
                                   ignore_errors=True, cwd=dest_dir)
-    merge_common.GetCommandStdout(['git', 'add', '-f', '*.host.mk'],
+    merge_common.GetCommandStdout(['git', 'add', '-f', '*.host.*.mk'],
                                   ignore_errors=True, cwd=dest_dir)
     merge_common.GetCommandStdout(['git', 'add', '-f', '*.tmp'],
                                   ignore_errors=True, cwd=dest_dir)
