@@ -445,8 +445,8 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public WebBackForwardList copyBackForwardList() {
-        UnimplementedWebViewApi.invoke();
-        return null;
+        return new WebBackForwardListChromium(
+                mAwContents.getContentViewCore().getNavigationHistory());
     }
 
     @Override
