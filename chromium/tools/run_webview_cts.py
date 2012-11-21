@@ -25,9 +25,6 @@ import sys
 
 # Eventually this list will be empty!
 EXPECTED_FAILURES = set([
-  'android.webkit.cts.CacheManagerTest#testCacheFile',
-  'android.webkit.cts.CacheManagerTest#testGetCacheFileBaseDir',
-  'android.webkit.cts.CacheManager_CacheResultTest#testCacheResult',
   'android.webkit.cts.WebBackForwardListTest#testGetCurrentItem',
   'android.webkit.cts.WebChromeClientTest#testOnReceivedIcon',
   'android.webkit.cts.WebChromeClientTest#testWindows',
@@ -70,7 +67,6 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.WebViewTest#testSavePassword',
   'android.webkit.cts.WebViewTest#testScrollBarOverlay',
   'android.webkit.cts.WebViewTest#testSecureSiteSetsCertificate',
-  'android.webkit.cts.WebViewTest#testSetAndGetCertificate',
   'android.webkit.cts.WebViewTest#testSetDownloadListener',
   'android.webkit.cts.WebViewTest#testSetInitialScale',
   'android.webkit.cts.WebViewTest#testSetScrollBarStyle',
@@ -98,7 +94,7 @@ def main():
   failures = set(re.findall(r'.*: (.*) FAIL', stdout))
   print '%d passes; %d failures' % (len(passes), len(failures))
 
-  unexpected_passes =  passes.intersection(EXPECTED_FAILURES)
+  unexpected_passes = EXPECTED_FAILURES.difference(failures)
   if len(unexpected_passes) > 0:
     print 'UNEXPECTED PASSES (update expectations!):'
     for test in unexpected_passes:
@@ -124,7 +120,9 @@ def main():
   elif unexpected_failures_count > 0:
     return 1
   elif unexpected_passes_count >= 5:
-    return 2  # Running webview classic or really should fix expectations
+    print ('More than 5 new passes? Either you''re running webview classic, or '
+           'it really is time to fix failure expectations.')
+    return 2
   elif unexpected_passes_count > 0:
     return 3  # STEP_WARNINGS
   else:
