@@ -546,12 +546,11 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     @Override
     public void setCacheMode(int mode) {
-        UnimplementedWebViewApi.invoke();
+        mAwSettings.setCacheMode(mode);
     }
 
     @Override
     public int getCacheMode() {
-        UnimplementedWebViewApi.invoke();
-        return 0;
+        return mAwSettings.getCacheMode();
     }
 }
