@@ -178,8 +178,9 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public WebBackForwardList saveState(Bundle outState) {
-        UnimplementedWebViewApi.invoke();
-        return null;
+        if (outState == null) return null;
+        if (!mAwContents.saveState(outState)) return null;
+        return copyBackForwardList();
     }
 
     @Override
@@ -196,8 +197,9 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public WebBackForwardList restoreState(Bundle inState) {
-        UnimplementedWebViewApi.invoke();
-        return null;
+        if (inState == null) return null;
+        if (!mAwContents.restoreState(inState)) return null;
+        return copyBackForwardList();
     }
 
     @Override
