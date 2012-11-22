@@ -12,10 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Common data/functions for the Chromium merging scripts.
-
-"""
+"""Common data/functions for the Chromium merging scripts."""
 
 import os
 import re
@@ -29,6 +26,9 @@ REPOSITORY_ROOT = os.path.join(os.environ['ANDROID_BUILD_TOP'],
 
 # Whitelist of projects that need to be merged to build WebView. We don't need
 # the other upstream repositories used to build the actual Chrome app.
+# Different stages of the merge process need different ways of looking at the
+# list, so we construct different combinations below.
+
 THIRD_PARTY_PROJECTS_WITH_FLAT_HISTORY = [
     'third_party/WebKit',
 ]
@@ -56,7 +56,6 @@ THIRD_PARTY_PROJECTS_WITH_FULL_HISTORY = [
     'v8',
 ]
 
-
 PROJECTS_WITH_FLAT_HISTORY = ['.'] + THIRD_PARTY_PROJECTS_WITH_FLAT_HISTORY
 PROJECTS_WITH_FULL_HISTORY = THIRD_PARTY_PROJECTS_WITH_FULL_HISTORY
 
@@ -74,43 +73,71 @@ PRUNE_WHEN_FLATTENING = {
 }
 
 
+# Only projects that have their history flattened can have directories pruned.
 assert all(p in PROJECTS_WITH_FLAT_HISTORY for p in PRUNE_WHEN_FLATTENING)
+
+
+class MergeError(Exception):
+  """Used to signal an error that prevents the merge from being completed."""
+
+
+class CommandError(MergeError):
+  """This exception is raised when a process run by GetCommandStdout fails."""
+
+  def __init__(self, returncode, cmd, cwd, stdout, stderr):
+    super(CommandError, self).__init__()
+    self.returncode = returncode
+    self.cmd = cmd
+    self.cwd = cwd
+    self.stdout = stdout
+    self.stderr = stderr
+
+  def __str__(self):
+    return ("Command '%s' returned non-zero exit status %d. cwd was '%s'.\n\n"
+            "===STDOUT===\n%s\n===STDERR===\n%s\n" %
+            (self.cmd, self.returncode, self.cwd, self.stdout, self.stderr))
 
 
 def GetCommandStdout(args, cwd=REPOSITORY_ROOT, ignore_errors=False):
   """Gets stdout from runnng the specified shell command.
+
+  Similar to subprocess.check_output() except that it can capture stdout and
+  stderr separately for better error reporting.
+
   Args:
-    args: The command and its arguments.
+    args: The command and its arguments as an iterable.
     cwd: The working directory to use. Defaults to REPOSITORY_ROOT.
-    ignore_errors: Ignore the command's return code.
+    ignore_errors: Ignore the command's return code and stderr.
   Returns:
     stdout from running the command.
+  Raises:
+    CommandError: if the command exited with a nonzero status.
   """
-
   p = subprocess.Popen(args=args, cwd=cwd, stdout=subprocess.PIPE,
                        stderr=subprocess.PIPE)
   stdout, stderr = p.communicate()
   if p.returncode == 0 or ignore_errors:
     return stdout
   else:
-    print >>sys.stderr, 'Running command %s failed:' % args
-    print >>sys.stderr, stderr
-    raise Exception('Command execution failed')
+    raise CommandError(p.returncode, ' '.join(args), cwd, stdout, stderr)
 
 
 def CheckNoConflictsAndCommitMerge(commit_message, cwd=REPOSITORY_ROOT):
-  """Prompts the user to resolve merge conflicts then once done, commits the
-  merge using either the supplied commit message or a user-supplied override.
-  Args:
-    commit_message: The default commit message
-  """
+  """Checks for conflicts and commits once they are resolved.
 
+  Certain conflicts are resolved automatically; if any remain, the user is
+  prompted to resolve them. The user can specify a custom commit message.
+
+  Args:
+    commit_message: The default commit message.
+    cwd: Working directory to use.
+  """
   status = GetCommandStdout(['git', 'status', '--porcelain'], cwd=cwd)
   conflicts_deleted_by_us = re.findall(r'^(?:DD|DU) ([^\n]+)$', status,
                                        flags=re.MULTILINE)
   if conflicts_deleted_by_us:
-    print 'Keeping ours for the following locally deleted files.\n  %s' % \
-        '\n  '.join(conflicts_deleted_by_us)
+    print ('Keeping ours for the following locally deleted files.\n  %s' %
+           '\n  '.join(conflicts_deleted_by_us))
     GetCommandStdout(['git', 'rm', '-rf', '--ignore-unmatch'] +
                      conflicts_deleted_by_us, cwd=cwd)
 
@@ -121,8 +148,8 @@ def CheckNoConflictsAndCommitMerge(commit_message, cwd=REPOSITORY_ROOT):
   conflicts_renamed_by_them = re.findall(r'^UA ([^\n]+)$', status,
                                          flags=re.MULTILINE)
   if conflicts_renamed_by_them:
-    print 'Adding theirs for the following locally deleted files.\n  %s' % \
-        '\n  '.join(conflicts_renamed_by_them)
+    print ('Adding theirs for the following locally deleted files.\n  %s' %
+           '\n  '.join(conflicts_renamed_by_them))
     GetCommandStdout(['git', 'add', '-f'] + conflicts_renamed_by_them, cwd=cwd)
 
   while True:
@@ -143,8 +170,13 @@ def CheckNoConflictsAndCommitMerge(commit_message, cwd=REPOSITORY_ROOT):
 
 
 def PushToServer(autopush, src, dest):
-  """Push each merge branch to the server."""
+  """Push the merged branch in each repository to the server.
 
+  Args:
+    autopush: Push automatically without prompting the user.
+    src: Local branch name to push.
+    dest: Destination branch name to push to.
+  """
   if not autopush:
     print 'Merge complete; push to server? [y|n]: ',
     answer = sys.stdin.readline()
