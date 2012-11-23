@@ -17,7 +17,6 @@
 import os
 import re
 import subprocess
-import sys
 
 
 REPOSITORY_ROOT = os.path.join(os.environ['ANDROID_BUILD_TOP'],
@@ -122,7 +121,8 @@ def GetCommandStdout(args, cwd=REPOSITORY_ROOT, ignore_errors=False):
     raise CommandError(p.returncode, ' '.join(args), cwd, stdout, stderr)
 
 
-def CheckNoConflictsAndCommitMerge(commit_message, cwd=REPOSITORY_ROOT):
+def CheckNoConflictsAndCommitMerge(commit_message, unattended=False,
+                                   cwd=REPOSITORY_ROOT):
   """Checks for conflicts and commits once they are resolved.
 
   Certain conflicts are resolved automatically; if any remain, the user is
@@ -130,7 +130,10 @@ def CheckNoConflictsAndCommitMerge(commit_message, cwd=REPOSITORY_ROOT):
 
   Args:
     commit_message: The default commit message.
+    unattended: If running unattended, abort on conflicts.
     cwd: Working directory to use.
+  Raises:
+    MergeError: If there are conflicts in unattended mode.
   """
   status = GetCommandStdout(['git', 'status', '--porcelain'], cwd=cwd)
   conflicts_deleted_by_us = re.findall(r'^(?:DD|DU) ([^\n]+)$', status,
@@ -158,6 +161,8 @@ def CheckNoConflictsAndCommitMerge(commit_message, cwd=REPOSITORY_ROOT):
                            flags=re.MULTILINE)
     if not conflicts:
       break
+    if unattended:
+      raise MergeError('Cannot resolve merge conflicts.')
     conflicts_string = '\n'.join([x[0] for x in conflicts])
     new_commit_message = raw_input(
         ('The following conflicts exist and must be resolved.\n\n%s\n\nWhen '
@@ -169,20 +174,13 @@ def CheckNoConflictsAndCommitMerge(commit_message, cwd=REPOSITORY_ROOT):
   GetCommandStdout(['git', 'commit', '-m', commit_message], cwd=cwd)
 
 
-def PushToServer(autopush, src, dest):
+def PushToServer(src, dest):
   """Push the merged branch in each repository to the server.
 
   Args:
-    autopush: Push automatically without prompting the user.
     src: Local branch name to push.
     dest: Destination branch name to push to.
   """
-  if not autopush:
-    print 'Merge complete; push to server? [y|n]: ',
-    answer = sys.stdin.readline()
-    if not answer.lower().startswith('y'):
-      return
-
   print 'Pushing to server ...'
   for path in ALL_PROJECTS:
     print path

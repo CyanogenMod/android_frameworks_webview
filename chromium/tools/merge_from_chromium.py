@@ -126,7 +126,7 @@ def _GetThirdPartyProjectMergeInfo(third_party_projects, deps_vars):
   return result
 
 
-def _MergeProjects(git_url, git_branch, svn_revision, root_sha1):
+def _MergeProjects(git_url, git_branch, svn_revision, root_sha1, unattended):
   """Merges each required Chromium project into the Android repository.
 
   .DEPS.git is consulted to determine which revision each project must be merged
@@ -137,11 +137,17 @@ def _MergeProjects(git_url, git_branch, svn_revision, root_sha1):
     git_branch: The branch in the Chromium repository to merge from.
     svn_revision: The SVN revision in the Chromium repository to merge from.
     root_sha1: The git hash corresponding to svn_revision.
+    unattended: Run in unattended mode.
   Raises:
     MergeError: If incompatibly licensed code is left after pruning.
   """
   # The logic for this step lives here, in the Android tree, as it makes no
   # sense for a Chromium tree to know about this merge.
+
+  if unattended:
+    branch_create_flag = '-B'
+  else:
+    branch_create_flag = '-b'
 
   print 'Parsing DEPS ...'
   deps_vars = _ParseDEPS(git_url, git_branch, root_sha1)
@@ -154,7 +160,7 @@ def _MergeProjects(git_url, git_branch, svn_revision, root_sha1):
     sha1 = merge_info[path]['sha1']
     dest_dir = os.path.join(merge_common.REPOSITORY_ROOT, path)
     merge_common.GetCommandStdout(['git', 'checkout',
-                                   '-b', 'merge-from-chromium',
+                                   branch_create_flag, 'merge-from-chromium',
                                    '-t', 'goog/master-chromium'], cwd=dest_dir)
     print 'Fetching project %s at %s ...' % (path, sha1)
     merge_common.GetCommandStdout(['git', 'fetch', url], cwd=dest_dir)
@@ -166,12 +172,13 @@ def _MergeProjects(git_url, git_branch, svn_revision, root_sha1):
                                     cwd=dest_dir, ignore_errors=True)
       merge_common.CheckNoConflictsAndCommitMerge(
           'Merge %s from %s at %s\n\n%s' % (path, url, sha1, AUTOGEN_MESSAGE),
-          cwd=dest_dir)
+          cwd=dest_dir, unattended=unattended)
     else:
       print 'No new commits to merge in project %s' % path
 
   # Handle root repository separately.
-  merge_common.GetCommandStdout(['git', 'checkout', '-b', 'merge-from-chromium',
+  merge_common.GetCommandStdout(['git', 'checkout',
+                                 branch_create_flag, 'merge-from-chromium',
                                  '-t', 'goog/master-chromium'])
   print 'Fetching Chromium at %s ...' % root_sha1
   merge_common.GetCommandStdout(['git', 'fetch', git_url, git_branch])
@@ -181,7 +188,8 @@ def _MergeProjects(git_url, git_branch, svn_revision, root_sha1):
                                 ignore_errors=True)
   merge_common.CheckNoConflictsAndCommitMerge(
       'Merge Chromium from %s branch %s at r%s (%s)\n\n%s'
-      % (git_url, git_branch, svn_revision, root_sha1, AUTOGEN_MESSAGE))
+      % (git_url, git_branch, svn_revision, root_sha1, AUTOGEN_MESSAGE),
+      unattended=unattended)
 
   print 'Getting directories to exclude ...'
 
@@ -321,7 +329,7 @@ def _GetSVNRevisionAndSHA1(git_url, git_branch, svn_revision):
   return (svn_revision, sha1)
 
 
-def _Snapshot(git_url, git_branch, svn_revision, autopush=False):
+def _Snapshot(git_url, git_branch, svn_revision, unattended):
   """Takes a snapshot of the Chromium tree and merges it into Android.
 
   Android makefiles and a top-level NOTICE file are generated and committed
@@ -331,7 +339,7 @@ def _Snapshot(git_url, git_branch, svn_revision, autopush=False):
     git_url: The URL of the Chromium repository to merge from.
     git_branch: The branch in the Chromium repository to merge from.
     svn_revision: The SVN revision in the Chromium repository to merge from.
-    autopush: Whether to push automatically after a successful merge.
+    unattended: Run in unattended mode.
 
   Returns:
     True if new commits were merged; False if no new commits were present.
@@ -348,7 +356,7 @@ def _Snapshot(git_url, git_branch, svn_revision, autopush=False):
          (git_url, git_branch, svn_revision, root_sha1))
 
   # 1. Merge, accounting for excluded directories
-  _MergeProjects(git_url, git_branch, svn_revision, root_sha1)
+  _MergeProjects(git_url, git_branch, svn_revision, root_sha1, unattended)
 
   # 2. Generate Android NOTICE file
   _GenerateNoticeFile(svn_revision)
@@ -359,8 +367,7 @@ def _Snapshot(git_url, git_branch, svn_revision, autopush=False):
   # 4. Generate Android makefiles
   _GenerateMakefiles(svn_revision)
 
-  # 5. Push result to server
-  merge_common.PushToServer(autopush, 'merge-from-chromium', 'master-chromium')
+  print 'Test, then run merge_from_chromium.py --push to push to the server.'
 
   return True
 
@@ -388,10 +395,13 @@ def main():
       help=('Merge to the specified chromium SVN revision, rather than using '
             'the current latest revision.'))
   parser.add_option(
-      '', '--autopush',
+      '', '--push',
       default=False, action='store_true',
-      help=('Automatically push the result to the server without prompting if'
-            'the merge was successful.'))
+      help=('Push the result of a previous merge to the server.'))
+  parser.add_option(
+      '', '--unattended',
+      default=False, action='store_true',
+      help=('Run in unattended mode.'))
   (options, args) = parser.parse_args()
   if args:
     parser.print_help()
@@ -401,8 +411,12 @@ def main():
     print >>sys.stderr, 'You need to run the Android envsetup.sh and lunch.'
     return 1
 
-  _Snapshot(options.git_url, options.git_branch, options.svn_revision,
-            options.autopush)
+  if options.push:
+    merge_common.PushToServer('merge-from-chromium', 'master-chromium')
+  else:
+    _Snapshot(options.git_url, options.git_branch, options.svn_revision,
+              options.unattended)
+
   return 0
 
 if __name__ == '__main__':

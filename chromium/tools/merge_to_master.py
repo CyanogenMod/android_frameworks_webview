@@ -114,10 +114,9 @@ def main():
                    'projects in Android and merges them into master to publish '
                    'them.')
   parser.add_option(
-      '', '--autopush',
+      '', '--push',
       default=False, action='store_true',
-      help=('Automatically push the result to the server without prompting if'
-            'the merge was successful.'))
+      help=('Push the result of a previous merge to the server.'))
   (options, args) = parser.parse_args()
   if args:
     parser.print_help()
@@ -127,9 +126,12 @@ def main():
     print >>sys.stderr, 'You need to run the Android envsetup.sh and lunch.'
     return 1
 
-  svn_revision = _GetSVNRevision()
-  _MergeProjects(svn_revision)
-  merge_common.PushToServer(options.autopush, 'merge-to-master', 'master')
+  if options.push:
+    merge_common.PushToServer('merge-to-master', 'master')
+  else:
+    svn_revision = _GetSVNRevision()
+    _MergeProjects(svn_revision)
+    print 'Test, then run merge_to_master.py --push to push to the server.'
 
   return 0
 
