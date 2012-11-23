@@ -329,21 +329,21 @@ def _GetSVNRevisionAndSHA1(git_url, git_branch, svn_revision):
   return (svn_revision, sha1)
 
 
-def _Snapshot(git_url, git_branch, svn_revision, unattended):
+def _Snapshot(svn_revision, unattended):
   """Takes a snapshot of the Chromium tree and merges it into Android.
 
   Android makefiles and a top-level NOTICE file are generated and committed
   after the merge.
 
   Args:
-    git_url: The URL of the Chromium repository to merge from.
-    git_branch: The branch in the Chromium repository to merge from.
     svn_revision: The SVN revision in the Chromium repository to merge from.
     unattended: Run in unattended mode.
 
   Returns:
     True if new commits were merged; False if no new commits were present.
   """
+  git_url = 'http://chromium.googlesource.com/chromium/src.git'
+  git_branch = 'git-svn'
   (svn_revision, root_sha1) = _GetSVNRevisionAndSHA1(git_url, git_branch,
                                                      svn_revision)
   if not merge_common.GetCommandStdout(['git', 'rev-list', '-1',
@@ -381,15 +381,6 @@ def main():
                    'generates a top-level NOTICE file suitable for use in the '
                    'Android build.')
   parser.add_option(
-      '', '--git_url',
-      default='http://git.chromium.org/chromium/src.git',
-      help=('The URL of the git server for the Chromium branch to merge. '
-            'Defaults to upstream.'))
-  parser.add_option(
-      '', '--git_branch',
-      default='git-svn',
-      help=('The name of the upstream branch to merge. Defaults to git-svn.'))
-  parser.add_option(
       '', '--svn_revision',
       default=None,
       help=('Merge to the specified chromium SVN revision, rather than using '
@@ -414,8 +405,7 @@ def main():
   if options.push:
     merge_common.PushToServer('merge-from-chromium', 'master-chromium')
   else:
-    _Snapshot(options.git_url, options.git_branch, options.svn_revision,
-              options.unattended)
+    _Snapshot(options.svn_revision, options.unattended)
 
   return 0
 
