@@ -16,10 +16,12 @@
 
 """Merge Chromium into the Android tree."""
 
+import contextlib
 import optparse
 import os
 import re
 import sys
+import urllib2
 
 import merge_common
 
@@ -294,6 +296,8 @@ def _GenerateLastChange(svn_revision):
 
   Args:
     svn_revision: The SVN revision for the main Chromium repository.
+  Raises:
+    MergeError: if the svn revision could not be found in the repository.
   """
   print 'Updating LASTCHANGE ...'
   with open(os.path.join(merge_common.REPOSITORY_ROOT, 'build/util/LASTCHANGE'),
@@ -311,25 +315,25 @@ def _GetSVNRevisionAndSHA1(git_url, git_branch, svn_revision):
   print 'Getting SVN revision and SHA1 ...'
   merge_common.GetCommandStdout(['git', 'fetch', '-f', git_url,
                                  git_branch + ':cached_upstream'])
-  if svn_revision:
-    # Sometimes, we see multiple commits with the same git SVN ID. No idea why.
-    # We take the most recent.
-    sha1 = merge_common.GetCommandStdout([
-        'git', 'log', '--grep=git-svn-id: .*@%s' % svn_revision,
-        '--format=%H', 'cached_upstream']).split()[0]
-  else:
-    # Just use the latest commit.
-    # TODO(torne): We may be able to use a LKGR?
-    commit = merge_common.GetCommandStdout([
-        'git', 'log', '-n1', '--grep=git-svn-id:', '--format=%H%n%b',
-        'cached_upstream'])
-    sha1 = commit.split()[0]
-    svn_revision = re.search(r'^git-svn-id: .*@([0-9]+)', commit,
-                             flags=re.MULTILINE).group(1)
+  if svn_revision is None:
+    # Fetch LKGR from upstream.
+    with contextlib.closing(
+        urllib2.urlopen('https://chromium-status.appspot.com/lkgr')) as lkgr:
+      svn_revision = lkgr.read()
+  output = merge_common.GetCommandStdout([
+      'git', 'log', '--grep=git-svn-id: .*@%s' % svn_revision,
+      '--format=%H', 'cached_upstream'])
+  if not output:
+    raise merge_common.MergeError('Revision %s not found in git repo.' %
+                                  svn_revision)
+  # The log grep will sometimes match reverts/reapplies of commits. We take the
+  # oldest (last) match because the first time it appears in history is
+  # overwhelmingly likely to be the correct commit.
+  sha1 = output.split()[-1]
   return (svn_revision, sha1)
 
 
-def _Snapshot(svn_revision, unattended):
+def Snapshot(svn_revision, unattended):
   """Takes a snapshot of the Chromium tree and merges it into Android.
 
   Android makefiles and a top-level NOTICE file are generated and committed
@@ -384,7 +388,7 @@ def main():
       '', '--svn_revision',
       default=None,
       help=('Merge to the specified chromium SVN revision, rather than using '
-            'the current latest revision.'))
+            'the current LKGR.'))
   parser.add_option(
       '', '--push',
       default=False, action='store_true',
@@ -405,7 +409,7 @@ def main():
   if options.push:
     merge_common.PushToServer('merge-from-chromium', 'master-chromium')
   else:
-    _Snapshot(options.svn_revision, options.unattended)
+    Snapshot(options.svn_revision, options.unattended)
 
   return 0
 
