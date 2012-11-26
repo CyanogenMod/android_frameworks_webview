@@ -25,11 +25,10 @@ import sys
 
 # Eventually this list will be empty!
 EXPECTED_FAILURES = set([
-  'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestAcceptOnce',
   'android.webkit.cts.GeolocationTest#testGeolocationPermissions',
   'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestAcceptAlways',
+  'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestAcceptOnce',
   'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestReject',
-  'android.webkit.cts.WebBackForwardListTest#testGetCurrentItem',
   'android.webkit.cts.WebChromeClientTest#testOnReceivedIcon',
   'android.webkit.cts.WebChromeClientTest#testWindows',
   'android.webkit.cts.WebHistoryItemTest#testWebHistoryItem',
@@ -52,12 +51,12 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.WebViewClientTest#testOnScaleChanged',
   'android.webkit.cts.WebViewTest#testAccessHttpAuthUsernamePassword',
   'android.webkit.cts.WebViewTest#testCapturePicture',
-  'android.webkit.cts.WebViewTest#testClearHistory',
   'android.webkit.cts.WebViewTest#testFindAddress',
   'android.webkit.cts.WebViewTest#testGetContentHeight',
   'android.webkit.cts.WebViewTest#testGetHitTestResult',
   'android.webkit.cts.WebViewTest#testGetZoomControls',
   'android.webkit.cts.WebViewTest#testGoBackAndForward',
+  'android.webkit.cts.WebViewTest#testInsecureSiteClearsCertificate',
   'android.webkit.cts.WebViewTest#testLoadDataWithBaseUrl',
   'android.webkit.cts.WebViewTest#testOnReceivedSslError',
   'android.webkit.cts.WebViewTest#testOnReceivedSslErrorProceed',
