@@ -85,25 +85,32 @@ def main():
 
   passes = set(re.findall(r'.*: (.*) PASS', stdout))
   failures = set(re.findall(r'.*: (.*) FAIL', stdout))
-  print '%d passes; %d failures' % (len(passes), len(failures))
+  test_results = '%d passes; %d failures' % (len(passes), len(failures))
 
   unexpected_passes = EXPECTED_FAILURES.difference(failures)
   if len(unexpected_passes) > 0:
-    print 'UNEXPECTED PASSES (update expectations!):'
+    test_results += '\n' + 'UNEXPECTED PASSES (update expectations!):'
     for test in unexpected_passes:
-      print '\t%s' % (test)
+      test_results += '\n' + '\t%s' % (test)
 
   unexpected_failures = failures.difference(EXPECTED_FAILURES)
   if len(unexpected_failures) > 0:
-    print 'UNEXPECTED FAILURES (please fix!):'
+    test_results += '\n' + 'UNEXPECTED FAILURES (please fix!):'
     for test in unexpected_failures:
-      print '\t%s' % (test)
-
-  print '\nstdout dump follows...'
-  print stdout
+      test_results += '\n' + '\t%s' % (test)
 
   unexpected_failures_count = len(unexpected_failures)
   unexpected_passes_count = len(unexpected_passes)
+
+  # on the buildbot this is most useful at the start
+  print test_results
+
+  print '\nstdout dump follows...'
+  print stdout
+  print '\n'
+
+  # on the cmd line this is most useful at the end
+  print test_results
 
   # Allow buildbot script to distinguish failures and possibly out of date
   # test expectations.
