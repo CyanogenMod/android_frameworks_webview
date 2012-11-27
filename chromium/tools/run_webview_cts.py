@@ -65,7 +65,6 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.WebViewTest#testRequestChildRectangleOnScreen',
   'android.webkit.cts.WebViewTest#testRequestFocusNodeHref',
   'android.webkit.cts.WebViewTest#testSaveAndRestorePicture',
-  'android.webkit.cts.WebViewTest#testSaveAndRestoreState',
   'android.webkit.cts.WebViewTest#testSavePassword',
   'android.webkit.cts.WebViewTest#testScrollBarOverlay',
   'android.webkit.cts.WebViewTest#testSecureSiteSetsCertificate',
