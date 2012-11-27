@@ -410,12 +410,12 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     @Override
     public synchronized void setAppCacheEnabled(boolean flag) {
-        UnimplementedWebViewApi.invoke();
+        mContentSettings.setAppCacheEnabled(flag);
     }
 
     @Override
     public synchronized void setAppCachePath(String appCachePath) {
-        UnimplementedWebViewApi.invoke();
+        mContentSettings.setAppCachePath(appCachePath);
     }
 
     @Override

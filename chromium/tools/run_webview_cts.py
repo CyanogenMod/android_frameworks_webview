@@ -39,8 +39,6 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.WebSettingsTest#testAccessSavePassword',
   'android.webkit.cts.WebSettingsTest#testAccessUseWideViewPort',
   'android.webkit.cts.WebSettingsTest#testAccessUserAgent',
-  'android.webkit.cts.WebSettingsTest#testAppCacheDisabled',
-  'android.webkit.cts.WebSettingsTest#testAppCacheEnabled',
   # BUG=crbug.com/163599
   'android.webkit.cts.WebSettingsTest#testBlockNetworkLoads',
   'android.webkit.cts.WebViewClientTest#testDoUpdateVisitedHistory',
