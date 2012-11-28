@@ -52,6 +52,8 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.WebViewTest#testAccessHttpAuthUsernamePassword',
   'android.webkit.cts.WebViewTest#testCapturePicture',
   'android.webkit.cts.WebViewTest#testFindAddress',
+  # BUG=crbug.com/162967
+  'android.webkit.cts.WebViewTest#testFlingScroll',
   'android.webkit.cts.WebViewTest#testGetContentHeight',
   'android.webkit.cts.WebViewTest#testGetHitTestResult',
   'android.webkit.cts.WebViewTest#testGetZoomControls',
