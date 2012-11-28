@@ -18,6 +18,7 @@ package com.android.webview.chromium;
 
 import android.app.ActivityThread;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Looper;
 import android.webkit.CookieManager;
 import android.webkit.GeolocationPermissions;
@@ -29,6 +30,7 @@ import android.webkit.WebViewFactoryProvider;
 import android.webkit.WebViewProvider;
 
 import org.chromium.android_webview.AwContents;
+import org.chromium.android_webview.AwGeolocationPermissions;
 import org.chromium.base.PathService;
 import org.chromium.base.PathUtils;
 import org.chromium.base.ThreadUtils;
@@ -42,11 +44,18 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
 
     private final Object mLock = new Object();
 
+    private static final String CHROMIUM_PREFS_NAME = "WebViewChromiumPrefs";
+
     // Initialization guarded by mLock.
     private Statics mStaticMethods;
 
+    private SharedPreferences mWebViewChromiumSharedPreferences;
+
     // Initialization guarded by mLock.
     private CookieManagerAdapter mCookieManagerAdapter;
+
+    // Initialization guarded by mLock.
+    private GeolocationPermissionsAdapter mGeolocationPermissionsAdapter;
 
     // Read/write protected by mLock.
     private boolean mInitialized;
@@ -92,6 +101,10 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
                 final int DIR_RESOURCE_PAKS_ANDROID = 3003;
                 PathService.override(DIR_RESOURCE_PAKS_ANDROID,
                         "/system/framework/webview/paks");
+
+                // Caching for later use, possibly from other threads
+                mWebViewChromiumSharedPreferences = ActivityThread.currentApplication().
+                        getSharedPreferences(CHROMIUM_PREFS_NAME, Context.MODE_PRIVATE);
 
                 AndroidBrowserProcess.initContentViewProcess(ActivityThread.currentApplication(),
                         AndroidBrowserProcess.MAX_RENDERERS_SINGLE_PROCESS);
@@ -143,8 +156,14 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
 
     @Override
     public GeolocationPermissions getGeolocationPermissions() {
-        UnimplementedWebViewApi.invoke();
-        return null;
+        synchronized (mLock) {
+            ensureChromiumNativeInitializedLocked();
+            if (mGeolocationPermissionsAdapter == null) {
+                mGeolocationPermissionsAdapter = new GeolocationPermissionsAdapter(
+                        new AwGeolocationPermissions(mWebViewChromiumSharedPreferences));
+            }
+        }
+        return mGeolocationPermissionsAdapter;
     }
 
     @Override
