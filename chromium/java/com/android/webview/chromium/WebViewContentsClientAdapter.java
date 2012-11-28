@@ -507,6 +507,10 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
         }
     }
 
+    @Override
+    public void onScaleChanged(float oldScale, float newScale) {
+        mWebViewClient.onScaleChanged(mWebView, oldScale, newScale);
+    }
 
     private static class AwHttpAuthHandlerAdapter extends android.webkit.HttpAuthHandler {
         private AwHttpAuthHandler mAwHandler;
