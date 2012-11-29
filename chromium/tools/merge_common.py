@@ -14,6 +14,7 @@
 
 """Common data/functions for the Chromium merging scripts."""
 
+import logging
 import os
 import re
 import subprocess
@@ -139,8 +140,8 @@ def CheckNoConflictsAndCommitMerge(commit_message, unattended=False,
   conflicts_deleted_by_us = re.findall(r'^(?:DD|DU) ([^\n]+)$', status,
                                        flags=re.MULTILINE)
   if conflicts_deleted_by_us:
-    print ('Keeping ours for the following locally deleted files.\n  %s' %
-           '\n  '.join(conflicts_deleted_by_us))
+    logging.info('Keeping ours for the following locally deleted files.\n  %s',
+                 '\n  '.join(conflicts_deleted_by_us))
     GetCommandStdout(['git', 'rm', '-rf', '--ignore-unmatch'] +
                      conflicts_deleted_by_us, cwd=cwd)
 
@@ -151,8 +152,8 @@ def CheckNoConflictsAndCommitMerge(commit_message, unattended=False,
   conflicts_renamed_by_them = re.findall(r'^UA ([^\n]+)$', status,
                                          flags=re.MULTILINE)
   if conflicts_renamed_by_them:
-    print ('Adding theirs for the following locally deleted files.\n  %s' %
-           '\n  '.join(conflicts_renamed_by_them))
+    logging.info('Adding theirs for the following locally deleted files.\n %s',
+                 '\n  '.join(conflicts_renamed_by_them))
     GetCommandStdout(['git', 'add', '-f'] + conflicts_renamed_by_them, cwd=cwd)
 
   while True:
@@ -181,8 +182,8 @@ def PushToServer(src, dest):
     src: Local branch name to push.
     dest: Destination branch name to push to.
   """
-  print 'Pushing to server ...'
+  logging.debug('Pushing to server ...')
   for path in ALL_PROJECTS:
-    print path
+    logging.debug('Pushing %s', path)
     dest_dir = os.path.join(REPOSITORY_ROOT, path)
     GetCommandStdout(['git', 'push', 'goog', src + ':' + dest], cwd=dest_dir)

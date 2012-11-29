@@ -17,6 +17,7 @@
 """Merge Chromium into the Android tree."""
 
 import contextlib
+import logging
 import optparse
 import os
 import re
@@ -123,7 +124,7 @@ def _GetThirdPartyProjectMergeInfo(third_party_projects, deps_vars):
     match = re.match('(.*?)@(.*)', url_plus_sha1)
     url = match.group(1)
     sha1 = match.group(2)
-    print '  Got URL %s and SHA1 %s for project %s' % (url, sha1, path)
+    logging.debug('  Got URL %s and SHA1 %s for project %s', url, sha1, path)
     result[path] = {'url': url, 'sha1': sha1}
   return result
 
@@ -151,7 +152,7 @@ def _MergeProjects(git_url, git_branch, svn_revision, root_sha1, unattended):
   else:
     branch_create_flag = '-b'
 
-  print 'Parsing DEPS ...'
+  logging.debug('Parsing DEPS ...')
   deps_vars = _ParseDEPS(git_url, git_branch, root_sha1)
 
   merge_info = _GetThirdPartyProjectMergeInfo(merge_common.THIRD_PARTY_PROJECTS,
@@ -164,11 +165,11 @@ def _MergeProjects(git_url, git_branch, svn_revision, root_sha1, unattended):
     merge_common.GetCommandStdout(['git', 'checkout',
                                    branch_create_flag, 'merge-from-chromium',
                                    '-t', 'goog/master-chromium'], cwd=dest_dir)
-    print 'Fetching project %s at %s ...' % (path, sha1)
+    logging.debug('Fetching project %s at %s ...', path, sha1)
     merge_common.GetCommandStdout(['git', 'fetch', url], cwd=dest_dir)
     if merge_common.GetCommandStdout(['git', 'rev-list', '-1', 'HEAD..' + sha1],
                                      cwd=dest_dir):
-      print 'Merging project %s at %s ...' % (path, sha1)
+      logging.debug('Merging project %s at %s ...', path, sha1)
       # Merge conflicts make git merge return 1, so ignore errors
       merge_common.GetCommandStdout(['git', 'merge', '--no-commit', sha1],
                                     cwd=dest_dir, ignore_errors=True)
@@ -176,15 +177,15 @@ def _MergeProjects(git_url, git_branch, svn_revision, root_sha1, unattended):
           'Merge %s from %s at %s\n\n%s' % (path, url, sha1, AUTOGEN_MESSAGE),
           cwd=dest_dir, unattended=unattended)
     else:
-      print 'No new commits to merge in project %s' % path
+      logging.debug('No new commits to merge in project %s', path)
 
   # Handle root repository separately.
   merge_common.GetCommandStdout(['git', 'checkout',
                                  branch_create_flag, 'merge-from-chromium',
                                  '-t', 'goog/master-chromium'])
-  print 'Fetching Chromium at %s ...' % root_sha1
+  logging.debug('Fetching Chromium at %s ...', root_sha1)
   merge_common.GetCommandStdout(['git', 'fetch', git_url, git_branch])
-  print 'Merging Chromium at %s ...' % root_sha1
+  logging.debug('Merging Chromium at %s ...', root_sha1)
   # Merge conflicts make git merge return 1, so ignore errors
   merge_common.GetCommandStdout(['git', 'merge', '--no-commit', root_sha1],
                                 ignore_errors=True)
@@ -193,7 +194,7 @@ def _MergeProjects(git_url, git_branch, svn_revision, root_sha1, unattended):
       % (git_url, git_branch, svn_revision, root_sha1, AUTOGEN_MESSAGE),
       unattended=unattended)
 
-  print 'Getting directories to exclude ...'
+  logging.debug('Getting directories to exclude ...')
 
   # We import this now that we have merged the latest version.
   # It imports to a global in order that it can be used to generate NOTICE
@@ -206,7 +207,8 @@ def _MergeProjects(git_url, git_branch, svn_revision, root_sha1, unattended):
   import known_issues
 
   for path, exclude_list in known_issues.KNOWN_INCOMPATIBLE.iteritems():
-    print '  %s' % '\n  '.join(os.path.join(path, x) for x in exclude_list)
+    logging.debug('  %s', '\n  '.join(os.path.join(path, x) for x in
+                                      exclude_list))
     dest_dir = os.path.join(merge_common.REPOSITORY_ROOT, path)
     merge_common.GetCommandStdout(['git', 'rm', '-rf', '--ignore-unmatch'] +
                                   exclude_list, cwd=dest_dir)
@@ -274,7 +276,7 @@ def _GenerateNoticeFile(svn_revision):
   Args:
     svn_revision: The SVN revision for the main Chromium repository.
   """
-  print 'Regenerating NOTICE file ...'
+  logging.debug('Regenerating NOTICE file ...')
 
   contents = webview_licenses.GenerateNoticeFile()
 
@@ -299,7 +301,7 @@ def _GenerateLastChange(svn_revision):
   Raises:
     MergeError: if the svn revision could not be found in the repository.
   """
-  print 'Updating LASTCHANGE ...'
+  logging.debug('Updating LASTCHANGE ...')
   with open(os.path.join(merge_common.REPOSITORY_ROOT, 'build/util/LASTCHANGE'),
             'w') as f:
     f.write('LASTCHANGE=%s\n' % svn_revision)
@@ -312,7 +314,7 @@ def _GenerateLastChange(svn_revision):
 
 
 def _GetSVNRevisionAndSHA1(git_url, git_branch, svn_revision):
-  print 'Getting SVN revision and SHA1 ...'
+  logging.debug('Getting SVN revision and SHA1 ...')
   merge_common.GetCommandStdout(['git', 'fetch', '-f', git_url,
                                  git_branch + ':cached_upstream'])
   if svn_revision is None:
@@ -352,12 +354,12 @@ def Snapshot(svn_revision, unattended):
                                                      svn_revision)
   if not merge_common.GetCommandStdout(['git', 'rev-list', '-1',
                                         'HEAD..' + root_sha1]):
-    print ('No new commits to merge from %s branch %s at r%s (%s)' %
-           (git_url, git_branch, svn_revision, root_sha1))
+    logging.info('No new commits to merge from %s branch %s at r%s (%s)',
+                 git_url, git_branch, svn_revision, root_sha1)
     return False
 
-  print ('Snapshotting Chromium from %s branch %s at r%s (%s)' %
-         (git_url, git_branch, svn_revision, root_sha1))
+  logging.info('Snapshotting Chromium from %s branch %s at r%s (%s)',
+               git_url, git_branch, svn_revision, root_sha1)
 
   # 1. Merge, accounting for excluded directories
   _MergeProjects(git_url, git_branch, svn_revision, root_sha1, unattended)
@@ -370,8 +372,6 @@ def Snapshot(svn_revision, unattended):
 
   # 4. Generate Android makefiles
   _GenerateMakefiles(svn_revision)
-
-  print 'Test, then run merge_from_chromium.py --push to push to the server.'
 
   return True
 
@@ -405,6 +405,9 @@ def main():
   if 'ANDROID_BUILD_TOP' not in os.environ:
     print >>sys.stderr, 'You need to run the Android envsetup.sh and lunch.'
     return 1
+
+  logging.basicConfig(format='%(message)s', level=logging.DEBUG,
+                      stream=sys.stdout)
 
   if options.push:
     merge_common.PushToServer('merge-from-chromium', 'master-chromium')

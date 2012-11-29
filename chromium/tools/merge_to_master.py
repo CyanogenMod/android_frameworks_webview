@@ -16,6 +16,7 @@
 
 """Merge master-chromium to master within the Android tree."""
 
+import logging
 import optparse
 import os
 import re
@@ -53,7 +54,7 @@ def _MergeProjects(svn_revision):
                       os.path.join(dest_dir, '.git', 'info', 'grafts'))
     if merge_common.GetCommandStdout(['git', 'rev-list', '-1',
                                       'HEAD..' + merge_sha1], cwd=dest_dir):
-      print 'Merging project %s ...' % path
+      logging.debug('Merging project %s ...', path)
       # Merge conflicts cause 'git merge' to return 1, so ignore errors
       merge_common.GetCommandStdout(['git', 'merge', '--no-commit', '--squash',
                                      merge_sha1],
@@ -76,7 +77,7 @@ def _MergeProjects(svn_revision):
            'Record Chromium merge at DEPS revision r%s\n\n%s' %
            (svn_revision, AUTOGEN_MESSAGE)], cwd=dest_dir)
     else:
-      print 'No new commits to merge in project %s' % path
+      logging.debug('No new commits to merge in project %s', path)
 
   for path in merge_common.PROJECTS_WITH_FULL_HISTORY:
     dest_dir = os.path.join(merge_common.REPOSITORY_ROOT, path)
@@ -86,7 +87,7 @@ def _MergeProjects(svn_revision):
     if merge_common.GetCommandStdout(['git', 'rev-list', '-1',
                                       'HEAD..goog/master-chromium'],
                                      cwd=dest_dir):
-      print 'Merging project %s ...' % path
+      logging.debug('Merging project %s ...', path)
       # Merge conflicts cause 'git merge' to return 1, so ignore errors
       merge_common.GetCommandStdout(['git', 'merge', '--no-commit', '--no-ff',
                                      'goog/master-chromium'],
@@ -95,11 +96,11 @@ def _MergeProjects(svn_revision):
           'Merge from Chromium at DEPS revision r%s\n\n%s' %
           (svn_revision, AUTOGEN_MESSAGE), cwd=dest_dir)
     else:
-      print 'No new commits to merge in project %s' % path
+      logging.debug('No new commits to merge in project %s', path)
 
 
 def _GetSVNRevision():
-  print 'Getting SVN revision ...'
+  logging.debug('Getting SVN revision ...')
   commit = merge_common.GetCommandStdout([
       'git', 'log', '-n1', '--grep=git-svn-id:', '--format=%H%n%b',
       'goog/master-chromium'])
@@ -126,12 +127,14 @@ def main():
     print >>sys.stderr, 'You need to run the Android envsetup.sh and lunch.'
     return 1
 
+  logging.basicConfig(format='%(message)s', level=logging.DEBUG,
+                      stream=sys.stdout)
+
   if options.push:
     merge_common.PushToServer('merge-to-master', 'master')
   else:
     svn_revision = _GetSVNRevision()
     _MergeProjects(svn_revision)
-    print 'Test, then run merge_to_master.py --push to push to the server.'
 
   return 0
 
