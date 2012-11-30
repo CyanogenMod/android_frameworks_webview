@@ -45,6 +45,8 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.WebSettingsTest#testAccessUserAgent',
   'android.webkit.cts.WebSettingsTest#testAppCacheDisabled',
   'android.webkit.cts.WebSettingsTest#testAppCacheEnabled',
+  # BUG=crbug.com/163599
+  'android.webkit.cts.WebSettingsTest#testBlockNetworkLoads',
   'android.webkit.cts.WebSettingsTest#testIframesWhenAccessFromFileURLsEnabled',
   'android.webkit.cts.WebSettingsTest#testXHRWhenAccessFromFileURLsEnabled',
   'android.webkit.cts.WebViewClientTest#testDoUpdateVisitedHistory',
