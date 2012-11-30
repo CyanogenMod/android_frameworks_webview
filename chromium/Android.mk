@@ -32,11 +32,10 @@ LOCAL_STATIC_JAVA_LIBRARIES += google-common \
 LOCAL_SRC_FILES := $(call all-java-files-under, java)
 
 LOCAL_REQUIRED_MODULES := \
-	libwebviewchromium \
-	libwebviewchromium_plat_support \
-	webviewchromium_res_chrome \
-	webviewchromium_res_chrome_100_percent \
-	webviewchromium_res_en-US \
+        libwebviewchromium \
+        libwebviewchromium_plat_support \
+        webviewchromium_pak \
+        webviewchromium_strings_pak
 
 LOCAL_PROGUARD_ENABLED := disabled
 
