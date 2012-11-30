@@ -27,6 +27,7 @@ import android.net.http.SslCertificate;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
+import android.util.Log;
 import android.view.HardwareCanvas;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -66,6 +67,9 @@ import java.util.Map;
  */
 class WebViewChromium implements WebViewProvider,
           WebViewProvider.ScrollDelegate, WebViewProvider.ViewDelegate {
+
+    private static final String TAG = WebViewChromium.class.getSimpleName();
+
     // The WebView that this WebViewChromium is the provider for.
     WebView mWebView;
     // Lets us access protected View-derived methods on the WebView instance we're backing.
@@ -562,8 +566,10 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public View getZoomControls() {
-        UnimplementedWebViewApi.invoke();
-        return null;
+        // This was deprecated in 2009 and hidden in JB MR1, so just provide the minimum needed
+        // to stop very out-dated applications from crashing.
+        Log.w(TAG, "WebView doesn't support getZoomControls");
+        return mAwContents.getSettings().supportZoom() ? new View(mWebView.getContext()) : null;
     }
 
     @Override
