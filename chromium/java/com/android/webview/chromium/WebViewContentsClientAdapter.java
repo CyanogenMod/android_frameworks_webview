@@ -286,6 +286,14 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
         return mWebChromeClient.onCreateWindow(mWebView, isDialog, isUserGesture, m);
     }
 
+    /**
+     * @see AwContentsClient#onCloseWindow()
+     */
+    /* @Override */
+    public void onCloseWindow() {
+        mWebChromeClient.onCloseWindow(mWebView);
+    }
+
     //--------------------------------------------------------------------------------------------
     //                        Trivial Chrome -> WebViewClient mappings.
     //--------------------------------------------------------------------------------------------
