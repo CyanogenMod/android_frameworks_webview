@@ -376,6 +376,12 @@ def Snapshot(svn_revision, unattended):
   return True
 
 
+def Push():
+  """Push the finished snapshot to the Android repository."""
+  merge_common.PushToServer('merge-from-chromium', 'master-chromium',
+                            'master-chromium-merge')
+
+
 def main():
   parser = optparse.OptionParser(usage='%prog [options]')
   parser.epilog = ('Takes a snapshot of the Chromium tree at the specified '
@@ -410,7 +416,7 @@ def main():
                       stream=sys.stdout)
 
   if options.push:
-    merge_common.PushToServer('merge-from-chromium', 'master-chromium')
+    Push()
   else:
     Snapshot(options.svn_revision, options.unattended)
 
