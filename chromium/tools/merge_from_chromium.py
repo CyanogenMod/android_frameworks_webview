@@ -317,6 +317,16 @@ def _GetSVNRevisionAndSHA1(git_url, git_branch, svn_revision):
   logging.debug('Getting SVN revision and SHA1 ...')
   merge_common.GetCommandStdout(['git', 'fetch', '-f', git_url,
                                  git_branch + ':cached_upstream'])
+  if svn_revision == 'HEAD':
+    # Just use the latest commit.
+    commit = merge_common.GetCommandStdout([
+        'git', 'log', '-n1', '--grep=git-svn-id:', '--format=%H%n%b',
+        'cached_upstream'])
+    sha1 = commit.split()[0]
+    svn_revision = re.search(r'^git-svn-id: .*@([0-9]+)', commit,
+                             flags=re.MULTILINE).group(1)
+    return (svn_revision, sha1)
+
   if svn_revision is None:
     # Fetch LKGR from upstream.
     with contextlib.closing(
@@ -394,7 +404,7 @@ def main():
       '', '--svn_revision',
       default=None,
       help=('Merge to the specified chromium SVN revision, rather than using '
-            'the current LKGR.'))
+            'the current LKGR. Can also pass HEAD to merge from tip of tree.'))
   parser.add_option(
       '', '--push',
       default=False, action='store_true',
