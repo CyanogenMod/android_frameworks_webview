@@ -27,6 +27,7 @@ import android.provider.Browser;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.webkit.ConsoleMessage;
+import android.webkit.DownloadListener;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
@@ -73,6 +74,8 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     private WebView.FindListener mFindListener;
     // The listener receiving notifications of screen updates.
     private WebView.PictureListener mPictureListener;
+
+    private DownloadListener mDownloadListener;
 
     private Handler mUiThreadHandler;
 
@@ -205,6 +208,10 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
             // WebViewClassic doesn't implement any special behavior for a null WebChromeClient.
             mWebChromeClient = new WebChromeClient();
         }
+    }
+
+    void setDownloadListener(DownloadListener listener) {
+        mDownloadListener = listener;
     }
 
     void setFindListener(WebView.FindListener listener) {
@@ -480,6 +487,22 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     public void onFormResubmission(Message dontResend, Message resend) {
         mWebViewClient.onFormResubmission(mWebView, dontResend, resend);
     }
+
+    @Override
+    public void onDownloadStart(String url,
+                                String userAgent,
+                                String contentDisposition,
+                                String mimeType,
+                                long contentLength) {
+        if (mDownloadListener != null) {
+            mDownloadListener.onDownloadStart(url,
+                                              userAgent,
+                                              contentDisposition,
+                                              mimeType,
+                                              contentLength);
+        }
+    }
+
 
     private static class AwHttpAuthHandlerAdapter extends android.webkit.HttpAuthHandler {
         private AwHttpAuthHandler mAwHandler;
