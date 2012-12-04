@@ -52,7 +52,6 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.WebViewTest#testFlingScroll',
   'android.webkit.cts.WebViewTest#testGetContentHeight',
   'android.webkit.cts.WebViewTest#testGetHitTestResult',
-  'android.webkit.cts.WebViewTest#testGetZoomControls',
   'android.webkit.cts.WebViewTest#testGoBackAndForward',
   'android.webkit.cts.WebViewTest#testInsecureSiteClearsCertificate',
   'android.webkit.cts.WebViewTest#testLoadDataWithBaseUrl',
