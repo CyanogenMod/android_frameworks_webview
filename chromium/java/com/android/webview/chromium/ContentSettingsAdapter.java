@@ -154,24 +154,12 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     @Override
     public synchronized void setTextZoom(int textZoom) {
-        UnimplementedWebViewApi.invoke();
+        mContentSettings.setTextZoom(textZoom);
     }
 
     @Override
     public synchronized int getTextZoom() {
-        UnimplementedWebViewApi.invoke();
-        return 0;
-    }
-
-    @Override
-    public synchronized void setTextSize(TextSize t) {
-        UnimplementedWebViewApi.invoke();
-    }
-
-    @Override
-    public synchronized TextSize getTextSize() {
-        UnimplementedWebViewApi.invoke();
-        return null;
+        return mContentSettings.getTextZoom();
     }
 
     @Override
@@ -387,12 +375,12 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     @Override
     public void setAllowUniversalAccessFromFileURLs(boolean flag) {
-        UnimplementedWebViewApi.invoke();
+        mContentSettings.setAllowUniversalAccessFromFileURLs(flag);
     }
 
     @Override
     public void setAllowFileAccessFromFileURLs(boolean flag) {
-        UnimplementedWebViewApi.invoke();
+        mContentSettings.setAllowFileAccessFromFileURLs(flag);
     }
 
     @Override
@@ -475,26 +463,22 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     @Override
     public boolean getAllowUniversalAccessFromFileURLs() {
-        UnimplementedWebViewApi.invoke();
-        return false;
+        return mContentSettings.getAllowUniversalAccessFromFileURLs();
     }
 
     @Override
     public boolean getAllowFileAccessFromFileURLs() {
-        UnimplementedWebViewApi.invoke();
-        return false;
+        return mContentSettings.getAllowFileAccessFromFileURLs();
     }
 
     @Override
     public synchronized boolean getPluginsEnabled() {
-        UnimplementedWebViewApi.invoke();
-        return false;
+        return mContentSettings.getPluginsEnabled();
     }
 
     @Override
     public synchronized PluginState getPluginState() {
-        UnimplementedWebViewApi.invoke();
-        return null;
+        return mContentSettings.getPluginState();
     }
 
     @Override
@@ -515,13 +499,12 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     @Override
     public synchronized void setDefaultTextEncodingName(String encoding) {
-        UnimplementedWebViewApi.invoke();
+        mContentSettings.setDefaultTextEncodingName(encoding);
     }
 
     @Override
     public synchronized String getDefaultTextEncodingName() {
-        UnimplementedWebViewApi.invoke();
-        return null;
+        return mContentSettings.getDefaultTextEncodingName();
     }
 
     @Override
