@@ -502,30 +502,9 @@ class WebViewChromium implements WebViewProvider,
         mContentsClientAdapter.setWebViewClient(client);
     }
 
-    static class DownloadListenerAdapter implements ContentViewDownloadDelegate {
-        private DownloadListener mListener;
-
-        public DownloadListenerAdapter(DownloadListener listener) {
-            mListener = listener;
-        }
-
-        @Override
-        public void requestHttpGetDownload(String url, String userAgent, String contentDisposition,
-                String mimetype, String cookie, String referer, long contentLength) {
-            mListener.onDownloadStart(url, userAgent, contentDisposition, mimetype, contentLength);
-        }
-
-        @Override
-        public void onHttpPostDownloadStarted() {}
-
-        @Override
-        public void onHttpPostDownloadCompleted(String url, String mimetype, String path,
-                long contentLength, boolean successful) {}
-    }
-
     @Override
     public void setDownloadListener(DownloadListener listener) {
-        mAwContents.getContentViewCore().setDownloadDelegate(new DownloadListenerAdapter(listener));
+        mContentsClientAdapter.setDownloadListener(listener);
     }
 
     @Override

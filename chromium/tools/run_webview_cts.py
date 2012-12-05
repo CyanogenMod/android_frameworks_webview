@@ -39,8 +39,6 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.WebSettingsTest#testAccessSavePassword',
   'android.webkit.cts.WebSettingsTest#testAccessUseWideViewPort',
   'android.webkit.cts.WebSettingsTest#testAccessUserAgent',
-  # BUG=crbug.com/163599
-  'android.webkit.cts.WebSettingsTest#testBlockNetworkLoads',
   'android.webkit.cts.WebViewClientTest#testDoUpdateVisitedHistory',
   'android.webkit.cts.WebViewClientTest#testOnScaleChanged',
   'android.webkit.cts.WebViewTest#testAccessHttpAuthUsernamePassword',
@@ -63,7 +61,6 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.WebViewTest#testSavePassword',
   'android.webkit.cts.WebViewTest#testScrollBarOverlay',
   'android.webkit.cts.WebViewTest#testSecureSiteSetsCertificate',
-  'android.webkit.cts.WebViewTest#testSetDownloadListener',
   'android.webkit.cts.WebViewTest#testSetInitialScale',
   'android.webkit.cts.WebViewTest#testSetScrollBarStyle',
   'android.webkit.cts.WebViewTest#testSetWebViewClient',
