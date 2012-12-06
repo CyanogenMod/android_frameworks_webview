@@ -41,9 +41,6 @@ function bb_webview_build_android() {
 
   bb_run_step $MAKE_COMMAND $MAKE_PARAMS showcommands
 
-  echo "@@@BUILD_STEP Compile CTS@@@"
-  bb_run_step $MAKE_COMMAND $MAKE_PARAMS cts
-
   if [ "$USE_GOMA" -eq 1 ]; then
     bb_stop_goma_internal
   fi
@@ -58,6 +55,10 @@ function bb_webview_goma_setup() {
   if [ ! -d $GOMA_DIR ]; then
     USE_GOMA=0
   fi
+
+  # TODO(boliu): Always do clobber build on tot as workaround for bison issue.
+  rm -rf ${ANDROID_SRC_ROOT}/out
+
   if [ "$USE_GOMA" -eq 1 ]; then
     MAKE_PARAMS="-j150 -l20"
   else
