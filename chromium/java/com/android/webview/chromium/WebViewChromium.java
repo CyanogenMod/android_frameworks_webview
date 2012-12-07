@@ -702,8 +702,7 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public boolean performLongClick() {
-        UnimplementedWebViewApi.invoke();
-        return false;
+        return mWebViewPrivate.super_performLongClick();
     }
 
     @Override
