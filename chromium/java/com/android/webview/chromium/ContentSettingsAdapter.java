@@ -185,17 +185,6 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
     }
 
     @Override
-    public synchronized void setUseDoubleTree(boolean use) {
-        // Specified to do nothing, so no need for derived classes to override.
-    }
-
-    @Override
-    public synchronized boolean getUseDoubleTree() {
-        // Returns false unconditionally, so no need for derived classes to override.
-        return false;
-    }
-
-    @Override
     public synchronized void setUserAgent(int ua) {
         UnimplementedWebViewApi.invoke();
     }
@@ -394,11 +383,6 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
     }
 
     @Override
-    public synchronized void setPluginsPath(String pluginsPath) {
-        // Specified to do nothing, so no need for derived classes to override.
-    }
-
-    @Override
     public synchronized void setDatabasePath(String databasePath) {
         UnimplementedWebViewApi.invoke();
     }
@@ -479,12 +463,6 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
     @Override
     public synchronized PluginState getPluginState() {
         return mContentSettings.getPluginState();
-    }
-
-    @Override
-    public synchronized String getPluginsPath() {
-        // Unconditionally returns empty string, so no need for derived classes to override.
-        return "";
     }
 
     @Override
