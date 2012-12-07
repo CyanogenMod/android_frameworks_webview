@@ -38,6 +38,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.webkit.DownloadListener;
+import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
 import android.webkit.WebBackForwardList;
 import android.webkit.WebChromeClient;
@@ -519,9 +520,13 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void addJavascriptInterface(Object obj, String interfaceName) {
-        // We do not require the @JavascriptInterface annotation on injected methods
-        // for WebView API compatibility.
-        mAwContents.getContentViewCore().addJavascriptInterface(obj, interfaceName, false);
+        Class<?> requiredAnnotation = null;
+        if (mWebView.getContext().getApplicationInfo().targetSdkVersion >=
+                Build.VERSION_CODES.JELLY_BEAN_MR1) {
+           requiredAnnotation = JavascriptInterface.class;
+        }
+        mAwContents.getContentViewCore().addPossiblyUnsafeJavascriptInterface(obj, interfaceName,
+            requiredAnnotation);
     }
 
     @Override
