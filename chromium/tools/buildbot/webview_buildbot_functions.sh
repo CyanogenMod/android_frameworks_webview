@@ -56,9 +56,6 @@ function bb_webview_goma_setup() {
     USE_GOMA=0
   fi
 
-  # TODO(boliu): Always do clobber build on tot as workaround for bison issue.
-  rm -rf ${ANDROID_SRC_ROOT}/out
-
   if [ "$USE_GOMA" -eq 1 ]; then
     MAKE_PARAMS="-j150 -l20"
   else
@@ -98,6 +95,11 @@ function bb_webview_baseline_setup {
   export CHECKOUT="repo"
 
   bb_webview_goma_setup
+}
+
+function bb_webview_smart_sync {
+  echo "@@@BUILD_STEP Smart Sync@@@"
+  bb_run_step repo smartsync -j8 -df
 }
 
 function bb_webview_sync_and_merge {

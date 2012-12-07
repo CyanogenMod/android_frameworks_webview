@@ -23,5 +23,6 @@ BB_DIR="${ANDROID_SRC_ROOT}/external/chromium_org/build/android/buildbot"
 . "$BB_INTERNAL_DIR/webview_buildbot_functions.sh"
 
 bb_webview_baseline_setup "${ANDROID_SRC_ROOT}"
+bb_webview_smart_sync
 bb_webview_sync_and_merge
 bb_webview_build_android
