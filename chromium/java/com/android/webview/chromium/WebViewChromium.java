@@ -50,12 +50,12 @@ import android.webkit.WebViewProvider;
 import org.chromium.android_webview.AwContents;
 import org.chromium.android_webview.AwNativeWindow;
 import org.chromium.content.browser.ContentViewCore;
-import org.chromium.content.browser.ContentViewDownloadDelegate;
 import org.chromium.content.browser.LoadUrlParams;
 import org.chromium.net.NetworkChangeNotifier;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.lang.annotation.Annotation;
 import java.util.Map;
 
 /**
@@ -520,7 +520,7 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void addJavascriptInterface(Object obj, String interfaceName) {
-        Class<?> requiredAnnotation = null;
+        Class<? extends Annotation> requiredAnnotation = null;
         if (mWebView.getContext().getApplicationInfo().targetSdkVersion >=
                 Build.VERSION_CODES.JELLY_BEAN_MR1) {
            requiredAnnotation = JavascriptInterface.class;
