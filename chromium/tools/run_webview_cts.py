@@ -71,17 +71,20 @@ EXPECTED_FAILURES = set([
 ])
 
 def main():
+  proc = None
+
+  # Send INT signal to test runner and exit gracefully so not to lose all
+  # output information in a run.
+  def handler(signum, frame):
+    if proc:
+      proc.send_signal(signum)
+  signal.signal(signal.SIGINT, handler)
+
   proc = subprocess.Popen(
       ['cts-tradefed', 'run', 'singleCommand', 'cts', '-p', 'android.webkit'],
       stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-  try:
-    (stdout, stderr) = proc.communicate();
-  except KeyboardInterrupt:
-    proc.send_signal(signal.SIGINT)
-    proc.communicate();  # Wait for process to finish.
-    # http://www.gnu.org/software/libc/manual/html_node/Exit-Status.html
-    return 128
+  (stdout, stderr) = proc.communicate();
 
   passes = set(re.findall(r'.*: (.*) PASS', stdout))
   failures = set(re.findall(r'.*: (.*) FAIL', stdout))
