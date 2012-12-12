@@ -301,6 +301,14 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
         mWebChromeClient.onCloseWindow(mWebView);
     }
 
+    /**
+     * @see AwContentsClient#onRequestFocus()
+     */
+    /* @Override */
+    public void onRequestFocus() {
+        mWebChromeClient.onRequestFocus(mWebView);
+    }
+
     //--------------------------------------------------------------------------------------------
     //                        Trivial Chrome -> WebViewClient mappings.
     //--------------------------------------------------------------------------------------------
