@@ -135,13 +135,6 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     // as the Null Object pattern) rather than duplicating the WebViewClassic approach in
     // ContentView.
     static class NullWebViewClient extends WebViewClient {
-        // The Context that was passed to the WebView by the external client app.
-        private final Context mContext;
-
-        NullWebViewClient(Context context) {
-            mContext = context;
-        }
-
         @Override
         public boolean shouldOverrideKeyEvent(WebView view, KeyEvent event) {
             // TODO: Investigate more and add a test case.
@@ -182,9 +175,10 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
             intent.setComponent(null);
             // Pass the package name as application ID so that the intent from the
             // same application can be opened in the same tab.
-            intent.putExtra(Browser.EXTRA_APPLICATION_ID, mContext.getPackageName());
+            intent.putExtra(Browser.EXTRA_APPLICATION_ID,
+                    view.getContext().getPackageName());
             try {
-                mContext.startActivity(intent);
+                view.getContext().startActivity(intent);
             } catch (ActivityNotFoundException ex) {
                 Log.w(TAG, "No application can handle " + url);
                 return false;
@@ -197,7 +191,7 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
         if (client != null) {
             mWebViewClient = client;
         } else {
-            mWebViewClient = new NullWebViewClient(mWebView.getContext());
+            mWebViewClient = new NullWebViewClient();
         }
     }
 
