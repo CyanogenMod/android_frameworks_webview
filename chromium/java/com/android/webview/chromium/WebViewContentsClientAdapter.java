@@ -400,9 +400,11 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
 
     /**
      * @see ContentViewClient#onStartContentIntent(Context, String)
+     * Callback when detecting a click on a content link.
      */
     @Override
     public void onStartContentIntent(Context context, String contentUrl) {
+        mWebViewClient.shouldOverrideUrlLoading(mWebView, contentUrl);
     }
 
     private static class SimpleJsResultReceiver implements JsResult.ResultReceiver {
