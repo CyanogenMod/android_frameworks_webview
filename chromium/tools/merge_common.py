@@ -98,6 +98,10 @@ class CommandError(MergeError):
             (self.cmd, self.returncode, self.cwd, self.stdout, self.stderr))
 
 
+class TemporaryMergeError(MergeError):
+  """A merge error that can potentially be resolved by trying again later."""
+
+
 def GetCommandStdout(args, cwd=REPOSITORY_ROOT, ignore_errors=False):
   """Gets stdout from runnng the specified shell command.
 
@@ -134,7 +138,7 @@ def CheckNoConflictsAndCommitMerge(commit_message, unattended=False,
     unattended: If running unattended, abort on conflicts.
     cwd: Working directory to use.
   Raises:
-    MergeError: If there are conflicts in unattended mode.
+    TemporaryMergeError: If there are conflicts in unattended mode.
   """
   status = GetCommandStdout(['git', 'status', '--porcelain'], cwd=cwd)
   conflicts_deleted_by_us = re.findall(r'^(?:DD|DU) ([^\n]+)$', status,
@@ -163,7 +167,8 @@ def CheckNoConflictsAndCommitMerge(commit_message, unattended=False,
     if not conflicts:
       break
     if unattended:
-      raise MergeError('Cannot resolve merge conflicts.')
+      GetCommandStdout(['git', 'reset', '--hard'], cwd=cwd)
+      raise TemporaryMergeError('Cannot resolve merge conflicts.')
     conflicts_string = '\n'.join([x[0] for x in conflicts])
     new_commit_message = raw_input(
         ('The following conflicts exist and must be resolved.\n\n%s\n\nWhen '
