@@ -175,12 +175,12 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     @Override
     public void setLightTouchEnabled(boolean enabled) {
-        UnimplementedWebViewApi.invoke();
+        // Intentional no-op.
     }
 
     @Override
     public boolean getLightTouchEnabled() {
-        UnimplementedWebViewApi.invoke();
+        // Intentional no-op.
         return false;
     }
 
