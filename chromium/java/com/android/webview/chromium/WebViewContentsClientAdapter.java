@@ -221,6 +221,14 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     //--------------------------------------------------------------------------------------------
 
     /**
+     * @see AwContentsClient#doUpdateVisiteHistory(String, boolean)
+     */
+    @Override
+    public void doUpdateVisitedHistory(String url, boolean isReload) {
+        mWebViewClient.doUpdateVisitedHistory(mWebView, url, isReload);
+    }
+
+    /**
      * @see AwContentsClient#onProgressChanged(int)
      */
     @Override
