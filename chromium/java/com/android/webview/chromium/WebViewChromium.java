@@ -247,8 +247,11 @@ class WebViewChromium implements WebViewProvider,
     public void loadDataWithBaseURL(String baseUrl, String data, String mimeType, String encoding,
                                     String historyUrl) {
         if (baseUrl == null || baseUrl.length() == 0) baseUrl = "about:blank";
+        boolean isBase64 = isBase64Encoded(encoding);
+        // For backwards compatibility with WebViewClassic, we use the value of |encoding|
+        // as the charset, as long as it's not "base64".
         mAwContents.loadUrl(LoadUrlParams.createLoadDataParamsWithBaseUrl(
-                data, mimeType, isBase64Encoded(encoding), baseUrl, historyUrl));
+                data, mimeType, isBase64, baseUrl, historyUrl, isBase64 ? null : encoding));
     }
 
     @Override
