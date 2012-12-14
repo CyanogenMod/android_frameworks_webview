@@ -303,7 +303,7 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public boolean isPrivateBrowsingEnabled() {
-        UnimplementedWebViewApi.invoke();
+        // Not supported in this WebView implementation.
         return false;
     }
 
