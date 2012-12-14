@@ -218,13 +218,26 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     @Override
     public synchronized void setLayoutAlgorithm(LayoutAlgorithm l) {
-        UnimplementedWebViewApi.invoke();
+        // TODO: Remove the upstream enum and mapping once the new value is in the public API.
+        final ContentSettings.LayoutAlgorithm[] chromiumValues = {
+            ContentSettings.LayoutAlgorithm.NORMAL,
+            ContentSettings.LayoutAlgorithm.SINGLE_COLUMN,
+            ContentSettings.LayoutAlgorithm.NARROW_COLUMNS,
+            ContentSettings.LayoutAlgorithm.TEXT_AUTOSIZING
+        };
+        mContentSettings.setLayoutAlgorithm(chromiumValues[l.ordinal()]);
     }
 
     @Override
     public synchronized LayoutAlgorithm getLayoutAlgorithm() {
-        UnimplementedWebViewApi.invoke();
-        return null;
+        // TODO: Remove the upstream enum and mapping once the new value is in the public API.
+        final LayoutAlgorithm[] webViewValues = {
+            LayoutAlgorithm.NORMAL,
+            LayoutAlgorithm.SINGLE_COLUMN,
+            LayoutAlgorithm.NARROW_COLUMNS,
+            LayoutAlgorithm.TEXT_AUTOSIZING
+        };
+        return webViewValues[mContentSettings.getLayoutAlgorithm().ordinal()];
     }
 
     @Override

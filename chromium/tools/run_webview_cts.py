@@ -31,7 +31,6 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestReject',
   'android.webkit.cts.WebChromeClientTest#testOnReceivedIcon',
   'android.webkit.cts.WebSettingsTest#testAccessCacheMode',
-  'android.webkit.cts.WebSettingsTest#testAccessLayoutAlgorithm',
   'android.webkit.cts.WebSettingsTest#testAccessNavDump',
   'android.webkit.cts.WebSettingsTest#testAccessSaveFormData',
   'android.webkit.cts.WebSettingsTest#testAccessSavePassword',
