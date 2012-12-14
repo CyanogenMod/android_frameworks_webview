@@ -244,7 +244,7 @@ def _GenerateMakefiles(svn_revision, unattended):
 
   try:
     merge_common.GetCommandStdout(['android_webview/tools/gyp_webview'])
-  except merge_common.MergeError:
+  except merge_common.MergeError as e:
     if not unattended:
       raise
     else:
@@ -252,7 +252,8 @@ def _GenerateMakefiles(svn_revision, unattended):
         merge_common.GetCommandStdout(
             ['git', 'reset', '--hard'],
             cwd=os.path.join(merge_common.REPOSITORY_ROOT, path))
-      raise merge_common.TemporaryMergeError('Makefile generation failed.')
+      raise merge_common.TemporaryMergeError('Makefile generation failed: ' +
+                                             e)
 
   for path in merge_common.ALL_PROJECTS:
     dest_dir = os.path.join(merge_common.REPOSITORY_ROOT, path)
