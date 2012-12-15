@@ -584,18 +584,12 @@ class WebViewChromium implements WebViewProvider,
         return mAwContents.getContentViewCore().zoomOut();
     }
 
-    // TODO: This should  @Override the base class method, but the method
-    // exists only in the Android-master source. So to keep compiling on both
-    // Android-master and Android-jb-dev, omit the annotation. When we no longer
-    // need to build with jb-dev, add the annotation.
+    @Override
     public void dumpViewHierarchyWithProperties(BufferedWriter out, int level) {
         UnimplementedWebViewApi.invoke();
     }
 
-    // TODO: This should  @Override the base class method, but the method
-    // exists only in the Android-master source. So to keep compiling on both
-    // Android-master and Android-jb-dev, omit the annotation. When we no longer
-    // need to build with jb-dev, add the annotation.
+    @Override
     public View findHierarchyView(String className, int hashCode) {
         UnimplementedWebViewApi.invoke();
         return null;
@@ -613,21 +607,6 @@ class WebViewChromium implements WebViewProvider,
         return this;
     }
 
-
-    // WebViewProvider JB migration methods -------------------------------------------------------
-
-    // TODO: These methods are removed from the base class in
-    // Android-master, but we keep them here to ensure that the glue
-    // layer builds in an Android-jb-dev tree. Once we no longer
-    // need to compile the glue against jb-dev, remove this method.
-
-    public void debugDump() {
-        // This is deprecated and now does nothing.
-    }
-
-    public void emulateShiftHeld() {
-        // This is deprecated and now does nothing.
-    }
 
     // WebViewProvider.ViewDelegate implementation ------------------------------------------------
 
