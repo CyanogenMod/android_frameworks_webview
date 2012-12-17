@@ -26,58 +26,72 @@ public class CookieManagerAdapter extends android.webkit.CookieManager {
         mChromeCookieManager = chromeCookieManager;
     }
 
+    @Override
     public synchronized void setAcceptCookie(boolean accept) {
         mChromeCookieManager.setAcceptCookie(accept);
     }
 
+    @Override
     public synchronized boolean acceptCookie() {
         return mChromeCookieManager.acceptCookie();
     }
 
+    @Override
     public void setCookie(String url, String value) {
         mChromeCookieManager.setCookie(url, value);
     }
 
+    @Override
     public String getCookie(String url) {
         return mChromeCookieManager.getCookie(url);
     }
 
+    @Override
     public String getCookie(String url, boolean privateBrowsing) {
         return mChromeCookieManager.getCookie(url);
     }
 
+    @Override
     public synchronized String getCookie(WebAddress uri) {
         return mChromeCookieManager.getCookie(uri.toString());
     }
 
+    @Override
     public void removeSessionCookie() {
         mChromeCookieManager.removeSessionCookie();
     }
 
+    @Override
     public void removeAllCookie() {
         mChromeCookieManager.removeAllCookie();
     }
 
+    @Override
     public synchronized boolean hasCookies() {
         return mChromeCookieManager.hasCookies();
     }
 
+    @Override
     public synchronized boolean hasCookies(boolean privateBrowsing) {
         return mChromeCookieManager.hasCookies();
     }
 
+    @Override
     public void removeExpiredCookie() {
         mChromeCookieManager.removeExpiredCookie();
     }
 
+    @Override
     protected void flushCookieStore() {
-        UnimplementedWebViewApi.invoke();
+        mChromeCookieManager.flushCookieStore();
     }
 
+    @Override
     protected boolean allowFileSchemeCookiesImpl() {
         return mChromeCookieManager.allowFileSchemeCookies();
     }
 
+    @Override
     protected void setAcceptFileSchemeCookiesImpl(boolean accept) {
         mChromeCookieManager.setAcceptFileSchemeCookies(accept);
     }
