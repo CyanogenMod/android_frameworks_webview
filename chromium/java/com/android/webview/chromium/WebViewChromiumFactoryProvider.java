@@ -165,7 +165,6 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
             }
         }
         return mGeolocationPermissions;
-        };
     }
 
     @Override
