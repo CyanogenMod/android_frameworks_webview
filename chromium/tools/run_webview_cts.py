@@ -30,7 +30,6 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestAcceptOnce',
   'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestReject',
   'android.webkit.cts.WebChromeClientTest#testOnReceivedIcon',
-  'android.webkit.cts.WebChromeClientTest#testWindows',
   'android.webkit.cts.WebSettingsTest#testAccessCacheMode',
   'android.webkit.cts.WebSettingsTest#testAccessLayoutAlgorithm',
   'android.webkit.cts.WebSettingsTest#testAccessLightTouchEnabled',
