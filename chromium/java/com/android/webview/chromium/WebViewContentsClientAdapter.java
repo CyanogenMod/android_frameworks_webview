@@ -360,7 +360,13 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
      */
     @Override
     public boolean shouldOverrideKeyEvent(KeyEvent event) {
-        return mWebViewClient.shouldOverrideKeyEvent(mWebView, event);
+        // TODO(joth): The expression here is a workaround for http://b/7697782 :-
+        // 1. The check for system key should be made in AwContents or ContentViewCore,
+        //    before shouldOverrideKeyEvent() is called at all.
+        // 2. shouldOverrideKeyEvent() should be called in onKeyDown/onKeyUp, not from
+        //    dispatchKeyEvent().
+        return event.isSystem() ||
+            mWebViewClient.shouldOverrideKeyEvent(mWebView, event);
     }
 
 
