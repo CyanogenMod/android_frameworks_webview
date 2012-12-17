@@ -23,7 +23,11 @@ import org.chromium.android_webview.AwGeolocationPermissions;
 
 import java.util.Set;
 
-public class GeolocationPermissionsAdapter extends GeolocationPermissions {
+/**
+ * Chromium implementation of GeolocationPermissions -- forwards calls to the
+ * chromium internal implementation.
+ */
+final class GeolocationPermissionsAdapter extends GeolocationPermissions {
 
     private AwGeolocationPermissions mChromeGeolocationPermissions;
 
@@ -31,22 +35,27 @@ public class GeolocationPermissionsAdapter extends GeolocationPermissions {
         mChromeGeolocationPermissions = chromeGeolocationPermissions;
     }
 
+    @Override
     public void allow(String origin) {
         mChromeGeolocationPermissions.allow(origin);
     }
 
+    @Override
     public void clear(String origin) {
         mChromeGeolocationPermissions.clear(origin);
     }
 
+    @Override
     public void clearAll() {
         mChromeGeolocationPermissions.clearAll();
     }
 
+    @Override
     public void getAllowed(String origin, ValueCallback<Boolean> callback) {
         mChromeGeolocationPermissions.getAllowed(origin, callback);
     }
 
+    @Override
     public void getOrigins(ValueCallback<Set<String>> callback) {
         mChromeGeolocationPermissions.getOrigins(callback);
     }

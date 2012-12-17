@@ -47,12 +47,13 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     private static final String CHROMIUM_PREFS_NAME = "WebViewChromiumPrefs";
 
     // Initialization guarded by mLock.
-    private Statics mStaticMethods;
-
     private SharedPreferences mWebViewChromiumSharedPreferences;
-
-    // Initialization guarded by mLock.
-    private CookieManagerAdapter mCookieManagerAdapter;
+    private Statics mStaticMethods;
+    private GeolocationPermissionsAdapter mGeolocationPermissions;
+    private CookieManagerAdapter mCookieManager;
+    private WebIconDatabaseAdapter mWebIconDatabase;
+    private WebStorageAdapter mWebStorage;
+    private WebViewDatabaseAdapter mWebViewDatabase;
 
     // Initialization guarded by mLock.
     private GeolocationPermissionsAdapter mGeolocationPermissionsAdapter;
@@ -118,10 +119,10 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     @Override
     public Statics getStatics() {
         synchronized (mLock) {
-            // TODO: Optimization potential: most these methods only need the native library
-            // loaded, not the entire browser process initialized. See also http://b/7009882
-            ensureChromiumNativeInitializedLocked();
             if (mStaticMethods == null) {
+                // TODO: Optimization potential: most these methods only need the native library
+                // loaded, not the entire browser process initialized. See also http://b/7009882
+                ensureChromiumNativeInitializedLocked();
                 mStaticMethods = new WebViewFactoryProvider.Statics() {
                     @Override
                     public String findAddress(String addr) {
@@ -157,45 +158,58 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     @Override
     public GeolocationPermissions getGeolocationPermissions() {
         synchronized (mLock) {
-            ensureChromiumNativeInitializedLocked();
-            if (mGeolocationPermissionsAdapter == null) {
+            if (mGeolocationPermissions == null) {
+                ensureChromiumNativeInitializedLocked();
                 mGeolocationPermissionsAdapter = new GeolocationPermissionsAdapter(
                         new AwGeolocationPermissions(mWebViewChromiumSharedPreferences));
             }
         }
-        return mGeolocationPermissionsAdapter;
+        return mGeolocationPermissions;
+        };
     }
 
     @Override
     public CookieManager getCookieManager() {
         synchronized (mLock) {
-            ensureChromiumNativeInitializedLocked();
-            if (mCookieManagerAdapter == null) {
-                mCookieManagerAdapter = new CookieManagerAdapter(
+            if (mCookieManager == null) {
+                ensureChromiumNativeInitializedLocked();
+                mCookieManager = new CookieManagerAdapter(
                         new org.chromium.android_webview.CookieManager());
             }
         }
-        return mCookieManagerAdapter;
+        return mCookieManager;
     }
 
     @Override
     public WebIconDatabase getWebIconDatabase() {
-        UnimplementedWebViewApi.invoke();
-        return null;
+        synchronized (mLock) {
+            if (mWebIconDatabase == null) {
+                ensureChromiumNativeInitializedLocked();
+                mWebIconDatabase = new WebIconDatabaseAdapter();
+            }
+        }
+        return mWebIconDatabase;
     }
 
     @Override
     public WebStorage getWebStorage() {
-        UnimplementedWebViewApi.invoke();
-        return null;
+        synchronized (mLock) {
+            if (mWebStorage == null) {
+                ensureChromiumNativeInitializedLocked();
+                mWebStorage = new WebStorageAdapter();
+            }
+        }
+        return mWebStorage;
     }
 
     @Override
     public WebViewDatabase getWebViewDatabase(Context context) {
         synchronized (mLock) {
-            ensureChromiumNativeInitializedLocked();
+            if (mWebViewDatabase == null) {
+                ensureChromiumNativeInitializedLocked();
+                mWebViewDatabase = new WebViewDatabaseAdapter();
+            }
         }
-        UnimplementedWebViewApi.invoke();
-        return null;
+        return mWebViewDatabase;
     }
 }
