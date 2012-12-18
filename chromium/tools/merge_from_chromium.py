@@ -253,7 +253,7 @@ def _GenerateMakefiles(svn_revision, unattended):
             ['git', 'reset', '--hard'],
             cwd=os.path.join(merge_common.REPOSITORY_ROOT, path))
       raise merge_common.TemporaryMergeError('Makefile generation failed: ' +
-                                             e)
+                                             str(e))
 
   for path in merge_common.ALL_PROJECTS:
     dest_dir = os.path.join(merge_common.REPOSITORY_ROOT, path)
