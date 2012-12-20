@@ -17,12 +17,15 @@
 package com.android.webview.chromium;
 
 import android.net.WebAddress;
+import android.webkit.CookieManager;
 
-public class CookieManagerAdapter extends android.webkit.CookieManager {
+import org.chromium.android_webview.AwCookieManager;
 
-    org.chromium.android_webview.CookieManager mChromeCookieManager;
+public class CookieManagerAdapter extends CookieManager {
 
-    public CookieManagerAdapter(org.chromium.android_webview.CookieManager chromeCookieManager) {
+    AwCookieManager mChromeCookieManager;
+
+    public CookieManagerAdapter(AwCookieManager chromeCookieManager) {
         mChromeCookieManager = chromeCookieManager;
     }
 

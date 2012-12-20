@@ -30,6 +30,7 @@ import android.webkit.WebViewFactoryProvider;
 import android.webkit.WebViewProvider;
 
 import org.chromium.android_webview.AwContents;
+import org.chromium.android_webview.AwCookieManager;
 import org.chromium.android_webview.AwGeolocationPermissions;
 import org.chromium.base.PathService;
 import org.chromium.base.PathUtils;
@@ -172,8 +173,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         synchronized (mLock) {
             if (mCookieManager == null) {
                 ensureChromiumNativeInitializedLocked();
-                mCookieManager = new CookieManagerAdapter(
-                        new org.chromium.android_webview.CookieManager());
+                mCookieManager = new CookieManagerAdapter(new AwCookieManager());
             }
         }
         return mCookieManager;
