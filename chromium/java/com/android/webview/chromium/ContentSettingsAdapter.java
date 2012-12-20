@@ -510,7 +510,7 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     @Override
     public void setNeedInitialFocus(boolean flag) {
-        UnimplementedWebViewApi.invoke();
+        mAwSettings.setShouldFocusFirstNode(flag);
     }
 
     @Override
