@@ -789,6 +789,7 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public boolean requestFocus(int direction, Rect previouslyFocusedRect) {
+        mAwContents.requestFocus();
         return mWebViewPrivate.super_requestFocus(direction, previouslyFocusedRect);
     }
 
