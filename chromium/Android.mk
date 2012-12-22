@@ -27,7 +27,7 @@ LOCAL_MODULE := webviewchromium
 LOCAL_MODULE_TAGS := optional
 
 LOCAL_STATIC_JAVA_LIBRARIES += google-common \
-                               android_webview_java
+                               android_webview_java \
 
 LOCAL_SRC_FILES := $(call all-java-files-under, java)
 
@@ -35,7 +35,7 @@ LOCAL_REQUIRED_MODULES := \
         libwebviewchromium \
         libwebviewchromium_plat_support \
         webviewchromium_pak \
-        webviewchromium_strings_pak
+        webviewchromium_strings_pak \
 
 LOCAL_PROGUARD_ENABLED := disabled
 
@@ -49,14 +49,19 @@ LOCAL_MODULE:= libwebviewchromium_plat_support
 
 LOCAL_SRC_FILES:=       \
         plat_support/draw_gl_functor.cpp \
-        plat_support/jni_entry_point.cpp
+        plat_support/jni_entry_point.cpp \
+        plat_support/graphics_utils.cpp \
 
 LOCAL_C_INCLUDES:= \
-        $(CHROMIUM_PATH)
+        $(CHROMIUM_PATH) \
+        external/skia/include/core \
+        frameworks/base/core/jni/android/graphics \
 
 LOCAL_SHARED_LIBRARIES += \
+        libandroid_runtime \
+        libcutils \
+        libskia \
         libutils \
-        libcutils
 
 LOCAL_MODULE_TAGS := optional
 

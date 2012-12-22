@@ -14,24 +14,13 @@
  * limitations under the License.
  */
 
-#define LOG_TAG "webviewchromium_plat_support"
+package com.android.webview.chromium;
 
-#include <jni.h>
-#include <utils/Log.h>
+abstract class GraphicsUtils {
+    public static int getDrawSWFunctionTable() {
+        return nativeGetDrawSWFunctionTable();
+    }
 
-namespace android {
+    private static native int nativeGetDrawSWFunctionTable();
 
-void RegisterDrawGLFunctor(JNIEnv* env);
-void RegisterGraphicsUtils(JNIEnv* env);
-
-}  // namespace android
-
-JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
-  JNIEnv* env = NULL;
-  jint ret = vm->AttachCurrentThread(&env, NULL);
-  LOG_ALWAYS_FATAL_IF(ret != JNI_OK, "AttachCurrentThread failed");
-  android::RegisterDrawGLFunctor(env);
-  android::RegisterGraphicsUtils(env);
-
-  return JNI_VERSION_1_4;
 }
