@@ -22,7 +22,6 @@
 namespace android {
 
 void RegisterDrawGLFunctor(JNIEnv* env);
-void RegisterGraphicsUtils(JNIEnv* env);
 
 }  // namespace android
 
@@ -31,7 +30,6 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
   jint ret = vm->AttachCurrentThread(&env, NULL);
   LOG_ALWAYS_FATAL_IF(ret != JNI_OK, "AttachCurrentThread failed");
   android::RegisterDrawGLFunctor(env);
-  android::RegisterGraphicsUtils(env);
 
   return JNI_VERSION_1_4;
 }
