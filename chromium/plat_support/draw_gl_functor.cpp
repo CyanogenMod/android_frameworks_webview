@@ -112,11 +112,11 @@ void SetChromiumAwDrawGLFunction(JNIEnv*, jclass, jint draw_function) {
 const char kClassName[] = "com/android/webview/chromium/DrawGLFunctor";
 const JNINativeMethod kJniMethods[] = {
     { "nativeCreateGLFunctor", "(I)I",
-        reinterpret_cast<void*>(CreateGLFunctor), },
+        reinterpret_cast<void*>(CreateGLFunctor) },
     { "nativeDestroyGLFunctor", "(I)V",
-        reinterpret_cast<void*>(DestroyGLFunctor), },
+        reinterpret_cast<void*>(DestroyGLFunctor) },
     { "nativeSetChromiumAwDrawGLFunction", "(I)V",
-        reinterpret_cast<void*>(SetChromiumAwDrawGLFunction), },
+        reinterpret_cast<void*>(SetChromiumAwDrawGLFunction) },
 };
 
 }  // namespace

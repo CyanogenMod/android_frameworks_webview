@@ -66,6 +66,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         // Load glue-layer support library.
         System.loadLibrary("webviewchromium_plat_support");
         DrawGLFunctor.setChromiumAwDrawGLFunction(AwContents.getAwDrawGLFunction());
+        AwContents.setAwDrawSWFunctionTable(GraphicsUtils.getDrawSWFunctionTable());
     }
 
     // TODO(joth): Much of this initialization logic could be moved into the chromium tree.
