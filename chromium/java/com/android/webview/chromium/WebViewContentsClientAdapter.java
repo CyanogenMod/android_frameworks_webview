@@ -28,6 +28,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.webkit.ConsoleMessage;
 import android.webkit.DownloadListener;
+import android.webkit.GeolocationPermissions;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
@@ -464,6 +465,17 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
                 mChromeResultReceiver.cancel();
             }
         }
+    }
+
+    @Override
+    public void onGeolocationPermissionsShowPrompt(String origin,
+            GeolocationPermissions.Callback callback) {
+        mWebChromeClient.onGeolocationPermissionsShowPrompt(origin, callback);
+    }
+
+    @Override
+    public void onGeolocationPermissionsHidePrompt() {
+        mWebChromeClient.onGeolocationPermissionsHidePrompt();
     }
 
     @Override
