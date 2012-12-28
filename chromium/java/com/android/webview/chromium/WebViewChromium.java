@@ -328,8 +328,7 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public Picture capturePicture() {
-        UnimplementedWebViewApi.invoke();
-        return null;
+        return mAwContents.capturePicture();
     }
 
     @Override
@@ -521,6 +520,9 @@ class WebViewChromium implements WebViewProvider,
     @Override
     public void setPictureListener(WebView.PictureListener listener) {
         mContentsClientAdapter.setPictureListener(listener);
+        mAwContents.enableOnNewPicture(listener != null,
+                mWebView.getContext().getApplicationInfo().targetSdkVersion >=
+                Build.VERSION_CODES.K);
     }
 
     @Override

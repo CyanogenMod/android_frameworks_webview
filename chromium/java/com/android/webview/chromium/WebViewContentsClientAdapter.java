@@ -287,6 +287,7 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     /**
      * @See AwContentsClient#onNewPicture(Picture)
      */
+    @Override
     public void onNewPicture(Picture picture) {
         if (mPictureListener == null) return;
         mPictureListener.onNewPicture(mWebView, picture);
@@ -339,20 +340,6 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     @Override
     public void onPageFinished(String url) {
         mWebViewClient.onPageFinished(mWebView, url);
-
-        // HACK: Fake a picture listener update, to allow CTS tests to progress.
-        // TODO: Remove when we have real picture listener updates implemented.
-        if (mPictureListener != null) {
-            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    UnimplementedWebViewApi.invoke();
-                    if (mPictureListener != null) {
-                        mPictureListener.onNewPicture(mWebView, new Picture());
-                    }
-                }
-            }, 100);
-        }
     }
 
     /**
