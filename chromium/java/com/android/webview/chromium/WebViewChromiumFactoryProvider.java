@@ -56,9 +56,6 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     private WebStorageAdapter mWebStorage;
     private WebViewDatabaseAdapter mWebViewDatabase;
 
-    // Initialization guarded by mLock.
-    private GeolocationPermissionsAdapter mGeolocationPermissionsAdapter;
-
     // Read/write protected by mLock.
     private boolean mStarted;
 
@@ -162,7 +159,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         synchronized (mLock) {
             if (mGeolocationPermissions == null) {
                 ensureChromiumStartedLocked();
-                mGeolocationPermissionsAdapter = new GeolocationPermissionsAdapter(
+                mGeolocationPermissions = new GeolocationPermissionsAdapter(
                         new AwGeolocationPermissions(mWebViewChromiumSharedPreferences));
             }
         }
