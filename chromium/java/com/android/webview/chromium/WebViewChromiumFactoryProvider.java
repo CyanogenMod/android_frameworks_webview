@@ -34,6 +34,8 @@ import org.chromium.android_webview.AwContents;
 import org.chromium.android_webview.AwCookieManager;
 import org.chromium.android_webview.AwGeolocationPermissions;
 import org.chromium.base.PathService;
+import org.chromium.base.ThreadUtils;
+import org.chromium.content.app.LibraryLoader;
 import org.chromium.content.browser.ContentSettings;
 import org.chromium.content.browser.ContentViewStatics;
 import org.chromium.content.browser.ResourceExtractor;
@@ -71,9 +73,6 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         AwBrowserProcess.loadLibrary();
         // Load glue-layer support library.
         System.loadLibrary("webviewchromium_plat_support");
-        // Connect them up.
-        DrawGLFunctor.setChromiumAwDrawGLFunction(AwContents.getAwDrawGLFunction());
-        AwContents.setAwDrawSWFunctionTable(GraphicsUtils.getDrawSWFunctionTable());
     }
 
     private void ensureChromiumStartedLocked() {
@@ -81,20 +80,30 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
 
         if (mChromiumStarted) return;
 
-        PathService.override(PathService.DIR_MODULE, "/system/lib/");
-        // TODO: DIR_RESOURCE_PAKS_ANDROID needs to live somewhere sensible,
-        // inlined here for simplicity setting up the HTMLViewer demo. Unfortunately
-        // it can't go into base.PathService, as the native constant it refers to
-        // lives in the ui/ layer. See ui/base/ui_base_paths.h
-        final int DIR_RESOURCE_PAKS_ANDROID = 3003;
-        PathService.override(DIR_RESOURCE_PAKS_ANDROID,
-                "/system/framework/webview/paks");
+        ThreadUtils.runOnUiThreadBlocking(new Runnable() {
+            @Override
+            public void run() {
+                LibraryLoader.ensureInitialized();
+                // Connect  up chromium and plat-support libraries.
+                DrawGLFunctor.setChromiumAwDrawGLFunction(AwContents.getAwDrawGLFunction());
+                AwContents.setAwDrawSWFunctionTable(GraphicsUtils.getDrawSWFunctionTable());
 
-        // Caching for later use, possibly from other threads
-        mWebViewChromiumSharedPreferences = ActivityThread.currentApplication().
-                getSharedPreferences(CHROMIUM_PREFS_NAME, Context.MODE_PRIVATE);
+                PathService.override(PathService.DIR_MODULE, "/system/lib/");
+                // TODO: DIR_RESOURCE_PAKS_ANDROID needs to live somewhere sensible,
+                // inlined here for simplicity setting up the HTMLViewer demo. Unfortunately
+                // it can't go into base.PathService, as the native constant it refers to
+                // lives in the ui/ layer. See ui/base/ui_base_paths.h
+                final int DIR_RESOURCE_PAKS_ANDROID = 3003;
+                PathService.override(DIR_RESOURCE_PAKS_ANDROID,
+                        "/system/framework/webview/paks");
 
-        AwBrowserProcess.start(ActivityThread.currentApplication());
+                // Caching for later use, possibly from other threads
+                mWebViewChromiumSharedPreferences = ActivityThread.currentApplication().
+                        getSharedPreferences(CHROMIUM_PREFS_NAME, Context.MODE_PRIVATE);
+
+                AwBrowserProcess.start(ActivityThread.currentApplication());
+            }
+        });
         mChromiumStarted = true;
     }
 
