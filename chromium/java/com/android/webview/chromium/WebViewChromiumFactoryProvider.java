@@ -59,12 +59,11 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     private boolean mChromiumStarted;
 
     public WebViewChromiumFactoryProvider() {
-        // Only do the minimum initialization here that we know:
-        //   a) is safe to do prior to the zygote forking the app-specific process, and
-        //   b) gives the maximum benefit w.r.t. cross app memory and startup savings.
-        loadLibraries();
     }
 
+    // Only do the minimum initialization here that we know:
+    //   a) is safe to do prior to the zygote forking the app-specific process, and
+    //   b) gives the maximum benefit w.r.t. cross app memory and startup savings.
     private void loadLibraries() {
         // We don't need to extract any paks because for WebView, they are
         // in the system image.
@@ -83,6 +82,8 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         ThreadUtils.runOnUiThreadBlocking(new Runnable() {
             @Override
             public void run() {
+                // TODO: Call this earlier in startup.
+                loadLibraries();
                 LibraryLoader.ensureInitialized();
                 // Connect  up chromium and plat-support libraries.
                 DrawGLFunctor.setChromiumAwDrawGLFunction(AwContents.getAwDrawGLFunction());
@@ -110,6 +111,8 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     @Override
     public Statics getStatics() {
         synchronized (mLock) {
+            // TODO: only need to load & init the chromium library at this point.
+            ensureChromiumStartedLocked();
             if (mStaticMethods == null) {
                 mStaticMethods = new WebViewFactoryProvider.Statics() {
                     @Override
@@ -124,11 +127,6 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
 
                     @Override
                     public String getDefaultUserAgent(Context context) {
-                        // TODO(perf): Optimization potential: avoid starting chromium up here
-                        // by routing this call to AwSettings -> AwContentClient::GetUserAgent.
-                        synchronized (mLock) {
-                            ensureChromiumStartedLocked();
-                        }
                         return ContentSettings.getDefaultUserAgent();
                     }
                 };
