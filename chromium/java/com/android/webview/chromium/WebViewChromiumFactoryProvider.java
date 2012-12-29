@@ -29,13 +29,14 @@ import android.webkit.WebViewDatabase;
 import android.webkit.WebViewFactoryProvider;
 import android.webkit.WebViewProvider;
 
-import org.chromium.android_webview.AwBrowserProcess;
 import org.chromium.android_webview.AwContents;
 import org.chromium.android_webview.AwCookieManager;
 import org.chromium.android_webview.AwGeolocationPermissions;
 import org.chromium.base.PathService;
+import org.chromium.base.PathUtils;
 import org.chromium.base.ThreadUtils;
 import org.chromium.content.app.LibraryLoader;
+import org.chromium.content.browser.AndroidBrowserProcess;
 import org.chromium.content.browser.ContentSettings;
 import org.chromium.content.browser.ContentViewStatics;
 import org.chromium.content.browser.ResourceExtractor;
@@ -55,39 +56,46 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     private WebStorageAdapter mWebStorage;
     private WebViewDatabaseAdapter mWebViewDatabase;
 
+    // Initialization guarded by mLock.
+    private GeolocationPermissionsAdapter mGeolocationPermissionsAdapter;
+
     // Read/write protected by mLock.
-    private boolean mChromiumStarted;
+    private boolean mStarted;
 
-    public WebViewChromiumFactoryProvider() {
-    }
-
-    // Only do the minimum initialization here that we know:
-    //   a) is safe to do prior to the zygote forking the app-specific process, and
-    //   b) gives the maximum benefit w.r.t. cross app memory and startup savings.
-    private void loadLibraries() {
-        // We don't need to extract any paks because for WebView, they are
-        // in the system image.
-        ResourceExtractor.setMandatoryPaksToExtract("");
-        // Load the main chromium native library.
-        AwBrowserProcess.loadLibrary();
+    private void loadPlatSupportLibrary() {
         // Load glue-layer support library.
         System.loadLibrary("webviewchromium_plat_support");
+        DrawGLFunctor.setChromiumAwDrawGLFunction(AwContents.getAwDrawGLFunction());
+        AwContents.setAwDrawSWFunctionTable(GraphicsUtils.getDrawSWFunctionTable());
     }
 
+    // TODO(joth): Much of this initialization logic could be moved into the chromium tree.
     private void ensureChromiumStartedLocked() {
         assert Thread.holdsLock(mLock);
 
-        if (mChromiumStarted) return;
+        if (mStarted) {
+            return;
+        }
 
+        // We must post to the UI thread to cover the case that the user
+        // has invoked Chromium startup by using the (thread-safe)
+        // CookieManager rather than creating a WebView.
         ThreadUtils.runOnUiThreadBlocking(new Runnable() {
             @Override
             public void run() {
-                // TODO: Call this earlier in startup.
-                loadLibraries();
+                PathUtils.setPrivateDataDirectorySuffix("webview");
+                // We don't need to extract any paks because for WebView, they are
+                // in the system image.
+                ResourceExtractor.setMandatoryPaksToExtract("");
+
+                LibraryLoader.setLibraryToLoad("webviewchromium");
+                LibraryLoader.loadNow();
+
+                // TODO: Ultimately we want to load the library in the zygote
+                // process, so we should split this init step into two parts -
+                // one generic bit that loads the library and another that performs
+                // the app specific parts, from here onwards.
                 LibraryLoader.ensureInitialized();
-                // Connect  up chromium and plat-support libraries.
-                DrawGLFunctor.setChromiumAwDrawGLFunction(AwContents.getAwDrawGLFunction());
-                AwContents.setAwDrawSWFunctionTable(GraphicsUtils.getDrawSWFunctionTable());
 
                 PathService.override(PathService.DIR_MODULE, "/system/lib/");
                 // TODO: DIR_RESOURCE_PAKS_ANDROID needs to live somewhere sensible,
@@ -102,18 +110,22 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
                 mWebViewChromiumSharedPreferences = ActivityThread.currentApplication().
                         getSharedPreferences(CHROMIUM_PREFS_NAME, Context.MODE_PRIVATE);
 
-                AwBrowserProcess.start(ActivityThread.currentApplication());
+                AndroidBrowserProcess.initContentViewProcess(ActivityThread.currentApplication(),
+                        AndroidBrowserProcess.MAX_RENDERERS_SINGLE_PROCESS);
+
+                loadPlatSupportLibrary();
             }
         });
-        mChromiumStarted = true;
+        mStarted = true;
     }
 
     @Override
     public Statics getStatics() {
         synchronized (mLock) {
-            // TODO: only need to load & init the chromium library at this point.
-            ensureChromiumStartedLocked();
             if (mStaticMethods == null) {
+                // TODO: Optimization potential: most these methods only need the native library
+                // loaded, not the entire browser process initialized. See also http://b/7009882
+                ensureChromiumStartedLocked();
                 mStaticMethods = new WebViewFactoryProvider.Statics() {
                     @Override
                     public String findAddress(String addr) {
@@ -150,7 +162,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         synchronized (mLock) {
             if (mGeolocationPermissions == null) {
                 ensureChromiumStartedLocked();
-                mGeolocationPermissions = new GeolocationPermissionsAdapter(
+                mGeolocationPermissionsAdapter = new GeolocationPermissionsAdapter(
                         new AwGeolocationPermissions(mWebViewChromiumSharedPreferences));
             }
         }
