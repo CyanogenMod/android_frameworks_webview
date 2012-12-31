@@ -284,6 +284,14 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
         mFindListener.onFindResultReceived(activeMatchOrdinal, numberOfMatches, isDoneCounting);
     }
 
+    /**
+     * @See AwContentsClient#onNewPicture(Picture)
+     */
+    public void onNewPicture(Picture picture) {
+        if (mPictureListener == null) return;
+        mPictureListener.onNewPicture(mWebView, picture);
+    }
+
     @Override
     public void onLoadResource(String url) {
         mWebViewClient.onLoadResource(mWebView, url);
