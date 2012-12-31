@@ -564,20 +564,7 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
 
         @Override
         public boolean useHttpAuthUsernamePassword() {
-            // The documentation for this method says:
-            // Gets whether the credentials stored for the current host (i.e. the host
-            // for which {@link WebViewClient#onReceivedHttpAuthRequest} was called)
-            // are suitable for use. Credentials are not suitable if they have
-            // previously been rejected by the server for the current request.
-            // @return whether the credentials are suitable for use
-            //
-            // The CTS tests point out that it always returns true (at odds with
-            // the documentation).
-            // TODO: Decide whether to follow the docs or follow the classic
-            // implementation and update the docs. For now the latter, as it's
-            // easiest.  (though not updating docs until this is resolved).
-            // See b/6204427.
-            return true;
+            return mAwHandler.isFirstAttempt();
         }
     }
 }
