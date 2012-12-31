@@ -115,9 +115,6 @@ class WebViewChromium implements WebViewProvider,
         mAwContents = new AwContents(mWebView, new InternalAccessAdapter(), mContentsClientAdapter,
                 new AwNativeWindow(mWebView.getContext()), privateBrowsing,
                 isAccessFromFileURLsGrantedByDefault);
-
-        // At this point we now have the native AwContents and WebContents created and code
-        // that requires them can now be called.
     }
 
     @Override
@@ -730,7 +727,11 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void onVisibilityChanged(View changedView, int visibility) {
-        mAwContents.onVisibilityChanged(changedView, visibility);
+        // The AwContents will find out the container view visibility before the first draw so we
+        // can safely ignore onVisibilityChanged callbacks that happen before init().
+        if (mAwContents != null) {
+            mAwContents.onVisibilityChanged(changedView, visibility);
+        }
     }
 
     @Override
@@ -867,7 +868,6 @@ class WebViewChromium implements WebViewProvider,
 
     // ContentViewCore.InternalAccessDelegate implementation --------------------------------------
     private class InternalAccessAdapter implements ContentViewCore.InternalAccessDelegate {
-
         @Override
         public boolean drawChild(Canvas arg0, View arg1, long arg2) {
             UnimplementedWebViewApi.invoke();
@@ -921,11 +921,6 @@ class WebViewChromium implements WebViewProvider,
             // TODO: need method on WebView.PrivateAccess?
             UnimplementedWebViewApi.invoke();
             return false;
-        }
-
-        // TODO: Remove this method. It is not planned to get upstreamed.
-        // @Override
-        public void onSurfaceTextureUpdated() {
         }
     }
 }
