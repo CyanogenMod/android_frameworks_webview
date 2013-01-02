@@ -98,8 +98,8 @@ function bb_webview_baseline_setup {
 }
 
 function bb_webview_smart_sync {
-  echo "@@@BUILD_STEP Smart Sync@@@"
-  bb_run_step repo smartsync -j8 -df
+  echo "@@@BUILD_STEP Smart Sync (sync -s) @@@"
+  bb_run_step repo sync -s -j8 -df
 }
 
 function bb_webview_sync_and_merge {
