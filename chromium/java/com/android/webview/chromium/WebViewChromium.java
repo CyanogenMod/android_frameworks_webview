@@ -107,13 +107,17 @@ class WebViewChromium implements WebViewProvider,
     public void init(Map<String, Object> javaScriptInterfaces, boolean privateBrowsing) {
         // TODO: BUG=6790250 javaScriptInterfaces were only ever used by DumpRenderTree and should
         // probably be implemented as a hidden hook in WebViewClassic.
+        if (privateBrowsing) {
+            throw new IllegalArgumentException(
+                    "Private browsing is not supported in this version of the WebView.");
+        }
 
         final boolean isAccessFromFileURLsGrantedByDefault =
                 mWebView.getContext().getApplicationInfo().targetSdkVersion <
                 Build.VERSION_CODES.JELLY_BEAN;
         mContentsClientAdapter = new WebViewContentsClientAdapter(mWebView);
         mAwContents = new AwContents(mWebView, new InternalAccessAdapter(), mContentsClientAdapter,
-                new AwNativeWindow(mWebView.getContext()), privateBrowsing,
+                new AwNativeWindow(mWebView.getContext()), false,
                 isAccessFromFileURLsGrantedByDefault);
     }
 
