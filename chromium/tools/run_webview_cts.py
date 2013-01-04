@@ -33,7 +33,6 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.WebSettingsTest#testAccessCacheMode',
   'android.webkit.cts.WebSettingsTest#testAccessSaveFormData',
   'android.webkit.cts.WebSettingsTest#testAccessSavePassword',
-  'android.webkit.cts.WebSettingsTest#testAccessUseWideViewPort',
   'android.webkit.cts.WebViewClientTest#testOnScaleChanged',
   'android.webkit.cts.WebViewTest#testCapturePicture',
   'android.webkit.cts.WebViewTest#testFindAddress',

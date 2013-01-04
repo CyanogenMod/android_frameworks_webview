@@ -206,13 +206,12 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     @Override
     public synchronized void setUseWideViewPort(boolean use) {
-        UnimplementedWebViewApi.invoke();
+        mContentSettings.setUseWideViewPort(use);
     }
 
     @Override
     public synchronized boolean getUseWideViewPort() {
-        UnimplementedWebViewApi.invoke();
-        return false;
+        return mContentSettings.getUseWideViewPort();
     }
 
     @Override
