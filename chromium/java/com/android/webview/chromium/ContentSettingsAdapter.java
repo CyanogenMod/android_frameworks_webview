@@ -16,6 +16,7 @@
 
 package com.android.webview.chromium;
 
+import android.util.Log;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebSettings.PluginState;
 import android.webkit.WebSettings.RenderPriority;
@@ -26,6 +27,9 @@ import org.chromium.content.browser.ContentSettings;
 import org.chromium.android_webview.AwSettings;
 
 public class ContentSettingsAdapter extends android.webkit.WebSettings {
+
+    private static final String TAG = ContentSettingsAdapter.class.getSimpleName();
+
     ContentSettings mContentSettings;
     AwSettings mAwSettings;
 
@@ -186,13 +190,18 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     @Override
     public synchronized void setUserAgent(int ua) {
-        UnimplementedWebViewApi.invoke();
+        // Minimal implementation for backwards compatibility: just supports resetting to default.
+        if (ua == 0) {
+            setUserAgentString(null);
+        } else {
+            Log.w(TAG, "setUserAgent not suported, ua=" + ua);
+        }
     }
 
     @Override
     public synchronized int getUserAgent() {
-        UnimplementedWebViewApi.invoke();
-        return 0;
+        // Minimal implementation for backwards compatibility: just identifies default vs custom.
+        return ContentSettings.getDefaultUserAgent().equals(getUserAgentString()) ? 0 : -1;
     }
 
     @Override
