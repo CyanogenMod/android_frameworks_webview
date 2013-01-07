@@ -431,6 +431,10 @@ def main():
       default=False, action='store_true',
       help=('Push the result of a previous merge to the server.'))
   parser.add_option(
+      '', '--get_lkgr',
+      default=False, action='store_true',
+      help=('Just print the current LKGR on stdout and exit.'))
+  parser.add_option(
       '', '--unattended',
       default=False, action='store_true',
       help=('Run in unattended mode.'))
@@ -446,7 +450,9 @@ def main():
   logging.basicConfig(format='%(message)s', level=logging.DEBUG,
                       stream=sys.stdout)
 
-  if options.push:
+  if options.get_lkgr:
+    print GetLKGR()
+  elif options.push:
     if options.svn_revision is None:
       print >>sys.stderr, 'You need to pass the SVN revision to push.'
       return 1
