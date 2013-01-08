@@ -438,6 +438,10 @@ def main():
       '', '--unattended',
       default=False, action='store_true',
       help=('Run in unattended mode.'))
+  parser.add_option(
+      '', '--no_changes_exit',
+      default=0, type='int',
+      help=('Exit code to use if there are no changes to merge, for scripts.'))
   (options, args) = parser.parse_args()
   if args:
     parser.print_help()
@@ -459,7 +463,8 @@ def main():
     else:
       Push(options.svn_revision)
   else:
-    Snapshot(options.svn_revision, options.unattended)
+    if not Snapshot(options.svn_revision, options.unattended):
+      return options.no_changes_exit
 
   return 0
 
