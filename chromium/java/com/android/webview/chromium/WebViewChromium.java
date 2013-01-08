@@ -829,12 +829,10 @@ class WebViewChromium implements WebViewProvider,
         UnimplementedWebViewApi.invoke();
     }
 
-    // No @Override for now to keep bots happy.
+    @Override
     public void preDispatchDraw(Canvas canvas) {
-        // ContentViewCore handles drawing the scroll internally, therefore
-        // we need to compensate for the canvas transform already applied
-        // by the framework due to changes to the WebView's scrollX/Y.
-        canvas.translate(mWebView.getScrollX(), mWebView.getScrollY());
+        // TODO(leandrogracia): remove this method from WebViewProvider if we think
+        // we won't need it again.
     }
 
     // WebViewProvider.ScrollDelegate implementation ----------------------------------------------
