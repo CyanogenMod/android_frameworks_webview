@@ -697,7 +697,7 @@ class WebViewChromium implements WebViewProvider,
             }
             mGLfunctor.requestDrawGL((HardwareCanvas) canvas, mWebView.getViewRootImpl());
         } else {
-          mAwContents.onDraw(canvas);
+            mAwContents.onDraw(canvas);
         }
     }
 
