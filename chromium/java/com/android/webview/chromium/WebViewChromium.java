@@ -868,8 +868,8 @@ class WebViewChromium implements WebViewProvider,
         UnimplementedWebViewApi.invoke();
     }
 
-    // ContentViewCore.InternalAccessDelegate implementation --------------------------------------
-    private class InternalAccessAdapter implements ContentViewCore.InternalAccessDelegate {
+    // AwContents.InternalAccessDelegate implementation --------------------------------------
+    private class InternalAccessAdapter implements AwContents.InternalAccessDelegate {
         @Override
         public boolean drawChild(Canvas arg0, View arg1, long arg2) {
             UnimplementedWebViewApi.invoke();
@@ -923,6 +923,11 @@ class WebViewChromium implements WebViewProvider,
             // TODO: need method on WebView.PrivateAccess?
             UnimplementedWebViewApi.invoke();
             return false;
+        }
+
+        //@Override
+        public void setMeasuredDimension(int measuredWidth, int measuredHeight) {
+            mWebViewPrivate.setMeasuredDimension(measuredWidth, measuredHeight);
         }
     }
 }
