@@ -161,7 +161,7 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void savePassword(String host, String username, String password) {
-        UnimplementedWebViewApi.invoke();
+        // This is a deprecated API: intentional no-op.
     }
 
     @Override

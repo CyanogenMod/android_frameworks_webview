@@ -25,13 +25,13 @@ import android.webkit.WebViewDatabase;
 final class WebViewDatabaseAdapter extends WebViewDatabase {
     @Override
     public boolean hasUsernamePassword() {
-        UnimplementedWebViewApi.invoke();
+        // This is a deprecated API: intentional no-op.
         return false;
     }
 
     @Override
     public void clearUsernamePassword() {
-        UnimplementedWebViewApi.invoke();
+        // This is a deprecated API: intentional no-op.
     }
 
     @Override
