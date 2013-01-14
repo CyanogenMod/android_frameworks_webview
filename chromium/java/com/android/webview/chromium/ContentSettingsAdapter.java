@@ -41,13 +41,13 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
     @Override
     @Deprecated
     public void setNavDump(boolean enabled) {
-        UnimplementedWebViewApi.invoke();
+        // Intentional no-op.
     }
 
     @Override
     @Deprecated
     public boolean getNavDump() {
-        UnimplementedWebViewApi.invoke();
+        // Intentional no-op.
         return false;
     }
 
@@ -114,23 +114,23 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     @Override
     public void setEnableSmoothTransition(boolean enable) {
-        UnimplementedWebViewApi.invoke();
+        // Intentional no-op.
     }
 
     @Override
     public boolean enableSmoothTransition() {
-        UnimplementedWebViewApi.invoke();
+        // Intentional no-op.
         return false;
     }
 
     @Override
     public void setUseWebViewBackgroundForOverscrollBackground(boolean view) {
-        UnimplementedWebViewApi.invoke();
+        // Intentional no-op.
     }
 
     @Override
     public boolean getUseWebViewBackgroundForOverscrollBackground() {
-        UnimplementedWebViewApi.invoke();
+        // Intentional no-op.
         return false;
     }
 
