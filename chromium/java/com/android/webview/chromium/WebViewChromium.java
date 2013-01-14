@@ -800,17 +800,7 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        // TODO(boliu): This is to get around the fact that onMeasure is not
-        // implemented yet but some cts tests depends on non-zero behavior.
-        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-        if (heightMode != MeasureSpec.EXACTLY &&
-            widthMode != MeasureSpec.EXACTLY) {
-            mWebViewPrivate.setMeasuredDimension(widthSize, heightSize);
-        }
-        UnimplementedWebViewApi.invoke();
+        mAwContents.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
     @Override
@@ -925,7 +915,7 @@ class WebViewChromium implements WebViewProvider,
             return false;
         }
 
-        //@Override
+        @Override
         public void setMeasuredDimension(int measuredWidth, int measuredHeight) {
             mWebViewPrivate.setMeasuredDimension(measuredWidth, measuredHeight);
         }
