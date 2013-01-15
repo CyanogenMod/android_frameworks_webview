@@ -417,13 +417,6 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     }
 
     /**
-     * @see ContentViewClient#onEvaluateJavaScriptResult(int,String)
-     */
-    @Override
-    public void onEvaluateJavaScriptResult(int id, String jsonResult) {
-    }
-
-    /**
      * @see ContentViewClient#onStartContentIntent(Context, String)
      * Callback when detecting a click on a content link.
      */
