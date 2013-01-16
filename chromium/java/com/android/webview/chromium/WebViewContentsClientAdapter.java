@@ -31,6 +31,7 @@ import android.webkit.DownloadListener;
 import android.webkit.GeolocationPermissions;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
@@ -220,6 +221,14 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     //--------------------------------------------------------------------------------------------
     //                        Adapter for WebContentsDelegate methods.
     //--------------------------------------------------------------------------------------------
+
+    /**
+     * @see AwContentsClient#getVisitedHistory
+     */
+    @Override
+    public void getVisitedHistory(ValueCallback<String[]> callback) {
+        mWebChromeClient.getVisitedHistory(callback);
+    }
 
     /**
      * @see AwContentsClient#doUpdateVisiteHistory(String, boolean)
