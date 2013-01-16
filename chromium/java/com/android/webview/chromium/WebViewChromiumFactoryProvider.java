@@ -39,6 +39,7 @@ import org.chromium.content.app.LibraryLoader;
 import org.chromium.content.browser.ContentSettings;
 import org.chromium.content.browser.ContentViewStatics;
 import org.chromium.content.browser.ResourceExtractor;
+import org.chromium.content.common.ProcessInitException;
 
 public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
 
@@ -87,7 +88,11 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
                 // in the system image.
                 ResourceExtractor.setMandatoryPaksToExtract("");
 
-                LibraryLoader.ensureInitialized();
+                try {
+                    LibraryLoader.ensureInitialized();
+                } catch(ProcessInitException e) {
+                    // TODO: handle the exception
+                }
 
                 PathService.override(PathService.DIR_MODULE, "/system/lib/");
                 // TODO: DIR_RESOURCE_PAKS_ANDROID needs to live somewhere sensible,
