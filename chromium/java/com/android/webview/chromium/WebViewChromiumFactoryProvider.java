@@ -39,7 +39,6 @@ import org.chromium.content.app.LibraryLoader;
 import org.chromium.content.browser.ContentSettings;
 import org.chromium.content.browser.ContentViewStatics;
 import org.chromium.content.browser.ResourceExtractor;
-import org.chromium.content.common.ProcessInitException;
 
 public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
 
@@ -90,7 +89,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
 
                 try {
                     LibraryLoader.ensureInitialized();
-                } catch(ProcessInitException e) {
+                } catch(Exception e) {
                     // TODO: handle the exception
                 }
 
