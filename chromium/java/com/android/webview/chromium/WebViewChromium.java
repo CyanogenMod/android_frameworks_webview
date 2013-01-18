@@ -493,6 +493,10 @@ class WebViewChromium implements WebViewProvider,
         return false;
     }
 
+    // @Override
+    public void notifyFindDialogDismissed() {
+    }
+
     @Override
     public void clearMatches() {
         mAwContents.clearMatches();
