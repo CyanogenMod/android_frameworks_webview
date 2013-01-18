@@ -39,6 +39,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.webkit.DownloadListener;
+import android.webkit.FindActionModeCallback;
 import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
 import android.webkit.WebBackForwardList;
@@ -489,12 +490,32 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public boolean showFindDialog(String text, boolean showIme) {
-        UnimplementedWebViewApi.invoke();
-        return false;
+        if (mWebView.getParent() == null) {
+            return false;
+        }
+
+        FindActionModeCallback findAction = new FindActionModeCallback(mWebView.getContext());
+        if (findAction == null) {
+            return false;
+        }
+
+        mWebView.startActionMode(findAction);
+        findAction.setWebView(mWebView);
+        if (showIme) {
+            findAction.showSoftInput();
+        }
+
+        if (text != null) {
+            findAction.setText(text);
+            findAction.findAll();
+        }
+
+        return true;
     }
 
-    // @Override
+    @Override
     public void notifyFindDialogDismissed() {
+        clearMatches();
     }
 
     @Override
