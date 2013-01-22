@@ -33,6 +33,8 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.WebSettingsTest#testAccessCacheMode',
   'android.webkit.cts.WebSettingsTest#testAccessSaveFormData',
   'android.webkit.cts.WebViewClientTest#testOnScaleChanged',
+  'android.webkit.cts.WebViewClientTest#testOnUnhandledKeyEvent',
+  # BUG=crbug.com/171485
   'android.webkit.cts.WebViewTest#testCapturePicture',
   # BUG=crbug.com/162967
   'android.webkit.cts.WebViewTest#testFlingScroll',
