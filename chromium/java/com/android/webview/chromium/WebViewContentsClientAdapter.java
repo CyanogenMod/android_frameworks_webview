@@ -524,6 +524,11 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     }
 
     @Override
+    public void onReceivedLoginRequest(String realm, String account, String args) {
+        mWebViewClient.onReceivedLoginRequest(mWebView, realm, account, args);
+    }
+
+    @Override
     public void onFormResubmission(Message dontResend, Message resend) {
         mWebViewClient.onFormResubmission(mWebView, dontResend, resend);
     }
