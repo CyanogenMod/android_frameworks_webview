@@ -410,7 +410,7 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     @Override
     public synchronized void setGeolocationDatabasePath(String databasePath) {
-        UnimplementedWebViewApi.invoke();
+        // Intentional no-op.
     }
 
     @Override
