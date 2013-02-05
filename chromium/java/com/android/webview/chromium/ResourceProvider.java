@@ -41,6 +41,18 @@ public class ResourceProvider {
         org.chromium.content.R.string.actionbar_web_search =
                 com.android.internal.R.string.websearch;
 
+        org.chromium.content.R.string.media_player_error_button =
+                com.android.internal.R.string.VideoView_error_button;
+        org.chromium.content.R.string.media_player_error_text_invalid_progressive_playback =
+                com.android.internal.R.string.VideoView_error_text_invalid_progressive_playback;
+        org.chromium.content.R.string.media_player_error_text_unknown =
+                com.android.internal.R.string.VideoView_error_text_unknown;
+        org.chromium.content.R.string.media_player_error_title =
+                com.android.internal.R.string.VideoView_error_title;
+        org.chromium.content.R.string.media_player_loading_video =
+                com.android.internal.R.string.loading;
+
+
         AwResource.setResources(context.getResources());
 
         AwResource.RAW_LOAD_ERROR = com.android.internal.R.raw.loaderror;
