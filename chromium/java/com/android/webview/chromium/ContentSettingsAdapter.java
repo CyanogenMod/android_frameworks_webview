@@ -26,6 +26,8 @@ import android.webkit.WebSettings.ZoomDensity;
 import org.chromium.content.browser.ContentSettings;
 import org.chromium.android_webview.AwSettings;
 
+// BUG(8296421): We must get rid of paired calls to ContentSettings and AwSettings,
+// making AwSettings a single entry point.
 public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     private static final String TAG = ContentSettingsAdapter.class.getSimpleName();
@@ -103,13 +105,15 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     @Override
     public void setLoadWithOverviewMode(boolean overview) {
-        UnimplementedWebViewApi.invoke();
+        if (overview != mContentSettings.getLoadWithOverviewMode()) {
+            mContentSettings.setLoadWithOverviewMode(overview);
+            mAwSettings.resetScrollAndScaleState();
+        }
     }
 
     @Override
     public boolean getLoadWithOverviewMode() {
-        UnimplementedWebViewApi.invoke();
-        return false;
+        return mContentSettings.getLoadWithOverviewMode();
     }
 
     @Override
