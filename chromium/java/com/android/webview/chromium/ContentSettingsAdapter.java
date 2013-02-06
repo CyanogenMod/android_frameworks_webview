@@ -147,12 +147,12 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     @Override
     public void setSavePassword(boolean save) {
-        UnimplementedWebViewApi.invoke();
+        // Intentional no-op.
     }
 
     @Override
     public boolean getSavePassword() {
-        UnimplementedWebViewApi.invoke();
+        // Intentional no-op.
         return false;
     }
 
