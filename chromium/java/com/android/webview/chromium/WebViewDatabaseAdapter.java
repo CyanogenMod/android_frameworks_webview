@@ -16,13 +16,23 @@
 
 package com.android.webview.chromium;
 
+import android.content.Context;
 import android.webkit.WebViewDatabase;
+
+import org.chromium.android_webview.HttpAuthDatabase;
 
 /**
  * Chromium implementation of WebViewDatabase -- forwards calls to the
  * chromium internal implementation.
  */
 final class WebViewDatabaseAdapter extends WebViewDatabase {
+
+    private Context mContext;
+
+    public WebViewDatabaseAdapter(Context context) {
+        mContext = context;
+    }
+
     @Override
     public boolean hasUsernamePassword() {
         // This is a deprecated API: intentional no-op.
@@ -36,13 +46,12 @@ final class WebViewDatabaseAdapter extends WebViewDatabase {
 
     @Override
     public boolean hasHttpAuthUsernamePassword() {
-        UnimplementedWebViewApi.invoke();
-        return false;
+        return HttpAuthDatabase.getInstance(mContext).hasHttpAuthUsernamePassword();
     }
 
     @Override
     public void clearHttpAuthUsernamePassword() {
-        UnimplementedWebViewApi.invoke();
+        HttpAuthDatabase.getInstance(mContext).clearHttpAuthUsernamePassword();
     }
 
     @Override
