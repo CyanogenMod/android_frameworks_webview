@@ -118,7 +118,7 @@ class WebViewChromium implements WebViewProvider,
                 Build.VERSION_CODES.JELLY_BEAN;
         mContentsClientAdapter = new WebViewContentsClientAdapter(mWebView);
         mAwContents = new AwContents(mWebView, new InternalAccessAdapter(), mContentsClientAdapter,
-                new AwNativeWindow(mWebView.getContext()), isAccessFromFileURLsGrantedByDefault);
+                isAccessFromFileURLsGrantedByDefault);
     }
 
     @Override
