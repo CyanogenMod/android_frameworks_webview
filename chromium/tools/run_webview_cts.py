@@ -33,12 +33,9 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.WebSettingsTest#testAccessCacheMode',
   'android.webkit.cts.WebSettingsTest#testAccessSaveFormData',
   'android.webkit.cts.WebViewClientTest#testOnScaleChanged',
-  'android.webkit.cts.WebViewClientTest#testOnUnhandledKeyEvent',
-  # BUG=crbug.com/171485
   'android.webkit.cts.WebViewTest#testCapturePicture',
   # BUG=crbug.com/162967
   'android.webkit.cts.WebViewTest#testFlingScroll',
-  'android.webkit.cts.WebViewTest#testGetHitTestResult',
   'android.webkit.cts.WebViewTest#testInsecureSiteClearsCertificate',
   'android.webkit.cts.WebViewTest#testLoadDataWithBaseUrl',
   'android.webkit.cts.WebViewTest#testOnReceivedSslError',
@@ -46,7 +43,6 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.WebViewTest#testPageScroll',
   'android.webkit.cts.WebViewTest#testPauseResumeTimers',
   'android.webkit.cts.WebViewTest#testRequestChildRectangleOnScreen',
-  'android.webkit.cts.WebViewTest#testRequestFocusNodeHref',
   'android.webkit.cts.WebViewTest#testScrollBarOverlay',
   'android.webkit.cts.WebViewTest#testSecureSiteSetsCertificate',
   'android.webkit.cts.WebViewTest#testSetInitialScale',
