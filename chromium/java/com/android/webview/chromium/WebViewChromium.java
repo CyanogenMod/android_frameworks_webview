@@ -333,12 +333,12 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public float getScale() {
-        return mAwContents.getContentViewCore().getScale();
+        return mAwContents.getScale();
     }
 
     @Override
     public void setInitialScale(int scaleInPercent) {
-        UnimplementedWebViewApi.invoke();
+        mAwContents.getSettings().setInitialPageScale(scaleInPercent);
     }
 
     @Override
