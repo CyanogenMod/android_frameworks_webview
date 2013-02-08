@@ -162,8 +162,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
                         new AwGeolocationPermissions(mWebViewChromiumSharedPreferences));
             }
         }
-        // TODO: return mGeolocationPermissions when http://b/7929330 is fixed.
-        return null;
+        return mGeolocationPermissions;
     }
 
     @Override
