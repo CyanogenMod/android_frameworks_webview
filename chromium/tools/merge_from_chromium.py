@@ -349,22 +349,37 @@ def GetHEAD():
   """
   (svn_revision, root_sha1) = _GetSVNRevisionAndSHA1(SRC_GIT_URL,
                                                      SRC_GIT_BRANCH,
-                                                     'HEAD')
+                                                     'HEAD',
+                                                     None)
   return int(svn_revision)
 
 
-def _GetSVNRevisionAndSHA1(git_url, git_branch, svn_revision):
+def _ParseSvnRevisionFromGitCommitMessage(commit_message):
+  return re.search(r'^git-svn-id: .*@([0-9]+)', commit_message,
+                   flags=re.MULTILINE).group(1)
+
+
+def _GetSVNRevisionFromSha(sha1):
+  commit = merge_common.GetCommandStdout([
+      'git', 'show', '--format=%H%n%b', sha1])
+  return _ParseSvnRevisionFromGitCommitMessage(commit)
+
+
+def _GetSVNRevisionAndSHA1(git_url, git_branch, svn_revision, sha1):
   logging.debug('Getting SVN revision and SHA1 ...')
   merge_common.GetCommandStdout(['git', 'fetch', '-f', git_url,
                                  git_branch + ':cached_upstream'])
+
+  if sha1:
+    return (_GetSVNRevisionFromSha(sha1), sha1)
+
   if svn_revision == 'HEAD':
     # Just use the latest commit.
     commit = merge_common.GetCommandStdout([
         'git', 'log', '-n1', '--grep=git-svn-id:', '--format=%H%n%b',
         'cached_upstream'])
     sha1 = commit.split()[0]
-    svn_revision = re.search(r'^git-svn-id: .*@([0-9]+)', commit,
-                             flags=re.MULTILINE).group(1)
+    svn_revision = _ParseSvnRevisionFromGitCommitMessage(commit)
     return (svn_revision, sha1)
 
   if svn_revision is None:
@@ -383,7 +398,7 @@ def _GetSVNRevisionAndSHA1(git_url, git_branch, svn_revision):
   return (svn_revision, sha1)
 
 
-def Snapshot(svn_revision, unattended):
+def Snapshot(svn_revision, root_sha1, unattended):
   """Takes a snapshot of the Chromium tree and merges it into Android.
 
   Android makefiles and a top-level NOTICE file are generated and committed
@@ -391,6 +406,8 @@ def Snapshot(svn_revision, unattended):
 
   Args:
     svn_revision: The SVN revision in the Chromium repository to merge from.
+    root_sha1: The sha1 in the Chromium git mirror to merge from. Only one of
+               svn_revision and root_sha1 should be specified.
     unattended: Run in unattended mode.
 
   Returns:
@@ -399,7 +416,7 @@ def Snapshot(svn_revision, unattended):
   git_url = SRC_GIT_URL
   git_branch = SRC_GIT_BRANCH
   (svn_revision, root_sha1) = _GetSVNRevisionAndSHA1(git_url, git_branch,
-                                                     svn_revision)
+                                                     svn_revision, root_sha1)
   if not merge_common.GetCommandStdout(['git', 'rev-list', '-1',
                                         'HEAD..' + root_sha1]):
     logging.info('No new commits to merge from %s branch %s at r%s (%s)',
@@ -442,11 +459,19 @@ def main():
       '', '--svn_revision',
       default=None,
       help=('Merge to the specified chromium SVN revision, rather than using '
-            'the current LKGR. Can also pass HEAD to merge from tip of tree.'))
+            'the current LKGR. Can also pass HEAD to merge from tip of tree. '
+            'Only one of svn_revision and sha1 should be specified'))
+  parser.add_option(
+      '', '--sha1',
+      default=None,
+      help=('Merge to the specified chromium sha1 revision from ' + SRC_GIT_BRANCH
+            + ' branch, rather than using the current LKGR. Only one of'
+             'svn_revision and sha1 should be specified.'))
   parser.add_option(
       '', '--push',
       default=False, action='store_true',
-      help=('Push the result of a previous merge to the server.'))
+      help=('Push the result of a previous merge to the server. Note '
+            'svn_revision must be given.'))
   parser.add_option(
       '', '--get_lkgr',
       default=False, action='store_true',
@@ -487,7 +512,7 @@ def main():
     else:
       Push(options.svn_revision)
   else:
-    if not Snapshot(options.svn_revision, options.unattended):
+    if not Snapshot(options.svn_revision, options.sha1, options.unattended):
       return options.no_changes_exit
 
   return 0
