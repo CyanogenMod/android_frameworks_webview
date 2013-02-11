@@ -31,11 +31,64 @@ LOCAL_STATIC_JAVA_LIBRARIES += google-common \
 
 LOCAL_SRC_FILES := $(call all-java-files-under, java)
 
+# TODO: filter webviewchromium_webkit_strings based on PRODUCT_LOCALES.
 LOCAL_REQUIRED_MODULES := \
         libwebviewchromium \
         libwebviewchromium_plat_support \
         webviewchromium_pak \
-        webviewchromium_strings_pak \
+        webviewchromium_webkit_strings_am.pak \
+        webviewchromium_webkit_strings_ar.pak \
+        webviewchromium_webkit_strings_bg.pak \
+        webviewchromium_webkit_strings_bn.pak \
+        webviewchromium_webkit_strings_ca.pak \
+        webviewchromium_webkit_strings_cs.pak \
+        webviewchromium_webkit_strings_da.pak \
+        webviewchromium_webkit_strings_de.pak \
+        webviewchromium_webkit_strings_el.pak \
+        webviewchromium_webkit_strings_en-GB.pak \
+        webviewchromium_webkit_strings_en-US.pak \
+        webviewchromium_webkit_strings_es-419.pak \
+        webviewchromium_webkit_strings_es.pak \
+        webviewchromium_webkit_strings_et.pak \
+        webviewchromium_webkit_strings_fa.pak \
+        webviewchromium_webkit_strings_fil.pak \
+        webviewchromium_webkit_strings_fi.pak \
+        webviewchromium_webkit_strings_fr.pak \
+        webviewchromium_webkit_strings_gu.pak \
+        webviewchromium_webkit_strings_he.pak \
+        webviewchromium_webkit_strings_hi.pak \
+        webviewchromium_webkit_strings_hr.pak \
+        webviewchromium_webkit_strings_hu.pak \
+        webviewchromium_webkit_strings_id.pak \
+        webviewchromium_webkit_strings_it.pak \
+        webviewchromium_webkit_strings_ja.pak \
+        webviewchromium_webkit_strings_kn.pak \
+        webviewchromium_webkit_strings_ko.pak \
+        webviewchromium_webkit_strings_lt.pak \
+        webviewchromium_webkit_strings_lv.pak \
+        webviewchromium_webkit_strings_ml.pak \
+        webviewchromium_webkit_strings_mr.pak \
+        webviewchromium_webkit_strings_ms.pak \
+        webviewchromium_webkit_strings_nb.pak \
+        webviewchromium_webkit_strings_nl.pak \
+        webviewchromium_webkit_strings_pl.pak \
+        webviewchromium_webkit_strings_pt-BR.pak \
+        webviewchromium_webkit_strings_pt-PT.pak \
+        webviewchromium_webkit_strings_ro.pak \
+        webviewchromium_webkit_strings_ru.pak \
+        webviewchromium_webkit_strings_sk.pak \
+        webviewchromium_webkit_strings_sl.pak \
+        webviewchromium_webkit_strings_sr.pak \
+        webviewchromium_webkit_strings_sv.pak \
+        webviewchromium_webkit_strings_sw.pak \
+        webviewchromium_webkit_strings_ta.pak \
+        webviewchromium_webkit_strings_te.pak \
+        webviewchromium_webkit_strings_th.pak \
+        webviewchromium_webkit_strings_tr.pak \
+        webviewchromium_webkit_strings_uk.pak \
+        webviewchromium_webkit_strings_vi.pak \
+        webviewchromium_webkit_strings_zh-CN.pak \
+        webviewchromium_webkit_strings_zh-TW.pak
 
 LOCAL_PROGUARD_ENABLED := disabled
 
