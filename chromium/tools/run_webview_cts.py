@@ -32,6 +32,8 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.WebChromeClientTest#testOnReceivedIcon',
   'android.webkit.cts.WebSettingsTest#testAccessCacheMode',
   'android.webkit.cts.WebSettingsTest#testAccessSaveFormData',
+  'android.webkit.cts.WebSettingsTest#testDatabaseEnabled',
+  'android.webkit.cts.WebSettingsTest#testDatabaseDisabled',
   'android.webkit.cts.WebViewClientTest#testOnScaleChanged',
   'android.webkit.cts.WebViewClientTest#testOnUnhandledKeyEvent',
   # BUG=crbug.com/171485
