@@ -26,6 +26,7 @@ import android.os.Message;
 import android.provider.Browser;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.webkit.ConsoleMessage;
 import android.webkit.DownloadListener;
 import android.webkit.GeolocationPermissions;
@@ -33,6 +34,7 @@ import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
+import android.webkit.WebChromeClient.CustomViewCallback;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -551,6 +553,12 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     @Override
     public void onScaleChanged(float oldScale, float newScale) {
         mWebViewClient.onScaleChanged(mWebView, oldScale, newScale);
+    }
+
+    // TODO(boliu): Add override when upstream change is merged down.
+    public void onShowCustomView(View view,
+            int requestedOrientation, CustomViewCallback cb) {
+        mWebChromeClient.onShowCustomView(view, requestedOrientation, cb);
     }
 
     private static class AwHttpAuthHandlerAdapter extends android.webkit.HttpAuthHandler {
