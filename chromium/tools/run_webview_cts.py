@@ -54,6 +54,11 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.WebViewTest#testSslErrorProceedResponseReusedForSameHost',
   'android.webkit.cts.WebViewTest#testStopLoading',
   'android.webkit.cts.WebViewTest#testZoom',
+  # Following 4 tests failing due to crbug.com/172786.
+  'android.webkit.cts.WebViewTest#testRequestImageRef',
+  'android.webkit.cts.WebViewTest#testFindNext',
+  'android.webkit.cts.WebViewTest#testFindAll',
+  'android.webkit.cts.WebViewTest#testGetContentHeight',
 ])
 
 def main():
