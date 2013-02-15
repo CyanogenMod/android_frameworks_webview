@@ -32,8 +32,6 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.WebChromeClientTest#testOnReceivedIcon',
   'android.webkit.cts.WebSettingsTest#testAccessCacheMode',
   'android.webkit.cts.WebSettingsTest#testAccessSaveFormData',
-  'android.webkit.cts.WebSettingsTest#testDatabaseEnabled',
-  'android.webkit.cts.WebSettingsTest#testDatabaseDisabled',
   'android.webkit.cts.WebViewClientTest#testOnScaleChanged',
   'android.webkit.cts.WebViewTest#testCapturePicture',
   # BUG=crbug.com/162967
@@ -59,6 +57,11 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.WebViewTest#testFindNext',
   'android.webkit.cts.WebViewTest#testFindAll',
   'android.webkit.cts.WebViewTest#testGetContentHeight',
+  # see b/8209022
+  'android.webkit.cts.WebViewTest#testSetPictureListener',
+  # see b/8208948
+  'android.webkit.cts.WebViewTest#testAddJavascriptInterfaceNullObject',
+  'android.webkit.cts.WebViewTest#testRemoveJavascriptInterface'
 ])
 
 def main():
