@@ -159,6 +159,10 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
     @Override
     public synchronized void setTextZoom(int textZoom) {
         mContentSettings.setTextZoom(textZoom);
+        if (mContentSettings.getLayoutAlgorithm() !=
+                ContentSettings.LayoutAlgorithm.TEXT_AUTOSIZING) {
+            mAwSettings.setTextZoom(textZoom);
+        }
     }
 
     @Override
@@ -234,6 +238,8 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
             ContentSettings.LayoutAlgorithm.TEXT_AUTOSIZING
         };
         mContentSettings.setLayoutAlgorithm(chromiumValues[l.ordinal()]);
+        mAwSettings.setTextZoom(l == LayoutAlgorithm.TEXT_AUTOSIZING ?
+                -1 : mContentSettings.getTextZoom());
     }
 
     @Override
