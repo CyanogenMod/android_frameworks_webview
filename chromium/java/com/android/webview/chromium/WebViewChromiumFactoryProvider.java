@@ -150,6 +150,8 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
             ensureChromiumStartedLocked();
             ResourceProvider.registerResources(webView.getContext());
         }
+        // Make sure GeolocationPermissions is created before creating a webview
+        getGeolocationPermissions();
         return new WebViewChromium(webView, privateAccess);
     }
 
