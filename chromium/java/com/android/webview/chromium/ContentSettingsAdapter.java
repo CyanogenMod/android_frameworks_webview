@@ -405,7 +405,7 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     @Override
     public synchronized void setDatabasePath(String databasePath) {
-        // Intentional no-op.
+        UnimplementedWebViewApi.invoke();
     }
 
     @Override
@@ -430,7 +430,7 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     @Override
     public synchronized void setDatabaseEnabled(boolean flag) {
-        mContentSettings.setDatabaseEnabled(flag);
+        UnimplementedWebViewApi.invoke();
     }
 
     @Override
@@ -446,13 +446,14 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     @Override
     public synchronized String getDatabasePath() {
-        // Intentional no-op.
-        return "";
+        UnimplementedWebViewApi.invoke();
+        return null;
     }
 
     @Override
     public synchronized boolean getDatabaseEnabled() {
-        return mContentSettings.getDatabaseEnabled();
+        UnimplementedWebViewApi.invoke();
+        return false;
     }
 
     @Override
