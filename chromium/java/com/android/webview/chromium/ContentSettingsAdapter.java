@@ -463,7 +463,7 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     @Override
     public synchronized void setGeolocationEnabled(boolean flag) {
-        UnimplementedWebViewApi.invoke();
+        mAwSettings.setGeolocationEnabled(flag);
     }
 
     @Override
