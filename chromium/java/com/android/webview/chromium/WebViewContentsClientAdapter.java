@@ -19,6 +19,7 @@ package com.android.webview.chromium;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Picture;
 import android.os.Handler;
 import android.os.Looper;
@@ -330,6 +331,14 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     /* @Override */
     public void onRequestFocus() {
         mWebChromeClient.onRequestFocus(mWebView);
+    }
+
+    /**
+     * @see AwContentsClient#onReceivedIcon(Bitmap bitmap)
+     */
+    @Override
+    public void onReceivedIcon(Bitmap bitmap) {
+        mWebChromeClient.onReceivedIcon(mWebView, bitmap);
     }
 
     //--------------------------------------------------------------------------------------------
