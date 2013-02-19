@@ -25,10 +25,6 @@ import sys
 
 # Eventually this list will be empty!
 EXPECTED_FAILURES = set([
-  'android.webkit.cts.GeolocationTest#testGeolocationPermissions',
-  'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestAcceptAlways',
-  'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestAcceptOnce',
-  'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestReject',
   'android.webkit.cts.WebChromeClientTest#testOnReceivedIcon',
   'android.webkit.cts.WebSettingsTest#testAccessCacheMode',
   'android.webkit.cts.WebSettingsTest#testAccessSaveFormData',
