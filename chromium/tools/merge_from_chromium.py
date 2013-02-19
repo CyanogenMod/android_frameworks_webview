@@ -217,7 +217,7 @@ def _MergeProjects(git_url, git_branch, svn_revision, root_sha1, unattended):
                                   exclude_list, cwd=dest_dir)
     if _ModifiedFilesInIndex(dest_dir):
       merge_common.GetCommandStdout(['git', 'commit', '-m',
-                                     'Exclude incompatible directories'],
+                                     'Exclude unwanted directories'],
                                     cwd=dest_dir)
 
   directories_left_over = webview_licenses.GetIncompatibleDirectories()
