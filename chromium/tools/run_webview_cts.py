@@ -25,8 +25,6 @@ import sys
 
 # Eventually this list will be empty!
 EXPECTED_FAILURES = set([
-  'android.webkit.cts.WebChromeClientTest#testOnReceivedIcon',
-  'android.webkit.cts.WebSettingsTest#testAccessCacheMode',
   'android.webkit.cts.WebSettingsTest#testAccessSaveFormData',
   'android.webkit.cts.WebViewClientTest#testOnScaleChanged',
   'android.webkit.cts.WebViewTest#testCapturePicture',
@@ -55,9 +53,10 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.WebViewTest#testGetContentHeight',
   # see b/8209022
   'android.webkit.cts.WebViewTest#testSetPictureListener',
-  # see b/8208948
-  'android.webkit.cts.WebViewTest#testAddJavascriptInterfaceNullObject',
-  'android.webkit.cts.WebViewTest#testRemoveJavascriptInterface'
+  # see b/8208948 for the next three bugs
+  'android.webkit.cts.WebViewTest#testRemoveJavascriptInterface',
+  'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestAcceptAlways',
+  'android.webkit.cts.WebSettingsTest#testDatabaseEnabled',
 ])
 
 def main():
