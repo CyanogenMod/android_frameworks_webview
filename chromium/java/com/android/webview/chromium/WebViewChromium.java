@@ -402,12 +402,12 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public int getContentHeight() {
-        return mAwContents.getContentViewCore().getContentHeight();
+        return mAwContents.getContentHeightCss();
     }
 
     @Override
     public int getContentWidth() {
-        return mAwContents.getContentViewCore().getContentWidth();
+        return mAwContents.getContentWidthCss();
     }
 
     @Override
