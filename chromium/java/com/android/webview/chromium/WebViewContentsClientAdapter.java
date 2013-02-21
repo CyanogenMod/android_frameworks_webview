@@ -360,6 +360,31 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     @Override
     public void onPageFinished(String url) {
         mWebViewClient.onPageFinished(mWebView, url);
+
+        // See b/8208948
+        // This fakes an onNewPicture callback after onPageFinished to allow
+        // CTS tests to run in an un-flaky manner. This is required as the
+        // path for sending Picture updates in Chromium are decoupled from the
+        // page loading callbacks, i.e. the Chrome compositor may draw our
+        // content and send the Picture before onPageStarted or onPageFinished
+        // are invoked. The CTS harness discards any pictures it receives before
+        // onPageStarted is invoked, so in the case we get the Picture before that and
+        // no further updates after onPageStarted, we'll fail the test by timing
+        // out waiting for a Picture.
+        // To ensure backwards compatibility, we need to defer sending Picture updates
+        // until onPageFinished has been invoked. This work is being done
+        // upstream, and we can revert this hack when it lands.
+        if (mPictureListener != null) {
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    UnimplementedWebViewApi.invoke();
+                    if (mPictureListener != null) {
+                        mPictureListener.onNewPicture(mWebView, null);
+                    }
+                }
+            }, 100);
+        }
     }
 
     /**
