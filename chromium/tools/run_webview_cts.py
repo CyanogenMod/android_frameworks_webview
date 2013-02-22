@@ -52,8 +52,6 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.WebViewTest#testFindNext',
   'android.webkit.cts.WebViewTest#testFindAll',
   'android.webkit.cts.WebViewTest#testGetContentHeight',
-  # see b/8209022
-  'android.webkit.cts.WebViewTest#testSetPictureListener',
   # See b/8231270
   'android.webkit.cts.WebSettingsTest#testDatabaseEnabled',
   # See b/8231433 for following two failures.
