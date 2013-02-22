@@ -47,16 +47,18 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.WebViewTest#testStopLoading',
   'android.webkit.cts.WebViewTest#testZoom',
   # Following 4 tests failing due to crbug.com/172786.
+  # See also b/8187850
   'android.webkit.cts.WebViewTest#testRequestImageRef',
   'android.webkit.cts.WebViewTest#testFindNext',
   'android.webkit.cts.WebViewTest#testFindAll',
   'android.webkit.cts.WebViewTest#testGetContentHeight',
   # see b/8209022
   'android.webkit.cts.WebViewTest#testSetPictureListener',
-  # see b/8208948 for the next three bugs
-  'android.webkit.cts.WebViewTest#testRemoveJavascriptInterface',
-  'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestAcceptAlways',
+  # See b/8231270
   'android.webkit.cts.WebSettingsTest#testDatabaseEnabled',
+  # See b/8231433 for following two failures.
+  'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestAcceptAlways',
+  'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestAcceptOnce'
 ])
 
 def main():
