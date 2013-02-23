@@ -33,6 +33,7 @@ import org.chromium.android_webview.AwBrowserProcess;
 import org.chromium.android_webview.AwContents;
 import org.chromium.android_webview.AwCookieManager;
 import org.chromium.android_webview.AwGeolocationPermissions;
+import org.chromium.android_webview.AwQuotaManagerBridge;
 import org.chromium.base.PathService;
 import org.chromium.base.ThreadUtils;
 import org.chromium.content.app.LibraryLoader;
@@ -194,7 +195,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         synchronized (mLock) {
             if (mWebStorage == null) {
                 ensureChromiumStartedLocked();
-                mWebStorage = new WebStorageAdapter();
+                mWebStorage = new WebStorageAdapter(AwQuotaManagerBridge.getInstance());
             }
         }
         return mWebStorage;
