@@ -198,13 +198,13 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public boolean savePicture(Bundle b, File dest) {
-        UnimplementedWebViewApi.invoke();
+        // Intentional no-op: hidden method on WebView.
         return false;
     }
 
     @Override
     public boolean restorePicture(Bundle b, File src) {
-        UnimplementedWebViewApi.invoke();
+        // Intentional no-op: hidden method on WebView.
         return false;
     }
 
@@ -385,13 +385,12 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public Bitmap getFavicon() {
-        UnimplementedWebViewApi.invoke();
-        return null;
+        return mAwContents.getFavicon();
     }
 
     @Override
     public String getTouchIconUrl() {
-        UnimplementedWebViewApi.invoke();
+        // Intentional no-op: hidden method on WebView.
         return null;
     }
 

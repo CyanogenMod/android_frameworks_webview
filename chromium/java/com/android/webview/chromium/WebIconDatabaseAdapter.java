@@ -28,36 +28,37 @@ final class WebIconDatabaseAdapter extends WebIconDatabase {
     @Override
     public void open(String path) {
         UnimplementedWebViewApi.invoke();
+        // TODO(joth): open() will just enable fav-icon download logic.
     }
 
     @Override
     public void close() {
-        UnimplementedWebViewApi.invoke();
+        // Intentional no-op.
     }
 
     @Override
     public void removeAllIcons() {
-        UnimplementedWebViewApi.invoke();
+        // Intentional no-op: we have no database so nothing to remove.
     }
 
     @Override
     public void requestIconForPageUrl(String url, IconListener listener) {
-        UnimplementedWebViewApi.invoke();
+        // Intentional no-op.
     }
 
     @Override
     public void bulkRequestIconForPageUrl(ContentResolver cr, String where,
             IconListener listener) {
-        UnimplementedWebViewApi.invoke();
+        // Intentional no-op: hidden in base class.
     }
 
     @Override
     public void retainIconForPageUrl(String url) {
-        UnimplementedWebViewApi.invoke();
+        // Intentional no-op.
     }
 
     @Override
     public void releaseIconForPageUrl(String url) {
-        UnimplementedWebViewApi.invoke();
+        // Intentional no-op.
     }
 }
