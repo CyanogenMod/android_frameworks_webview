@@ -441,13 +441,12 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     @Override
     public synchronized void setDomStorageEnabled(boolean flag) {
-        UnimplementedWebViewApi.invoke();
+        mContentSettings.setDomStorageEnabled(flag);
     }
 
     @Override
     public synchronized boolean getDomStorageEnabled() {
-        UnimplementedWebViewApi.invoke();
-        return false;
+        return mContentSettings.getDomStorageEnabled();
     }
 
     @Override
