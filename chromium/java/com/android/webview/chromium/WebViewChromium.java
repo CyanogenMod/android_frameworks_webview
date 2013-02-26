@@ -546,7 +546,7 @@ class WebViewChromium implements WebViewProvider,
         mContentsClientAdapter.setPictureListener(listener);
         mAwContents.enableOnNewPicture(listener != null,
                 mWebView.getContext().getApplicationInfo().targetSdkVersion >=
-                Build.VERSION_CODES.K);
+                Build.VERSION_CODES.JELLY_BEAN_MR2);
     }
 
     @Override
