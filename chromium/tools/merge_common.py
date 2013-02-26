@@ -53,6 +53,7 @@ THIRD_PARTY_PROJECTS_WITH_FULL_HISTORY = [
     'third_party/skia/src',
     'third_party/smhasher/src',
     'third_party/v8-i18n',
+    'third_party/yasm/source/patched-yasm',
     'tools/grit',
     'tools/gyp',
     'v8',
