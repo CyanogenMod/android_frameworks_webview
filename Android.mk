@@ -22,21 +22,9 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE := webview
 LOCAL_MODULE_TAGS := optional
-LOCAL_REQUIRED_MODULES := libwebcore
-
-# Currently webviewchromium only builds on ARM, on Linux hosts.
-ifeq ($(TARGET_ARCH),arm)
-ifeq ($(HOST_OS),linux)
-LOCAL_REQUIRED_MODULES += webviewchromium
-endif
-endif
+LOCAL_REQUIRED_MODULES := libwebcore webviewchromium
 
 include $(BUILD_PHONY_PACKAGE)
 
-# Currently webviewchromium only builds on ARM, on Linux hosts.
-ifeq ($(TARGET_ARCH),arm)
-ifeq ($(HOST_OS),linux)
 # Include all the makefiles for subdirectories.
 include $(call all-makefiles-under,$(LOCAL_PATH))
-endif
-endif
