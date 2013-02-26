@@ -431,7 +431,7 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     @Override
     public synchronized void setAppCacheMaxSize(long appCacheMaxSize) {
-        UnimplementedWebViewApi.invoke();
+        // Intentional no-op.
     }
 
     @Override
