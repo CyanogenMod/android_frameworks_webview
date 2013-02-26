@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Picture;
+import android.net.http.SslError;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -33,6 +34,7 @@ import android.webkit.DownloadListener;
 import android.webkit.GeolocationPermissions;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
+import android.webkit.SslErrorHandler;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebChromeClient.CustomViewCallback;
@@ -544,6 +546,29 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     public void onReceivedHttpAuthRequest(AwHttpAuthHandler handler, String host, String realm) {
         mWebViewClient.onReceivedHttpAuthRequest(mWebView,
                 new AwHttpAuthHandlerAdapter(handler), host, realm);
+    }
+
+    @Override
+    public void onReceivedSslError(final ValueCallback<Boolean> callback, SslError error) {
+        SslErrorHandler handler = new SslErrorHandler() {
+            @Override
+            public void proceed() {
+                postProceed(true);
+            }
+            @Override
+            public void cancel() {
+                postProceed(false);
+            }
+            private void postProceed(final boolean proceed) {
+                post(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.onReceiveValue(proceed);
+                        }
+                    });
+            }
+        };
+        mWebViewClient.onReceivedSslError(mWebView, handler, error);
     }
 
     @Override
