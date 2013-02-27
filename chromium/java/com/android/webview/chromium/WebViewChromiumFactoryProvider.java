@@ -19,6 +19,7 @@ package com.android.webview.chromium;
 import android.app.ActivityThread;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Looper;
 import android.webkit.CookieManager;
 import android.webkit.GeolocationPermissions;
@@ -40,12 +41,15 @@ import org.chromium.content.app.LibraryLoader;
 import org.chromium.content.browser.ContentSettings;
 import org.chromium.content.browser.ContentViewStatics;
 import org.chromium.content.browser.ResourceExtractor;
+import org.chromium.content.common.CommandLine;
+import org.chromium.content.common.ProcessInitException;
 
 public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
 
     private final Object mLock = new Object();
 
     private static final String CHROMIUM_PREFS_NAME = "WebViewChromiumPrefs";
+    private static final String COMMAND_LINE_PROPERTY = "webview.chromium.flags";
 
     // Initialization guarded by mLock.
     private SharedPreferences mWebViewChromiumSharedPreferences;
@@ -84,14 +88,28 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         ThreadUtils.runOnUiThreadBlocking(new Runnable() {
             @Override
             public void run() {
+                String[] flags = null;
+                String commandLine = System.getProperty(COMMAND_LINE_PROPERTY);
+                if (Build.IS_DEBUGGABLE && commandLine != null) {
+                    flags = CommandLine.tokenizeQuotedAruments(commandLine.toCharArray());
+                }
+                CommandLine.init(flags);
+
+                // TODO: currently in a relase build the DCHECKs only log. We either need to insall
+                // a report handler with SetLogReportHandler to make them assert, or else compile
+                // them out of the build altogether (b/8284203). Either way, so long they're
+                // compiled in, we may as unconditionally enable them here.
+                CommandLine.getInstance().appendSwitch("enable-dcheck");
+
                 // We don't need to extract any paks because for WebView, they are
                 // in the system image.
                 ResourceExtractor.setMandatoryPaksToExtract("");
 
                 try {
                     LibraryLoader.ensureInitialized();
-                } catch(Exception e) {
-                    // TODO: handle the exception
+                } catch(ProcessInitException e) {
+                    throw new RuntimeException("Error initializing WebView library "
+                            + LibraryLoader.getLibraryToLoad(), e);
                 }
 
                 PathService.override(PathService.DIR_MODULE, "/system/lib/");
