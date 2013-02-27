@@ -196,7 +196,8 @@ def PushToServer(src, dest, temp=None):
     for path in ALL_PROJECTS:
       logging.debug('Pushing %s', path)
       dest_dir = os.path.join(REPOSITORY_ROOT, path)
-      GetCommandStdout(['git', 'push', 'goog', src + ':' + temp], cwd=dest_dir)
+      GetCommandStdout(['git', 'push', '-f', 'goog', src + ':' + temp],
+                       cwd=dest_dir)
 
   logging.debug('Pushing to server ...')
   for path in ALL_PROJECTS:
