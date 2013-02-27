@@ -53,10 +53,6 @@ EXPECTED_FAILURES = set([
   # See b/8231433 for following two failures.
   'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestAcceptAlways',
   'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestAcceptOnce',
-  # See b/8276976 for following three failures.
-  'android.webkit.cts.WebViewClientTest#testOnUnhandledKeyEvent',
-  'android.webkit.cts.WebViewTest#testGetHitTestResult',
-  'android.webkit.cts.WebViewTest#testRequestFocusNodeHref',
   # Don't forget to update the spreadsheet! :)
 ])
 
