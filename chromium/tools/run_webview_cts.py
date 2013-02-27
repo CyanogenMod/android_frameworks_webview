@@ -24,6 +24,8 @@ import subprocess
 import sys
 
 # Eventually this list will be empty!
+# If you add or remove tests from this lists please update the CTS
+# spreadsheet!
 EXPECTED_FAILURES = set([
   'android.webkit.cts.WebSettingsTest#testAccessSaveFormData',
   'android.webkit.cts.WebViewClientTest#testOnScaleChanged',
@@ -55,6 +57,7 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.WebViewClientTest#testOnUnhandledKeyEvent',
   'android.webkit.cts.WebViewTest#testGetHitTestResult',
   'android.webkit.cts.WebViewTest#testRequestFocusNodeHref',
+  # Don't forget to update the spreadsheet! :)
 ])
 
 def main():
