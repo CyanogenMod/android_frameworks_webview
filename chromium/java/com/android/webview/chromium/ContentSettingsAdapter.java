@@ -210,7 +210,11 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     @Override
     public synchronized void setUseWideViewPort(boolean use) {
+        // See https://bugs.webkit.org/show_bug.cgi?id=111154. The settings need to be changed
+        // together. Also see b/8296421 about making AwSettings the single entry point for
+        // settings.
         mContentSettings.setUseWideViewPort(use);
+        mAwSettings.setEnableFixedLayoutMode(use);
     }
 
     @Override
