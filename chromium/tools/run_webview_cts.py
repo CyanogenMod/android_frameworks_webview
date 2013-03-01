@@ -48,8 +48,6 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.WebViewTest#testFindNext',
   'android.webkit.cts.WebViewTest#testFindAll',
   'android.webkit.cts.WebViewTest#testGetContentHeight',
-  # See b/8231270
-  'android.webkit.cts.WebSettingsTest#testDatabaseEnabled',
   # See b/8231433 for following two failures.
   'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestAcceptAlways',
   'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestAcceptOnce',
