@@ -597,7 +597,7 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     }
 
     @Override
-    public void onScaleChanged(float oldScale, float newScale) {
+    public void onScaleChangedScaled(float oldScale, float newScale) {
         mWebViewClient.onScaleChanged(mWebView, oldScale, newScale);
     }
 
