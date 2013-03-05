@@ -547,4 +547,14 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
     public int getCacheMode() {
         return mAwSettings.getCacheMode();
     }
+
+    @Override
+    public void setMediaPlaybackRequiresUserGesture(boolean require) {
+        mContentSettings.setMediaPlaybackRequiresUserGesture(require);
+    }
+
+    @Override
+    public boolean getMediaPlaybackRequiresUserGesture() {
+        return mContentSettings.getMediaPlaybackRequiresUserGesture();
+    }
 }
