@@ -40,7 +40,6 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.WebViewTest#testSetInitialScale',
   'android.webkit.cts.WebViewTest#testSetScrollBarStyle',
   'android.webkit.cts.WebViewTest#testSetWebViewClient',
-  'android.webkit.cts.WebViewTest#testStopLoading',
   'android.webkit.cts.WebViewTest#testZoom',
   # Following 4 tests failing due to crbug.com/172786.
   # See also b/8187850
