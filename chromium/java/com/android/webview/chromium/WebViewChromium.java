@@ -49,6 +49,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.WebViewProvider;
 
+import org.chromium.android_webview.AwBrowserContext;
 import org.chromium.android_webview.AwContents;
 import org.chromium.android_webview.AwNativeWindow;
 import org.chromium.content.browser.ContentViewCore;
@@ -88,12 +89,16 @@ class WebViewChromium implements WebViewProvider,
     // Non-null if this webview is using the GL accelerated draw path.
     private DrawGLFunctor mGLfunctor;
 
+    private AwBrowserContext mBrowserContext;
+
     private final WebView.HitTestResult mHitTestResult;
 
-    public WebViewChromium(WebView webView, WebView.PrivateAccess webViewPrivate) {
+    public WebViewChromium(WebView webView, WebView.PrivateAccess webViewPrivate,
+            AwBrowserContext browserContext) {
         mWebView = webView;
         mWebViewPrivate = webViewPrivate;
         mHitTestResult = new WebView.HitTestResult();
+        mBrowserContext = browserContext;
     }
 
     static void completeWindowCreation(WebView parent, WebView child) {
@@ -117,8 +122,8 @@ class WebViewChromium implements WebViewProvider,
                 mWebView.getContext().getApplicationInfo().targetSdkVersion <
                 Build.VERSION_CODES.JELLY_BEAN;
         mContentsClientAdapter = new WebViewContentsClientAdapter(mWebView);
-        mAwContents = new AwContents(mWebView, new InternalAccessAdapter(), mContentsClientAdapter,
-                isAccessFromFileURLsGrantedByDefault);
+        mAwContents = new AwContents(mBrowserContext, mWebView, new InternalAccessAdapter(),
+                mContentsClientAdapter, isAccessFromFileURLsGrantedByDefault);
     }
 
     @Override

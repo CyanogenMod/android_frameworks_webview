@@ -30,6 +30,7 @@ import android.webkit.WebViewDatabase;
 import android.webkit.WebViewFactoryProvider;
 import android.webkit.WebViewProvider;
 
+import org.chromium.android_webview.AwBrowserContext;
 import org.chromium.android_webview.AwBrowserProcess;
 import org.chromium.android_webview.AwContents;
 import org.chromium.android_webview.AwCookieManager;
@@ -52,7 +53,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     private static final String COMMAND_LINE_PROPERTY = "webview.chromium.flags";
 
     // Initialization guarded by mLock.
-    private SharedPreferences mWebViewChromiumSharedPreferences;
+    private AwBrowserContext mBrowserContext;
     private Statics mStaticMethods;
     private GeolocationPermissionsAdapter mGeolocationPermissions;
     private CookieManagerAdapter mCookieManager;
@@ -121,12 +122,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
                 PathService.override(DIR_RESOURCE_PAKS_ANDROID,
                         "/system/framework/webview/paks");
 
-                // Caching for later use, possibly from other threads
-                mWebViewChromiumSharedPreferences = ActivityThread.currentApplication().
-                        getSharedPreferences(CHROMIUM_PREFS_NAME, Context.MODE_PRIVATE);
-
                 AwBrowserProcess.start(ActivityThread.currentApplication());
-
                 initPlatSupportLibrary();
             }
         });
@@ -165,13 +161,15 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     @Override
     public WebViewProvider createWebView(WebView webView, WebView.PrivateAccess privateAccess) {
         assert Looper.myLooper() == Looper.getMainLooper();
+        AwBrowserContext browserContext;
         synchronized (mLock) {
             ensureChromiumStartedLocked();
             ResourceProvider.registerResources(webView.getContext());
+            browserContext = getBrowserContextLocked();
         }
         // Make sure GeolocationPermissions is created before creating a webview
         getGeolocationPermissions();
-        return new WebViewChromium(webView, privateAccess);
+        return new WebViewChromium(webView, privateAccess, browserContext);
     }
 
     @Override
@@ -180,10 +178,21 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
             if (mGeolocationPermissions == null) {
                 ensureChromiumStartedLocked();
                 mGeolocationPermissions = new GeolocationPermissionsAdapter(
-                        new AwGeolocationPermissions(mWebViewChromiumSharedPreferences));
+                        getBrowserContextLocked().getGeolocationPermissions());
             }
         }
         return mGeolocationPermissions;
+    }
+
+    private AwBrowserContext getBrowserContextLocked() {
+        assert Thread.holdsLock(mLock);
+        assert mStarted;
+        if (mBrowserContext == null) {
+            mBrowserContext = new AwBrowserContext(
+                    ActivityThread.currentApplication().getSharedPreferences(
+                            CHROMIUM_PREFS_NAME, Context.MODE_PRIVATE));
+        }
+        return mBrowserContext;
     }
 
     @Override
