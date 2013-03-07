@@ -601,10 +601,15 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
         mWebViewClient.onScaleChanged(mWebView, oldScale, newScale);
     }
 
-    // TODO(boliu): Add override when upstream change is merged down.
+    @Override
     public void onShowCustomView(View view,
             int requestedOrientation, CustomViewCallback cb) {
         mWebChromeClient.onShowCustomView(view, requestedOrientation, cb);
+    }
+
+    @Override
+    protected View getVideoLoadingProgressView() {
+        return mWebChromeClient.getVideoLoadingProgressView();
     }
 
     private static class AwHttpAuthHandlerAdapter extends android.webkit.HttpAuthHandler {
