@@ -52,7 +52,6 @@ import android.webkit.WebViewProvider;
 import org.chromium.android_webview.AwBrowserContext;
 import org.chromium.android_webview.AwContents;
 import org.chromium.android_webview.AwNativeWindow;
-import org.chromium.content.browser.ContentViewCore;
 import org.chromium.content.browser.LoadUrlParams;
 import org.chromium.net.NetworkChangeNotifier;
 
@@ -272,42 +271,42 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void stopLoading() {
-        mAwContents.getContentViewCore().stopLoading();
+        mAwContents.stopLoading();
     }
 
     @Override
     public void reload() {
-        mAwContents.getContentViewCore().reload();
+        mAwContents.reload();
     }
 
     @Override
     public boolean canGoBack() {
-        return mAwContents.getContentViewCore().canGoBack();
+        return mAwContents.canGoBack();
     }
 
     @Override
     public void goBack() {
-        mAwContents.getContentViewCore().goBack();
+        mAwContents.goBack();
     }
 
     @Override
     public boolean canGoForward() {
-        return mAwContents.getContentViewCore().canGoForward();
+        return mAwContents.canGoForward();
     }
 
     @Override
     public void goForward() {
-        mAwContents.getContentViewCore().goForward();
+        mAwContents.goForward();
     }
 
     @Override
     public boolean canGoBackOrForward(int steps) {
-        return mAwContents.getContentViewCore().canGoToOffset(steps);
+        return mAwContents.canGoBackOrForward(steps);
     }
 
     @Override
     public void goBackOrForward(int steps) {
-        mAwContents.getContentViewCore().goToOffset(steps);
+        mAwContents.goBackOrForward(steps);
     }
 
     @Override
@@ -318,12 +317,12 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public boolean pageUp(boolean top) {
-        return mAwContents.getContentViewCore().pageUp(top);
+        return mAwContents.pageUp(top);
     }
 
     @Override
     public boolean pageDown(boolean bottom) {
-        return mAwContents.getContentViewCore().pageDown(bottom);
+        return mAwContents.pageDown(bottom);
     }
 
     @Override
@@ -348,7 +347,7 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void invokeZoomPicker() {
-        mAwContents.getContentViewCore().invokeZoomPicker();
+        mAwContents.invokeZoomPicker();
     }
 
     @Override
@@ -371,7 +370,7 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public String getUrl() {
-        String url =  mAwContents.getContentViewCore().getUrl();
+        String url =  mAwContents.getUrl();
         if (url == null || url.trim().isEmpty()) return null;
         return url;
     }
@@ -385,7 +384,7 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public String getTitle() {
-        return mAwContents.getContentViewCore().getTitle();
+        return mAwContents.getTitle();
     }
 
     @Override
@@ -456,18 +455,18 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void clearHistory() {
-        mAwContents.getContentViewCore().clearHistory();
+        mAwContents.clearHistory();
     }
 
     @Override
     public void clearSslPreferences() {
-        mAwContents.getContentViewCore().clearSslPreferences();
+        mAwContents.clearSslPreferences();
     }
 
     @Override
     public WebBackForwardList copyBackForwardList() {
         return new WebBackForwardListChromium(
-                mAwContents.getContentViewCore().getNavigationHistory());
+                mAwContents.getNavigationHistory());
     }
 
     @Override
@@ -560,20 +559,18 @@ class WebViewChromium implements WebViewProvider,
                 Build.VERSION_CODES.JELLY_BEAN_MR1) {
            requiredAnnotation = JavascriptInterface.class;
         }
-        mAwContents.getContentViewCore().addPossiblyUnsafeJavascriptInterface(obj, interfaceName,
-            requiredAnnotation);
+        mAwContents.addPossiblyUnsafeJavascriptInterface(obj, interfaceName, requiredAnnotation);
     }
 
     @Override
     public void removeJavascriptInterface(String interfaceName) {
-        mAwContents.getContentViewCore().removeJavascriptInterface(interfaceName);
+        mAwContents.removeJavascriptInterface(interfaceName);
     }
 
     @Override
     public WebSettings getSettings() {
         if (mWebSettings == null) {
-            mWebSettings = new ContentSettingsAdapter(
-                    mAwContents.getContentViewCore().getContentSettings(),
+            mWebSettings = new ContentSettingsAdapter(mAwContents.getContentSettings(),
                     mAwContents.getSettings());
         }
         return mWebSettings;
@@ -586,7 +583,7 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void flingScroll(int vx, int vy) {
-        mAwContents.getContentViewCore().flingScroll(vx, vy);
+        mAwContents.flingScroll(vx, vy);
     }
 
     @Override
@@ -594,28 +591,28 @@ class WebViewChromium implements WebViewProvider,
         // This was deprecated in 2009 and hidden in JB MR1, so just provide the minimum needed
         // to stop very out-dated applications from crashing.
         Log.w(TAG, "WebView doesn't support getZoomControls");
-        return mAwContents.getContentViewCore().getContentSettings().supportZoom() ?
+        return mAwContents.getContentSettings().supportZoom() ?
             new View(mWebView.getContext()) : null;
     }
 
     @Override
     public boolean canZoomIn() {
-        return mAwContents.getContentViewCore().canZoomIn();
+        return mAwContents.canZoomIn();
     }
 
     @Override
     public boolean canZoomOut() {
-        return mAwContents.getContentViewCore().canZoomOut();
+        return mAwContents.canZoomOut();
     }
 
     @Override
     public boolean zoomIn() {
-        return mAwContents.getContentViewCore().zoomIn();
+        return mAwContents.zoomIn();
     }
 
     @Override
     public boolean zoomOut() {
-        return mAwContents.getContentViewCore().zoomOut();
+        return mAwContents.zoomOut();
     }
 
     @Override
@@ -652,12 +649,12 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo info) {
-        mAwContents.getContentViewCore().onInitializeAccessibilityNodeInfo(info);
+        mAwContents.onInitializeAccessibilityNodeInfo(info);
     }
 
     @Override
     public void onInitializeAccessibilityEvent(AccessibilityEvent event) {
-        mAwContents.getContentViewCore().onInitializeAccessibilityEvent(event);
+        mAwContents.onInitializeAccessibilityEvent(event);
     }
 
     // TODO: Update WebView to mimic ContentView implementation for the
@@ -665,7 +662,7 @@ class WebViewChromium implements WebViewProvider,
     // See ContentViewCore#performAccessibilityAction(int, Bundle) for more details.
     @Override
     public boolean performAccessibilityAction(int action, Bundle arguments) {
-        return mAwContents.getContentViewCore().performAccessibilityAction(action, arguments);
+        return mAwContents.performAccessibilityAction(action, arguments);
     }
 
     @Override
@@ -726,7 +723,7 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
-        return mAwContents.getContentViewCore().onCreateInputConnection(outAttrs);
+        return mAwContents.onCreateInputConnection(outAttrs);
     }
 
     @Override
@@ -743,7 +740,7 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        return mAwContents.getContentViewCore().onKeyUp(keyCode, event);
+        return mAwContents.onKeyUp(keyCode, event);
     }
 
     @Override
@@ -798,7 +795,7 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        return mAwContents.getContentViewCore().dispatchKeyEvent(event);
+        return mAwContents.dispatchKeyEvent(event);
     }
 
     @Override
@@ -859,27 +856,27 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public int computeHorizontalScrollRange() {
-        return mAwContents.getContentViewCore().computeHorizontalScrollRange();
+        return mAwContents.computeHorizontalScrollRange();
     }
 
     @Override
     public int computeHorizontalScrollOffset() {
-        return mAwContents.getContentViewCore().computeHorizontalScrollOffset();
+        return mAwContents.computeHorizontalScrollOffset();
     }
 
     @Override
     public int computeVerticalScrollRange() {
-        return mAwContents.getContentViewCore().computeVerticalScrollRange();
+        return mAwContents.computeVerticalScrollRange();
     }
 
     @Override
     public int computeVerticalScrollOffset() {
-        return mAwContents.getContentViewCore().computeVerticalScrollOffset();
+        return mAwContents.computeVerticalScrollOffset();
     }
 
     @Override
     public int computeVerticalScrollExtent() {
-        return mAwContents.getContentViewCore().computeVerticalScrollExtent();
+        return mAwContents.computeVerticalScrollExtent();
     }
 
     @Override
