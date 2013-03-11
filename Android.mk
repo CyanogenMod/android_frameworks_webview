@@ -22,9 +22,17 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE := webview
 LOCAL_MODULE_TAGS := optional
-LOCAL_REQUIRED_MODULES := libwebcore webviewchromium
+LOCAL_REQUIRED_MODULES := libwebcore
+
+# webviewchromium doesn't have makefiles for MIPS yet.
+ifneq ($(TARGET_ARCH),mips)
+LOCAL_REQUIRED_MODULES += webviewchromium
+endif
 
 include $(BUILD_PHONY_PACKAGE)
 
+# webviewchromium doesn't have makefiles for MIPS yet.
+ifneq ($(TARGET_ARCH),mips)
 # Include all the makefiles for subdirectories.
 include $(call all-makefiles-under,$(LOCAL_PATH))
+endif
