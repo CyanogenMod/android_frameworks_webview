@@ -34,7 +34,6 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.WebViewTest#testFlingScroll',
   'android.webkit.cts.WebViewTest#testLoadDataWithBaseUrl',
   'android.webkit.cts.WebViewTest#testPageScroll',
-  'android.webkit.cts.WebViewTest#testPauseResumeTimers',
   'android.webkit.cts.WebViewTest#testRequestChildRectangleOnScreen',
   'android.webkit.cts.WebViewTest#testScrollBarOverlay',
   'android.webkit.cts.WebViewTest#testSetInitialScale',
