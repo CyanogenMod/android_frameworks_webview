@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Picture;
+import android.net.http.ErrorStrings;
 import android.net.http.SslError;
 import android.os.Handler;
 import android.os.Looper;
@@ -394,6 +395,12 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
      */
     @Override
     public void onReceivedError(int errorCode, String description, String failingUrl) {
+        if (description == null || description.isEmpty()) {
+            // ErrorStrings is @hidden, so we can't do this in AwContents.
+            // Normally the net/ layer will set a valid description, but for synthesized callbacks
+            // (like in the case for intercepted requests) AwContents will pass in null.
+            description = ErrorStrings.getString(errorCode, mWebView.getContext());
+        }
         mWebViewClient.onReceivedError(mWebView, errorCode, description, failingUrl);
     }
 
