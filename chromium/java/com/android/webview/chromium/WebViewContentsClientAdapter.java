@@ -336,6 +336,14 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     }
 
     /**
+     * @see AwContentsClient#onReceivedTouchIconUrl(String url, boolean precomposed)
+     */
+    @Override
+    public void onReceivedTouchIconUrl(String url, boolean precomposed) {
+        mWebChromeClient.onReceivedTouchIconUrl(mWebView, url, precomposed);
+    }
+
+    /**
      * @see AwContentsClient#onReceivedIcon(Bitmap bitmap)
      */
     @Override
