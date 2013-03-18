@@ -26,13 +26,19 @@ LOCAL_REQUIRED_MODULES := libwebcore
 
 # webviewchromium doesn't have makefiles for MIPS yet.
 ifneq ($(TARGET_ARCH),mips)
+# webviewchromium is currently broken on mac (b/8326522)
+ifeq ($(HOST_OS),linux)
 LOCAL_REQUIRED_MODULES += webviewchromium
+endif
 endif
 
 include $(BUILD_PHONY_PACKAGE)
 
 # webviewchromium doesn't have makefiles for MIPS yet.
 ifneq ($(TARGET_ARCH),mips)
+# webviewchromium is currently broken on mac (b/8326522)
+ifeq ($(HOST_OS),linux)
 # Include all the makefiles for subdirectories.
 include $(call all-makefiles-under,$(LOCAL_PATH))
+endif
 endif
