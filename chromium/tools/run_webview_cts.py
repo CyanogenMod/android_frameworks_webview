@@ -32,7 +32,6 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.WebViewTest#testCapturePicture',
   # BUG=crbug.com/162967
   'android.webkit.cts.WebViewTest#testFlingScroll',
-  'android.webkit.cts.WebViewTest#testLoadDataWithBaseUrl',
   'android.webkit.cts.WebViewTest#testPageScroll',
   'android.webkit.cts.WebViewTest#testRequestChildRectangleOnScreen',
   'android.webkit.cts.WebViewTest#testScrollBarOverlay',
