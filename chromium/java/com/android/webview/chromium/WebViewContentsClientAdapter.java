@@ -616,6 +616,11 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     }
 
     @Override
+    public void onHideCustomView() {
+        mWebChromeClient.onHideCustomView();
+    }
+
+    @Override
     protected View getVideoLoadingProgressView() {
         return mWebChromeClient.getVideoLoadingProgressView();
     }
