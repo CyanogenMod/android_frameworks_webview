@@ -264,11 +264,16 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
                 response.getData());
     }
 
-    /**
-     * @see AwContentsClient#shouldIgnoreNavigation(java.lang.String)
-     */
-    @Override
+    // TODO: remove this overload, and mark shouldOverrideUrlLoading as @Override
     public boolean shouldIgnoreNavigation(String url) {
+        return this.shouldOverrideUrlLoading(url);
+    }
+
+    /**
+     * @see AwContentsClient#shouldOverrideUrlLoading(java.lang.String)
+     */
+    //@Override
+    public boolean shouldOverrideUrlLoading(String url) {
       return mWebViewClient.shouldOverrideUrlLoading(mWebView, url);
     }
 
@@ -360,8 +365,7 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
      */
     @Override
     public void onPageStarted(String url) {
-        //TODO: Can't get the favicon till b/6094807 is fixed.
-        mWebViewClient.onPageStarted(mWebView, url, null);
+        mWebViewClient.onPageStarted(mWebView, url, mWebView.getFavicon());
     }
 
     /**
@@ -405,11 +409,16 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
         mWebViewClient.onReceivedError(mWebView, errorCode, description, failingUrl);
     }
 
-    /**
-     * @see ContentViewClient#onUpdateTitle(String)
-     */
-    @Override
+    // TODO: remove this method, and mark onReceivedTitle as @Override
     public void onUpdateTitle(String title) {
+        onReceivedTitle(title);
+    }
+
+    /**
+     * @see ContentViewClient#onReceivedTitle(String)
+     */
+    //@Override
+    public void onReceivedTitle(String title) {
         mWebChromeClient.onReceivedTitle(mWebView, title);
     }
 
@@ -429,40 +438,11 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     }
 
 
-    //--------------------------------------------------------------------------------------------
-    //                 More complicated mappings (including behavior choices)
-    //--------------------------------------------------------------------------------------------
-
-    /**
-     * @see ContentViewClient#onTabCrash()
-     */
-    @Override
-    public void onTabCrash() {
-        // The WebViewClassic implementation used a single process, so any crash would
-        // cause the application to terminate.  WebViewChromium should have the same
-        // behavior as long as we run the renderer in-process. This needs to be revisited
-        // if we change that decision.
-        Log.e(TAG, "Renderer crash reported.");
-        mWebChromeClient.onCloseWindow(mWebView);
-    }
-
-    //--------------------------------------------------------------------------------------------
-    //                                     The TODO section
-    //--------------------------------------------------------------------------------------------
-
-
-    /**
-     * @see ContentViewClient#onImeEvent()
-     */
-    @Override
-    public void onImeEvent() {
-    }
-
     /**
      * @see ContentViewClient#onStartContentIntent(Context, String)
      * Callback when detecting a click on a content link.
      */
-    @Override
+    // TODO: Delete this method when removed from base class.
     public void onStartContentIntent(Context context, String contentUrl) {
         mWebViewClient.shouldOverrideUrlLoading(mWebView, contentUrl);
     }
