@@ -26,8 +26,7 @@ LOCAL_MODULE := webviewchromium
 
 LOCAL_MODULE_TAGS := optional
 
-LOCAL_STATIC_JAVA_LIBRARIES += google-common \
-                               android_webview_java \
+LOCAL_STATIC_JAVA_LIBRARIES += android_webview_java
 
 LOCAL_SRC_FILES := $(call all-java-files-under, java)
 

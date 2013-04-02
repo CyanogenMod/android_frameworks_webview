@@ -109,8 +109,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
                 try {
                     LibraryLoader.ensureInitialized();
                 } catch(ProcessInitException e) {
-                    throw new RuntimeException("Error initializing WebView library "
-                            + LibraryLoader.getLibraryToLoad(), e);
+                    throw new RuntimeException("Error initializing WebView library", e);
                 }
 
                 PathService.override(PathService.DIR_MODULE, "/system/lib/");
