@@ -605,6 +605,11 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
         return mWebChromeClient.getVideoLoadingProgressView();
     }
 
+    @Override
+    public Bitmap getDefaultVideoPoster() {
+        return mWebChromeClient.getDefaultVideoPoster();
+    }
+
     private static class AwHttpAuthHandlerAdapter extends android.webkit.HttpAuthHandler {
         private AwHttpAuthHandler mAwHandler;
 
