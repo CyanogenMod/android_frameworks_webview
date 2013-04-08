@@ -91,6 +91,8 @@ LOCAL_REQUIRED_MODULES := \
 
 LOCAL_PROGUARD_ENABLED := disabled
 
+LOCAL_JAVACFLAGS := -Xlint:unchecked -Werror
+
 include $(BUILD_JAVA_LIBRARY)
 
 # Native support library (libwebviewchromium_plat_support.so) - does NOT link
