@@ -55,7 +55,7 @@ def main():
   manifest_path = os.path.join(android_build_top, '.repo/manifests',
                                manifest_filename)
   local_manifest_path = os.path.join(android_build_top,
-                                     '.repo/local_manifests/generated.xml')
+                                     '.repo/local_manifest.xml')
 
 
   print 'Path to exclude: %s' % path_to_exclude
