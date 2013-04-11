@@ -24,7 +24,7 @@ function bb_webview_set_lunch_type() {
       LUNCH_TYPE=""
       echo "Unable to determine lunch type from: ${BUILDBOT_BUILDERNAME}"
       echo "@@@STEP_FAILURE@@@"
-      exit 1
+      exit 2
       ;;
   esac
   echo "Using lunch type: $LUNCH_TYPE"
@@ -39,7 +39,9 @@ function bb_webview_build_android() {
     MAKE_COMMAND="${GOMA_DIR}/goma-android-make"
   fi
 
-  bb_run_step $MAKE_COMMAND $MAKE_PARAMS showcommands
+  MAKE_TARGET="webviewchromium"
+
+  bb_run_step $MAKE_COMMAND $MAKE_PARAMS showcommands $MAKE_TARGET
 
   if [ "$USE_GOMA" -eq 1 ]; then
     bb_stop_goma_internal
@@ -100,16 +102,66 @@ function bb_webview_baseline_setup {
 function bb_webview_smart_sync {
   echo "@@@BUILD_STEP Smart Sync (sync -s) @@@"
   bb_run_step repo sync -s -j8 -df
+
+  # We always want to roll with the latest code in this project, regardless of
+  # what smartsync thinks.
+  echo "@@@BUILD_STEP Sync frameworks/webview@@@"
+  repo sync frameworks/webview
 }
 
-function bb_webview_sync_and_merge {
-  WEBVIEW_TOOLS_DIR="${ANDROID_SRC_ROOT}/frameworks/webview/chromium/tools"
+function bb_webview_remove_chromium_org {
+  echo "@@@BUILD_STEP Removing chromium_org project@@@"
+  # This generates a local manifest that will exclude any projects from the
+  # external/chromium_org folder.
+  bb_run_step python ${WEBVIEW_TOOLS_DIR}/generate_local_manifest.py \
+    ${ANDROID_SRC_ROOT} external/chromium_org
+  bb_webview_smart_sync
+}
 
-  echo "@@@BUILD_STEP Sync Chromium Repos@@@"
-  bb_run_step ${WEBVIEW_TOOLS_DIR}/sync_chromium_repos.sh
+function bb_webview_sync_upstream_chromium {
+  echo "@@@BUILD_STEP Sync upstream chromium@@@"
+  local CHROMIUM_TOT_DIR=${ANDROID_SRC_ROOT}/external/chromium_tot
+  local CHROMIUM_ORG_DIR=${ANDROID_SRC_ROOT}/external/chromium_org
+  if [ ! -e ${CHROMIUM_TOT_DIR} ]; then
+    echo "No chromium_tot checkout detected. Creating new one.."
+    mkdir -p ${CHROMIUM_TOT_DIR}
+    cd ${CHROMIUM_TOT_DIR}
 
-  echo "@@@BUILD_STEP Merge from Chromium@@@"
-  bb_run_step python ${WEBVIEW_TOOLS_DIR}/merge_from_chromium.py \
-    --unattended \
-    --svn_revision=HEAD
+    if [ ! -e ${CHROMIUM_ORG_DIR} ]; then
+      echo "Symlinking chromium_org to chromium_tot/src"
+      ln -s ${CHROMIUM_TOT_DIR}/src ${CHROMIUM_ORG_DIR}
+    else
+      echo "${CHROMIUM_ORG_DIR} should have been removed by local manifest."
+      echo "@@@STEP_FAILURE@@@"
+      exit 2
+    fi
+
+    # Prevent Android make recursing into this folder since we're
+    # exposing the src folder via a symlink.
+    touch ${CHROMIUM_TOT_DIR}/Android.mk
+
+    echo "Cloning chromium_tot"
+    git clone --template=${DEPOT_TOOLS_DIR}/git-templates \
+      https://chromium.googlesource.com/chromium/src.git
+    cd ${CHROMIUM_TOT_DIR}/src
+    git config target.os android
+  fi
+
+  cd ${CHROMIUM_TOT_DIR}/src
+  echo "Updating"
+  git crup -j8 --no-hooks
+
+  # if [ -n "${BUILDBOT_REVISION}" ]; then
+  #  echo "Checking out revision ${BUILDBOT_REVISION}"
+  #  git checkout ${BUILDBOT_REVISION}
+  #  git crsync --no-hooks
+  # fi
+  cd ${ANDROID_SRC_ROOT}
+}
+
+function bb_webview_gyp {
+  echo "@@@BUILD_STEP Run gyp_webview@@@"
+  cd ${ANDROID_SRC_ROOT}/external/chromium_org
+  bb_run_step "./android_webview/tools/gyp_webview"
+  cd ${ANDROID_SRC_ROOT}
 }
