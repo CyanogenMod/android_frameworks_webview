@@ -151,11 +151,9 @@ function bb_webview_sync_upstream_chromium {
   echo "Updating"
   git crup -j8 --no-hooks
 
-  # if [ -n "${BUILDBOT_REVISION}" ]; then
-  #  echo "Checking out revision ${BUILDBOT_REVISION}"
-  #  git checkout ${BUILDBOT_REVISION}
-  #  git crsync --no-hooks
-  # fi
+  echo "@@@BUILD_STEP Print checked out chromium revision@@@"
+  git log -1
+
   cd ${ANDROID_SRC_ROOT}
 }
 
