@@ -192,15 +192,17 @@ def PushToServer(src, dest, temp=None):
     temp: Temporary branch to push to first, to reduce branch skew.
   """
   if temp is not None:
-    logging.debug('Pushing to server (temporary branch) ...')
+    branches = [temp, dest]
+  else:
+    branches = [dest]
+  for branch in branches:
+    logging.debug('Pushing to server (%s) ...' % branch)
     for path in ALL_PROJECTS:
+      if path in PROJECTS_WITH_FLAT_HISTORY:
+        remote = 'history'
+      else:
+        remote = 'goog'
       logging.debug('Pushing %s', path)
       dest_dir = os.path.join(REPOSITORY_ROOT, path)
-      GetCommandStdout(['git', 'push', '-f', 'goog', src + ':' + temp],
+      GetCommandStdout(['git', 'push', '-f', remote, src + ':' + branch],
                        cwd=dest_dir)
-
-  logging.debug('Pushing to server ...')
-  for path in ALL_PROJECTS:
-    logging.debug('Pushing %s', path)
-    dest_dir = os.path.join(REPOSITORY_ROOT, path)
-    GetCommandStdout(['git', 'push', 'goog', src + ':' + dest], cwd=dest_dir)
