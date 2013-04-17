@@ -74,6 +74,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     private void initPlatSupportLibrary() {
         DrawGLFunctor.setChromiumAwDrawGLFunction(AwContents.getAwDrawGLFunction());
         AwContents.setAwDrawSWFunctionTable(GraphicsUtils.getDrawSWFunctionTable());
+        AwContents.setAwDrawGLFunctionTable(GraphicsUtils.getDrawGLFunctionTable());
     }
 
     private void ensureChromiumStartedLocked() {

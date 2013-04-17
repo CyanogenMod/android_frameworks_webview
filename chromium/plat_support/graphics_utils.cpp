@@ -19,11 +19,13 @@
 
 #define LOG_TAG "webviewchromium_plat_support"
 
+#include "android_webview/public/browser/draw_gl.h"
 #include "android_webview/public/browser/draw_sw.h"
 
 #include <cstdlib>
 #include <jni.h>
 #include <utils/Log.h>
+#include "graphic_buffer_impl.h"
 #include "GraphicsJNI.h"
 #include "SkGraphics.h"
 #include "SkPicture.h"
@@ -120,10 +122,24 @@ jint GetDrawSWFunctionTable(JNIEnv* env, jclass) {
   return reinterpret_cast<jint>(&function_table);
 }
 
+jint GetDrawGLFunctionTable(JNIEnv* env, jclass) {
+  static const AwDrawGLFunctionTable function_table = {
+      &GraphicBufferImpl::Create,
+      &GraphicBufferImpl::Release,
+      &GraphicBufferImpl::LockStatic,
+      &GraphicBufferImpl::UnlockStatic,
+      &GraphicBufferImpl::GetNativeBufferStatic,
+      &GraphicBufferImpl::GetStrideStatic,
+  };
+  return reinterpret_cast<jint>(&function_table);
+}
+
 const char kClassName[] = "com/android/webview/chromium/GraphicsUtils";
 const JNINativeMethod kJniMethods[] = {
     { "nativeGetDrawSWFunctionTable", "()I",
         reinterpret_cast<void*>(GetDrawSWFunctionTable) },
+    { "nativeGetDrawGLFunctionTable", "()I",
+        reinterpret_cast<void*>(GetDrawGLFunctionTable) },
 };
 
 }  // namespace

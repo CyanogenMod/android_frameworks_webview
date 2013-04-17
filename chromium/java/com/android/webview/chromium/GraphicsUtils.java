@@ -21,6 +21,11 @@ abstract class GraphicsUtils {
         return nativeGetDrawSWFunctionTable();
     }
 
+    public static int getDrawGLFunctionTable() {
+        return nativeGetDrawGLFunctionTable();
+    }
+
     private static native int nativeGetDrawSWFunctionTable();
+    private static native int nativeGetDrawGLFunctionTable();
 
 }

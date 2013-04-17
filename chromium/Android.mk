@@ -105,16 +105,19 @@ LOCAL_SRC_FILES:=       \
         plat_support/draw_gl_functor.cpp \
         plat_support/jni_entry_point.cpp \
         plat_support/graphics_utils.cpp \
+        plat_support/graphic_buffer_impl.cpp \
 
 LOCAL_C_INCLUDES:= \
         $(CHROMIUM_PATH) \
         external/skia/include/core \
         frameworks/base/core/jni/android/graphics \
+        frameworks/native/include/ui \
 
 LOCAL_SHARED_LIBRARIES += \
         libandroid_runtime \
         libcutils \
         libskia \
+        libui \
         libutils \
 
 LOCAL_MODULE_TAGS := optional
