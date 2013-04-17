@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Looper;
+import android.os.SystemProperties;
 import android.webkit.CookieManager;
 import android.webkit.GeolocationPermissions;
 import android.webkit.WebIconDatabase;
@@ -91,7 +92,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
             @Override
             public void run() {
                 String[] flags = null;
-                String commandLine = System.getProperty(COMMAND_LINE_PROPERTY);
+                String commandLine = SystemProperties.get(COMMAND_LINE_PROPERTY);
                 if (Build.IS_DEBUGGABLE && commandLine != null) {
                     flags = CommandLine.tokenizeQuotedAruments(commandLine.toCharArray());
                 }
