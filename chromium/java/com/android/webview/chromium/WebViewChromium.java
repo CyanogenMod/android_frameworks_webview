@@ -51,7 +51,6 @@ import android.webkit.WebViewProvider;
 
 import org.chromium.android_webview.AwBrowserContext;
 import org.chromium.android_webview.AwContents;
-import org.chromium.android_webview.AwNativeWindow;
 import org.chromium.content.browser.LoadUrlParams;
 import org.chromium.net.NetworkChangeNotifier;
 
