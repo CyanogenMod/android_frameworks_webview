@@ -450,8 +450,8 @@ def Push(svn_revision):
         remote = 'goog'
       logging.debug('Pushing %s', path)
       dest_dir = os.path.join(merge_common.REPOSITORY_ROOT, path)
-      GetCommandStdout(['git', 'push', '-f', remote, src + ':' + branch],
-                       cwd=dest_dir)
+      merge_common.GetCommandStdout(['git', 'push', '-f', remote,
+                                    src + ':' + branch], cwd=dest_dir)
 
 
 def main():

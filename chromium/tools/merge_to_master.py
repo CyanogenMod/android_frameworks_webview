@@ -115,8 +115,8 @@ def Push():
   for path in merge_common.ALL_PROJECTS:
     logging.debug('Pushing %s', path)
     dest_dir = os.path.join(merge_common.REPOSITORY_ROOT, path)
-    GetCommandStdout(['git', 'push', '-f', 'goog', 'merge-to-master:master'],
-                     cwd=dest_dir)
+    merge_common.GetCommandStdout(['git', 'push', '-f', 'goog',
+                                   'merge-to-master:master'], cwd=dest_dir)
 
 
 
