@@ -440,8 +440,18 @@ def Snapshot(svn_revision, root_sha1, unattended):
 
 def Push(svn_revision):
   """Push the finished snapshot to the Android repository."""
-  merge_common.PushToServer('merge-from-chromium-%s' % svn_revision,
-                            'master-chromium', 'master-chromium-merge')
+  src = 'merge-from-chromium-%s' % svn_revision
+  for branch in ['master-chromium-merge', 'master-chromium']:
+    logging.debug('Pushing to server (%s) ...' % branch)
+    for path in merge_common.ALL_PROJECTS:
+      if path in merge_common.PROJECTS_WITH_FLAT_HISTORY:
+        remote = 'history'
+      else:
+        remote = 'goog'
+      logging.debug('Pushing %s', path)
+      dest_dir = os.path.join(merge_common.REPOSITORY_ROOT, path)
+      GetCommandStdout(['git', 'push', '-f', remote, src + ':' + branch],
+                       cwd=dest_dir)
 
 
 def main():
