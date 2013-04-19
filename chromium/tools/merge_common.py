@@ -181,28 +181,3 @@ def CheckNoConflictsAndCommitMerge(commit_message, unattended=False,
       commit_message = new_commit_message
 
   GetCommandStdout(['git', 'commit', '-m', commit_message], cwd=cwd)
-
-
-def PushToServer(src, dest, temp=None):
-  """Push the merged branch in each repository to the server.
-
-  Args:
-    src: Local branch name to push.
-    dest: Destination branch name to push to.
-    temp: Temporary branch to push to first, to reduce branch skew.
-  """
-  if temp is not None:
-    branches = [temp, dest]
-  else:
-    branches = [dest]
-  for branch in branches:
-    logging.debug('Pushing to server (%s) ...' % branch)
-    for path in ALL_PROJECTS:
-      if path in PROJECTS_WITH_FLAT_HISTORY:
-        remote = 'history'
-      else:
-        remote = 'goog'
-      logging.debug('Pushing %s', path)
-      dest_dir = os.path.join(REPOSITORY_ROOT, path)
-      GetCommandStdout(['git', 'push', '-f', remote, src + ':' + branch],
-                       cwd=dest_dir)

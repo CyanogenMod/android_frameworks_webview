@@ -43,7 +43,7 @@ def _MergeProjects(svn_revision):
                                    '-b', 'merge-to-master',
                                    '-t', 'goog/master'], cwd=dest_dir)
     merge_sha1 = merge_common.GetCommandStdout(['git', 'rev-parse',
-                                                'goog/master-chromium'],
+                                                'history/master-chromium'],
                                                cwd=dest_dir).strip()
     old_sha1 = merge_common.GetCommandStdout(['git', 'rev-parse', 'HEAD'],
                                              cwd=dest_dir).strip()
@@ -109,6 +109,17 @@ def _GetSVNRevision():
   return svn_revision
 
 
+def Push():
+  """Push the finished snapshot to the Android repository."""
+  logging.debug('Pushing to server ...')
+  for path in merge_common.ALL_PROJECTS:
+    logging.debug('Pushing %s', path)
+    dest_dir = os.path.join(merge_common.REPOSITORY_ROOT, path)
+    GetCommandStdout(['git', 'push', '-f', 'goog', 'merge-to-master:master'],
+                     cwd=dest_dir)
+
+
+
 def main():
   parser = optparse.OptionParser(usage='%prog [options]')
   parser.epilog = ('Takes the current master-chromium branch of the Chromium '
@@ -131,7 +142,7 @@ def main():
                       stream=sys.stdout)
 
   if options.push:
-    merge_common.PushToServer('merge-to-master', 'master')
+    Push()
   else:
     svn_revision = _GetSVNRevision()
     _MergeProjects(svn_revision)
