@@ -945,5 +945,11 @@ class WebViewChromium implements WebViewProvider,
         public void setMeasuredDimension(int measuredWidth, int measuredHeight) {
             mWebViewPrivate.setMeasuredDimension(measuredWidth, measuredHeight);
         }
+
+        // TODO(michaelbai) : Add @Override once this method added in
+        // AwContents.InternalAcessDelegate.
+        public boolean requestDrawGL(Canvas canvas) {
+            return mGLfunctor.requestDrawGL((HardwareCanvas)canvas, mWebView.getViewRootImpl());
+        }
     }
 }
