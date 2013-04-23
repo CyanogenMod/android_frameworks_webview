@@ -414,12 +414,14 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void pauseTimers() {
-        mAwContents.pauseTimers();
+        // Temporarily stub out until b/8639231 is resolved.
+        // mAwContents.pauseTimers();
     }
 
     @Override
     public void resumeTimers() {
-        mAwContents.resumeTimers();
+        // Temporarily stub out until b/8639231 is resolved.
+        // mAwContents.resumeTimers();
     }
 
     @Override
