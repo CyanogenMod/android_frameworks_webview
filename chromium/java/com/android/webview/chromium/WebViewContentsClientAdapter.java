@@ -32,6 +32,7 @@ import android.view.View;
 import android.webkit.ConsoleMessage;
 import android.webkit.DownloadListener;
 import android.webkit.GeolocationPermissions;
+import android.webkit.JsDialogHelper;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
 import android.webkit.SslErrorHandler;
@@ -447,49 +448,6 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
         mWebViewClient.shouldOverrideUrlLoading(mWebView, contentUrl);
     }
 
-    private static class SimpleJsResultReceiver implements JsResult.ResultReceiver {
-        private JsResultReceiver mChromeResultReceiver;
-
-        public SimpleJsResultReceiver(JsResultReceiver receiver) {
-            mChromeResultReceiver = receiver;
-        }
-
-        @Override
-        public void onJsResultComplete(JsResult result) {
-            if (result.getResult()) {
-                mChromeResultReceiver.confirm();
-            } else {
-                mChromeResultReceiver.cancel();
-            }
-        }
-    }
-
-    private static class JsPromptResultReceiverAdapter implements JsResult.ResultReceiver {
-        private JsPromptResultReceiver mChromeResultReceiver;
-        private JsPromptResult mPromptResult;
-
-        public JsPromptResultReceiverAdapter(JsPromptResultReceiver receiver) {
-            mChromeResultReceiver = receiver;
-            // We hold onto the JsPromptResult here, just to avoid the need to downcast
-            // in onJsResultComplete.
-            mPromptResult = new JsPromptResult(this);
-        }
-
-        public JsPromptResult getPromptResult() {
-            return mPromptResult;
-        }
-
-        @Override
-        public void onJsResultComplete(JsResult result) {
-            if (result != mPromptResult) throw new RuntimeException("incorrect JsResult instance");
-            if (mPromptResult.getResult()) {
-                mChromeResultReceiver.confirm(mPromptResult.getStringResult());
-            } else {
-                mChromeResultReceiver.cancel();
-            }
-        }
-    }
-
     @Override
     public void onGeolocationPermissionsShowPrompt(String origin,
             GeolocationPermissions.Callback callback) {
@@ -501,33 +459,78 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
         mWebChromeClient.onGeolocationPermissionsHidePrompt();
     }
 
+    private static class JsPromptResultReceiverAdapter implements JsResult.ResultReceiver {
+        private JsPromptResultReceiver mChromePromptResultReceiver;
+        private JsResultReceiver mChromeResultReceiver;
+        // We hold onto the JsPromptResult here, just to avoid the need to downcast
+        // in onJsResultComplete.
+        private final JsPromptResult mPromptResult = new JsPromptResult(this);
+
+        public JsPromptResultReceiverAdapter(JsPromptResultReceiver receiver) {
+            mChromePromptResultReceiver = receiver;
+        }
+
+        public JsPromptResultReceiverAdapter(JsResultReceiver receiver) {
+            mChromeResultReceiver = receiver;
+        }
+
+        public JsPromptResult getPromptResult() {
+            return mPromptResult;
+        }
+
+        @Override
+        public void onJsResultComplete(JsResult result) {
+            if (mChromePromptResultReceiver != null) {
+                if (mPromptResult.getResult()) {
+                    mChromePromptResultReceiver.confirm(mPromptResult.getStringResult());
+                } else {
+                    mChromePromptResultReceiver.cancel();
+                }
+            } else {
+                if (mPromptResult.getResult()) {
+                    mChromeResultReceiver.confirm();
+                } else {
+                    mChromeResultReceiver.cancel();
+                }
+            }
+        }
+    }
+
     @Override
     public void handleJsAlert(String url, String message, JsResultReceiver receiver) {
-        JsResult res = new JsResult(new SimpleJsResultReceiver(receiver));
-        mWebChromeClient.onJsAlert(mWebView, url, message, res);
-        // TODO: Handle the case of the client returning false;
+        final JsPromptResult res = new JsPromptResultReceiverAdapter(receiver).getPromptResult();
+        if (!mWebChromeClient.onJsAlert(mWebView, url, message, res)) {
+            new JsDialogHelper(res, JsDialogHelper.ALERT, null, message, url)
+                    .showDialog(mWebView.getContext());
+        }
     }
 
     @Override
     public void handleJsBeforeUnload(String url, String message, JsResultReceiver receiver) {
-        JsResult res = new JsResult(new SimpleJsResultReceiver(receiver));
-        mWebChromeClient.onJsBeforeUnload(mWebView, url, message, res);
-        // TODO: Handle the case of the client returning false;
+        final JsPromptResult res = new JsPromptResultReceiverAdapter(receiver).getPromptResult();
+        if (!mWebChromeClient.onJsBeforeUnload(mWebView, url, message, res)) {
+            new JsDialogHelper(res, JsDialogHelper.UNLOAD, null, message, url)
+                    .showDialog(mWebView.getContext());
+        }
     }
 
     @Override
     public void handleJsConfirm(String url, String message, JsResultReceiver receiver) {
-        JsResult res = new JsResult(new SimpleJsResultReceiver(receiver));
-        mWebChromeClient.onJsConfirm(mWebView, url, message, res);
-        // TODO: Handle the case of the client returning false;
+        final JsPromptResult res = new JsPromptResultReceiverAdapter(receiver).getPromptResult();
+        if (!mWebChromeClient.onJsConfirm(mWebView, url, message, res)) {
+            new JsDialogHelper(res, JsDialogHelper.CONFIRM, null, message, url)
+                    .showDialog(mWebView.getContext());
+        }
     }
 
     @Override
     public void handleJsPrompt(String url, String message, String defaultValue,
             JsPromptResultReceiver receiver) {
-        JsPromptResult res = new JsPromptResultReceiverAdapter(receiver).getPromptResult();
-        mWebChromeClient.onJsPrompt(mWebView, url, message, defaultValue, res);
-        // TODO: Handle the case of the client returning false;
+        final JsPromptResult res = new JsPromptResultReceiverAdapter(receiver).getPromptResult();
+        if (!mWebChromeClient.onJsPrompt(mWebView, url, message, defaultValue, res)) {
+            new JsDialogHelper(res, JsDialogHelper.PROMPT, defaultValue, message, url)
+                    .showDialog(mWebView.getContext());
+        }
     }
 
     @Override
