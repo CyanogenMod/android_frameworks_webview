@@ -105,15 +105,12 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     @Override
     public void setLoadWithOverviewMode(boolean overview) {
-        if (overview != mContentSettings.getLoadWithOverviewMode()) {
-            mContentSettings.setLoadWithOverviewMode(overview);
-            mAwSettings.resetScrollAndScaleState();
-        }
+        mAwSettings.setLoadWithOverviewMode(overview);
     }
 
     @Override
     public boolean getLoadWithOverviewMode() {
-        return mContentSettings.getLoadWithOverviewMode();
+        return mAwSettings.getLoadWithOverviewMode();
     }
 
     @Override
@@ -162,16 +159,12 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     @Override
     public synchronized void setTextZoom(int textZoom) {
-        mContentSettings.setTextZoom(textZoom);
-        if (mContentSettings.getLayoutAlgorithm() !=
-                ContentSettings.LayoutAlgorithm.TEXT_AUTOSIZING) {
-            mAwSettings.setTextZoom(textZoom);
-        }
+        mAwSettings.setTextZoom(textZoom);
     }
 
     @Override
     public synchronized int getTextZoom() {
-        return mContentSettings.getTextZoom();
+        return mAwSettings.getTextZoom();
     }
 
     @Override
@@ -209,45 +202,39 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
     @Override
     public synchronized int getUserAgent() {
         // Minimal implementation for backwards compatibility: just identifies default vs custom.
-        return ContentSettings.getDefaultUserAgent().equals(getUserAgentString()) ? 0 : -1;
+        return AwSettings.getDefaultUserAgent().equals(getUserAgentString()) ? 0 : -1;
     }
 
     @Override
     public synchronized void setUseWideViewPort(boolean use) {
-        // See https://bugs.webkit.org/show_bug.cgi?id=111154. The settings need to be changed
-        // together. Also see b/8296421 about making AwSettings the single entry point for
-        // settings.
-        mContentSettings.setUseWideViewPort(use);
-        mAwSettings.setEnableFixedLayoutMode(use);
+        mAwSettings.setUseWideViewPort(use);
     }
 
     @Override
     public synchronized boolean getUseWideViewPort() {
-        return mContentSettings.getUseWideViewPort();
+        return mAwSettings.getUseWideViewPort();
     }
 
     @Override
     public synchronized void setSupportMultipleWindows(boolean support) {
-        mContentSettings.setSupportMultipleWindows(support);
+        mAwSettings.setSupportMultipleWindows(support);
     }
 
     @Override
     public synchronized boolean supportMultipleWindows() {
-        return mContentSettings.supportMultipleWindows();
+        return mAwSettings.supportMultipleWindows();
     }
 
     @Override
     public synchronized void setLayoutAlgorithm(LayoutAlgorithm l) {
         // TODO: Remove the upstream enum and mapping once the new value is in the public API.
-        final ContentSettings.LayoutAlgorithm[] chromiumValues = {
-            ContentSettings.LayoutAlgorithm.NORMAL,
-            ContentSettings.LayoutAlgorithm.SINGLE_COLUMN,
-            ContentSettings.LayoutAlgorithm.NARROW_COLUMNS,
-            ContentSettings.LayoutAlgorithm.TEXT_AUTOSIZING
+        final AwSettings.LayoutAlgorithm[] chromiumValues = {
+            AwSettings.LayoutAlgorithm.NORMAL,
+            AwSettings.LayoutAlgorithm.SINGLE_COLUMN,
+            AwSettings.LayoutAlgorithm.NARROW_COLUMNS,
+            AwSettings.LayoutAlgorithm.TEXT_AUTOSIZING
         };
-        mContentSettings.setLayoutAlgorithm(chromiumValues[l.ordinal()]);
-        mAwSettings.setTextZoom(l == LayoutAlgorithm.TEXT_AUTOSIZING ?
-                -1 : mContentSettings.getTextZoom());
+        mAwSettings.setLayoutAlgorithm(chromiumValues[l.ordinal()]);
     }
 
     @Override
@@ -259,127 +246,127 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
             LayoutAlgorithm.NARROW_COLUMNS,
             LayoutAlgorithm.TEXT_AUTOSIZING
         };
-        return webViewValues[mContentSettings.getLayoutAlgorithm().ordinal()];
+        return webViewValues[mAwSettings.getLayoutAlgorithm().ordinal()];
     }
 
     @Override
     public synchronized void setStandardFontFamily(String font) {
-        mContentSettings.setStandardFontFamily(font);
+        mAwSettings.setStandardFontFamily(font);
     }
 
     @Override
     public synchronized String getStandardFontFamily() {
-        return mContentSettings.getStandardFontFamily();
+        return mAwSettings.getStandardFontFamily();
     }
 
     @Override
     public synchronized void setFixedFontFamily(String font) {
-        mContentSettings.setFixedFontFamily(font);
+        mAwSettings.setFixedFontFamily(font);
     }
 
     @Override
     public synchronized String getFixedFontFamily() {
-        return mContentSettings.getFixedFontFamily();
+        return mAwSettings.getFixedFontFamily();
     }
 
     @Override
     public synchronized void setSansSerifFontFamily(String font) {
-        mContentSettings.setSansSerifFontFamily(font);
+        mAwSettings.setSansSerifFontFamily(font);
     }
 
     @Override
     public synchronized String getSansSerifFontFamily() {
-        return mContentSettings.getSansSerifFontFamily();
+        return mAwSettings.getSansSerifFontFamily();
     }
 
     @Override
     public synchronized void setSerifFontFamily(String font) {
-        mContentSettings.setSerifFontFamily(font);
+        mAwSettings.setSerifFontFamily(font);
     }
 
     @Override
     public synchronized String getSerifFontFamily() {
-        return mContentSettings.getSerifFontFamily();
+        return mAwSettings.getSerifFontFamily();
     }
 
     @Override
     public synchronized void setCursiveFontFamily(String font) {
-        mContentSettings.setCursiveFontFamily(font);
+        mAwSettings.setCursiveFontFamily(font);
     }
 
     @Override
     public synchronized String getCursiveFontFamily() {
-        return mContentSettings.getCursiveFontFamily();
+        return mAwSettings.getCursiveFontFamily();
     }
 
     @Override
     public synchronized void setFantasyFontFamily(String font) {
-        mContentSettings.setFantasyFontFamily(font);
+        mAwSettings.setFantasyFontFamily(font);
     }
 
     @Override
     public synchronized String getFantasyFontFamily() {
-        return mContentSettings.getFantasyFontFamily();
+        return mAwSettings.getFantasyFontFamily();
     }
 
     @Override
     public synchronized void setMinimumFontSize(int size) {
-        mContentSettings.setMinimumFontSize(size);
+        mAwSettings.setMinimumFontSize(size);
     }
 
     @Override
     public synchronized int getMinimumFontSize() {
-        return mContentSettings.getMinimumFontSize();
+        return mAwSettings.getMinimumFontSize();
     }
 
     @Override
     public synchronized void setMinimumLogicalFontSize(int size) {
-        mContentSettings.setMinimumLogicalFontSize(size);
+        mAwSettings.setMinimumLogicalFontSize(size);
     }
 
     @Override
     public synchronized int getMinimumLogicalFontSize() {
-        return mContentSettings.getMinimumLogicalFontSize();
+        return mAwSettings.getMinimumLogicalFontSize();
     }
 
     @Override
     public synchronized void setDefaultFontSize(int size) {
-        mContentSettings.setDefaultFontSize(size);
+        mAwSettings.setDefaultFontSize(size);
     }
 
     @Override
     public synchronized int getDefaultFontSize() {
-        return mContentSettings.getDefaultFontSize();
+        return mAwSettings.getDefaultFontSize();
     }
 
     @Override
     public synchronized void setDefaultFixedFontSize(int size) {
-        mContentSettings.setDefaultFixedFontSize(size);
+        mAwSettings.setDefaultFixedFontSize(size);
     }
 
     @Override
     public synchronized int getDefaultFixedFontSize() {
-        return mContentSettings.getDefaultFixedFontSize();
+        return mAwSettings.getDefaultFixedFontSize();
     }
 
     @Override
     public synchronized void setLoadsImagesAutomatically(boolean flag) {
-        mContentSettings.setLoadsImagesAutomatically(flag);
+        mAwSettings.setLoadsImagesAutomatically(flag);
     }
 
     @Override
     public synchronized boolean getLoadsImagesAutomatically() {
-        return mContentSettings.getLoadsImagesAutomatically();
+        return mAwSettings.getLoadsImagesAutomatically();
     }
 
     @Override
     public synchronized void setBlockNetworkImage(boolean flag) {
-        mContentSettings.setImagesEnabled(!flag);
+        mAwSettings.setImagesEnabled(!flag);
     }
 
     @Override
     public synchronized boolean getBlockNetworkImage() {
-        return !mContentSettings.getImagesEnabled();
+        return !mAwSettings.getImagesEnabled();
     }
 
     @Override
@@ -394,27 +381,27 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     @Override
     public synchronized void setJavaScriptEnabled(boolean flag) {
-        mContentSettings.setJavaScriptEnabled(flag);
+        mAwSettings.setJavaScriptEnabled(flag);
     }
 
     @Override
     public void setAllowUniversalAccessFromFileURLs(boolean flag) {
-        mContentSettings.setAllowUniversalAccessFromFileURLs(flag);
+        mAwSettings.setAllowUniversalAccessFromFileURLs(flag);
     }
 
     @Override
     public void setAllowFileAccessFromFileURLs(boolean flag) {
-        mContentSettings.setAllowFileAccessFromFileURLs(flag);
+        mAwSettings.setAllowFileAccessFromFileURLs(flag);
     }
 
     @Override
     public synchronized void setPluginsEnabled(boolean flag) {
-        mContentSettings.setPluginsEnabled(flag);
+        mAwSettings.setPluginsEnabled(flag);
     }
 
     @Override
     public synchronized void setPluginState(PluginState state) {
-        mContentSettings.setPluginState(state);
+        mAwSettings.setPluginState(state);
     }
 
     @Override
@@ -429,12 +416,12 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     @Override
     public synchronized void setAppCacheEnabled(boolean flag) {
-        mContentSettings.setAppCacheEnabled(flag);
+        mAwSettings.setAppCacheEnabled(flag);
     }
 
     @Override
     public synchronized void setAppCachePath(String appCachePath) {
-        mContentSettings.setAppCachePath(appCachePath);
+        mAwSettings.setAppCachePath(appCachePath);
     }
 
     @Override
@@ -444,17 +431,17 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     @Override
     public synchronized void setDatabaseEnabled(boolean flag) {
-        mContentSettings.setDatabaseEnabled(flag);
+        mAwSettings.setDatabaseEnabled(flag);
     }
 
     @Override
     public synchronized void setDomStorageEnabled(boolean flag) {
-        mContentSettings.setDomStorageEnabled(flag);
+        mAwSettings.setDomStorageEnabled(flag);
     }
 
     @Override
     public synchronized boolean getDomStorageEnabled() {
-        return mContentSettings.getDomStorageEnabled();
+        return mAwSettings.getDomStorageEnabled();
     }
 
     @Override
@@ -465,7 +452,7 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     @Override
     public synchronized boolean getDatabaseEnabled() {
-        return mContentSettings.getDatabaseEnabled();
+        return mAwSettings.getDatabaseEnabled();
     }
 
     @Override
@@ -475,57 +462,57 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     @Override
     public synchronized boolean getJavaScriptEnabled() {
-        return mContentSettings.getJavaScriptEnabled();
+        return mAwSettings.getJavaScriptEnabled();
     }
 
     @Override
     public boolean getAllowUniversalAccessFromFileURLs() {
-        return mContentSettings.getAllowUniversalAccessFromFileURLs();
+        return mAwSettings.getAllowUniversalAccessFromFileURLs();
     }
 
     @Override
     public boolean getAllowFileAccessFromFileURLs() {
-        return mContentSettings.getAllowFileAccessFromFileURLs();
+        return mAwSettings.getAllowFileAccessFromFileURLs();
     }
 
     @Override
     public synchronized boolean getPluginsEnabled() {
-        return mContentSettings.getPluginsEnabled();
+        return mAwSettings.getPluginsEnabled();
     }
 
     @Override
     public synchronized PluginState getPluginState() {
-        return mContentSettings.getPluginState();
+        return mAwSettings.getPluginState();
     }
 
     @Override
     public synchronized void setJavaScriptCanOpenWindowsAutomatically(boolean flag) {
-        mContentSettings.setJavaScriptCanOpenWindowsAutomatically(flag);
+        mAwSettings.setJavaScriptCanOpenWindowsAutomatically(flag);
     }
 
     @Override
     public synchronized boolean getJavaScriptCanOpenWindowsAutomatically() {
-        return mContentSettings.getJavaScriptCanOpenWindowsAutomatically();
+        return mAwSettings.getJavaScriptCanOpenWindowsAutomatically();
     }
 
     @Override
     public synchronized void setDefaultTextEncodingName(String encoding) {
-        mContentSettings.setDefaultTextEncodingName(encoding);
+        mAwSettings.setDefaultTextEncodingName(encoding);
     }
 
     @Override
     public synchronized String getDefaultTextEncodingName() {
-        return mContentSettings.getDefaultTextEncodingName();
+        return mAwSettings.getDefaultTextEncodingName();
     }
 
     @Override
     public synchronized void setUserAgentString(String ua) {
-        mContentSettings.setUserAgentString(ua);
+        mAwSettings.setUserAgentString(ua);
     }
 
     @Override
     public synchronized String getUserAgentString() {
-        return mContentSettings.getUserAgentString();
+        return mAwSettings.getUserAgentString();
     }
 
     @Override
@@ -550,11 +537,11 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     @Override
     public void setMediaPlaybackRequiresUserGesture(boolean require) {
-        mContentSettings.setMediaPlaybackRequiresUserGesture(require);
+        mAwSettings.setMediaPlaybackRequiresUserGesture(require);
     }
 
     @Override
     public boolean getMediaPlaybackRequiresUserGesture() {
-        return mContentSettings.getMediaPlaybackRequiresUserGesture();
+        return mAwSettings.getMediaPlaybackRequiresUserGesture();
     }
 }

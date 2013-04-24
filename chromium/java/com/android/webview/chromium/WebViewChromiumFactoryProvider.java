@@ -37,10 +37,10 @@ import org.chromium.android_webview.AwContents;
 import org.chromium.android_webview.AwCookieManager;
 import org.chromium.android_webview.AwGeolocationPermissions;
 import org.chromium.android_webview.AwQuotaManagerBridge;
+import org.chromium.android_webview.AwSettings;
 import org.chromium.base.PathService;
 import org.chromium.base.ThreadUtils;
 import org.chromium.content.app.LibraryLoader;
-import org.chromium.content.browser.ContentSettings;
 import org.chromium.content.browser.ContentViewStatics;
 import org.chromium.content.browser.ResourceExtractor;
 import org.chromium.content.common.CommandLine;
@@ -151,7 +151,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
 
                     @Override
                     public String getDefaultUserAgent(Context context) {
-                        return ContentSettings.getDefaultUserAgent();
+                        return AwSettings.getDefaultUserAgent();
                     }
                 };
             }
