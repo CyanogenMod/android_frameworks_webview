@@ -48,6 +48,8 @@ EXPECTED_FAILURES = set([
   # See b/8231433 for following two failures.
   'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestAcceptAlways',
   'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestAcceptOnce',
+  # Temporarily disabled, see b/8639231
+  'android.webkit.cts.WebViewTest#testPauseResumeTimers',
   # Don't forget to update the spreadsheet! :)
 ])
 
