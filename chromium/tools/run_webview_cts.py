@@ -31,7 +31,6 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.WebViewClientTest#testOnScaleChanged',
   'android.webkit.cts.WebViewTest#testCapturePicture',
   # BUG=crbug.com/162967
-  'android.webkit.cts.WebViewTest#testFlingScroll',
   'android.webkit.cts.WebViewTest#testPageScroll',
   'android.webkit.cts.WebViewTest#testRequestChildRectangleOnScreen',
   'android.webkit.cts.WebViewTest#testScrollBarOverlay',
@@ -41,8 +40,6 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.WebViewTest#testZoom',
   # Following 4 tests failing due to crbug.com/172786.
   # See also b/8187850
-  'android.webkit.cts.WebViewTest#testRequestImageRef',
-  'android.webkit.cts.WebViewTest#testFindNext',
   'android.webkit.cts.WebViewTest#testFindAll',
   'android.webkit.cts.WebViewTest#testGetContentHeight',
   # See b/8231433 for following two failures.
@@ -50,6 +47,14 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestAcceptOnce',
   # Temporarily disabled, see b/8639231
   'android.webkit.cts.WebViewTest#testPauseResumeTimers',
+  # b/8707883
+  'android.webkit.cts.CookieManagerTest#testAcceptCookie',
+  'android.webkit.cts.CookieManagerTest#testGetInstance',
+  'android.webkit.cts.CookieManagerTest#testClone',
+  'android.webkit.cts.CookieManagerTest#testCookieManager',
+  'android.webkit.cts.CookieManagerTest#testRemoveCookies',
+  'android.webkit.cts.CookieManagerTest#testb3167208',
+  'android.webkit.cts.CookieSyncManagerTest#testCookieSyncManager',
   # Don't forget to update the spreadsheet! :)
 ])
 
