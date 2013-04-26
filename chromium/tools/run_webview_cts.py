@@ -42,8 +42,9 @@ EXPECTED_FAILURES = set([
   # See also b/8187850
   'android.webkit.cts.WebViewTest#testFindAll',
   'android.webkit.cts.WebViewTest#testGetContentHeight',
-  # See b/8231433 for following two failures.
+  # See b/8231433 for Geolocation test failures.
   'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestAcceptAlways',
+  'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestReject',
   #'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestAcceptOnce',
   # Temporarily disabled, see b/8639231
   'android.webkit.cts.WebViewTest#testPauseResumeTimers',
