@@ -44,17 +44,9 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.WebViewTest#testGetContentHeight',
   # See b/8231433 for following two failures.
   'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestAcceptAlways',
-  'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestAcceptOnce',
+  #'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestAcceptOnce',
   # Temporarily disabled, see b/8639231
   'android.webkit.cts.WebViewTest#testPauseResumeTimers',
-  # b/8707883
-  'android.webkit.cts.CookieManagerTest#testAcceptCookie',
-  'android.webkit.cts.CookieManagerTest#testGetInstance',
-  'android.webkit.cts.CookieManagerTest#testClone',
-  'android.webkit.cts.CookieManagerTest#testCookieManager',
-  'android.webkit.cts.CookieManagerTest#testRemoveCookies',
-  'android.webkit.cts.CookieManagerTest#testb3167208',
-  'android.webkit.cts.CookieSyncManagerTest#testCookieSyncManager',
   # Don't forget to update the spreadsheet! :)
 ])
 
