@@ -593,9 +593,8 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     }
 
     @Override
-    public void onShowCustomView(View view,
-            int requestedOrientation, CustomViewCallback cb) {
-        mWebChromeClient.onShowCustomView(view, requestedOrientation, cb);
+    public void onShowCustomView(View view, CustomViewCallback cb) {
+        mWebChromeClient.onShowCustomView(view, cb);
     }
 
     @Override
