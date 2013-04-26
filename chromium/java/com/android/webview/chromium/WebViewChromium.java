@@ -694,14 +694,7 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void onDraw(Canvas canvas) {
-        if (canvas.isHardwareAccelerated() && mAwContents.onPrepareDrawGL(canvas)) {
-            if (mGLfunctor == null) {
-                mGLfunctor = new DrawGLFunctor(mAwContents.getAwDrawGLViewContext());
-            }
-            mGLfunctor.requestDrawGL((HardwareCanvas) canvas, mWebView.getViewRootImpl());
-        } else {
-            mAwContents.onDraw(canvas);
-        }
+        mAwContents.onDraw(canvas);
     }
 
     @Override
@@ -948,9 +941,11 @@ class WebViewChromium implements WebViewProvider,
             mWebViewPrivate.setMeasuredDimension(measuredWidth, measuredHeight);
         }
 
-        // TODO(michaelbai) : Add @Override once this method added in
-        // AwContents.InternalAcessDelegate.
+        @Override
         public boolean requestDrawGL(Canvas canvas) {
+            if (mGLfunctor == null) {
+                mGLfunctor = new DrawGLFunctor(mAwContents.getAwDrawGLViewContext());
+            }
             return mGLfunctor.requestDrawGL((HardwareCanvas)canvas, mWebView.getViewRootImpl());
         }
     }
