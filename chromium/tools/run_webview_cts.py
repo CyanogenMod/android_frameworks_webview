@@ -46,8 +46,6 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestAcceptAlways',
   'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestReject',
   #'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestAcceptOnce',
-  # Temporarily disabled, see b/8639231
-  'android.webkit.cts.WebViewTest#testPauseResumeTimers',
   # Don't forget to update the spreadsheet! :)
 ])
 
