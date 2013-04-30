@@ -249,7 +249,7 @@ def _GenerateMakefiles(svn_revision, unattended):
                                    '*.host.*.mk', '*.tmp'], cwd=dest_dir)
 
   try:
-    merge_common.GetCommandStdout(['android_webview/tools/gyp_webview'])
+    merge_common.GetCommandStdout(['android_webview/tools/gyp_webview', 'all'])
   except merge_common.MergeError as e:
     if not unattended:
       raise
