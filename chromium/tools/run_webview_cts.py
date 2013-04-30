@@ -38,14 +38,16 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.WebViewTest#testSetScrollBarStyle',
   'android.webkit.cts.WebViewTest#testSetWebViewClient',
   'android.webkit.cts.WebViewTest#testZoom',
-  # Following 4 tests failing due to crbug.com/172786.
-  # See also b/8187850
+  # b/8763845
   'android.webkit.cts.WebViewTest#testFindAll',
+  # b/8763944
   'android.webkit.cts.WebViewTest#testGetContentHeight',
   # See b/8231433 for Geolocation test failures.
   'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestAcceptAlways',
   'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestReject',
-  #'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestAcceptOnce',
+  'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestAcceptOnce',
+  # b/5006389
+  'android.webkit.cts.WebViewTest#testFlingScroll',
   # Don't forget to update the spreadsheet! :)
 ])
 
