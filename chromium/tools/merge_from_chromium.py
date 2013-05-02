@@ -441,8 +441,14 @@ def Snapshot(svn_revision, root_sha1, unattended):
 def Push(svn_revision):
   """Push the finished snapshot to the Android repository."""
   src = 'merge-from-chromium-%s' % svn_revision
-  for branch in ['master-chromium-merge', 'master-chromium']:
-    logging.debug('Pushing to server (%s) ...' % branch)
+  # Use forced pushes ('+' prefix) for the temporary and archive branches in
+  # case they already got updated by a previous (possibly failed?) merge, but
+  # do not force push to the real master-chromium branch as this could erase
+  # downstream changes.
+  for refspec in ['+%s:master-chromium-merge' % src,
+                  '%s:master-chromium' % src,
+                  '+%s:refs/archive/chromium-%s' % (src, svn_revision)]:
+    logging.debug('Pushing to server (%s) ...' % refspec)
     for path in merge_common.ALL_PROJECTS:
       if path in merge_common.PROJECTS_WITH_FLAT_HISTORY:
         remote = 'history'
@@ -450,8 +456,8 @@ def Push(svn_revision):
         remote = 'goog'
       logging.debug('Pushing %s', path)
       dest_dir = os.path.join(merge_common.REPOSITORY_ROOT, path)
-      merge_common.GetCommandStdout(['git', 'push', '-f', remote,
-                                    src + ':' + branch], cwd=dest_dir)
+      merge_common.GetCommandStdout(['git', 'push', remote, refspec],
+                                    cwd=dest_dir)
 
 
 def main():
