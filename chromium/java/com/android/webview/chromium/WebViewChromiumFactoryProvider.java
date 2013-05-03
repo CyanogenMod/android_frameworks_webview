@@ -46,6 +46,8 @@ import org.chromium.content.browser.ResourceExtractor;
 import org.chromium.content.common.CommandLine;
 import org.chromium.content.common.ProcessInitException;
 
+import java.io.File;
+
 public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
 
     private final Object mLock = new Object();
@@ -91,12 +93,17 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         ThreadUtils.runOnUiThreadBlocking(new Runnable() {
             @Override
             public void run() {
-                String[] flags = null;
                 String commandLine = SystemProperties.get(COMMAND_LINE_PROPERTY);
                 if (Build.IS_DEBUGGABLE && commandLine != null) {
-                    flags = CommandLine.tokenizeQuotedAruments(commandLine.toCharArray());
+                    if (new File(commandLine).isFile()) {
+                        CommandLine.initFromFile(commandLine);
+                    } else {
+                        CommandLine.init(
+                                CommandLine.tokenizeQuotedAruments(commandLine.toCharArray()));
+                    }
+                } else {
+                    CommandLine.init(null);
                 }
-                CommandLine.init(flags);
 
                 // Set 'no-merge-ui-and-compositor-threads' by default temporarily.
                 if (!CommandLine.getInstance().hasSwitch("merge-ui-and-compositor-threads")) {
