@@ -21,7 +21,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Looper;
-import android.os.SystemProperties;
 import android.webkit.CookieManager;
 import android.webkit.GeolocationPermissions;
 import android.webkit.WebIconDatabase;
@@ -46,14 +45,12 @@ import org.chromium.content.browser.ResourceExtractor;
 import org.chromium.content.common.CommandLine;
 import org.chromium.content.common.ProcessInitException;
 
-import java.io.File;
-
 public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
 
     private final Object mLock = new Object();
 
     private static final String CHROMIUM_PREFS_NAME = "WebViewChromiumPrefs";
-    private static final String COMMAND_LINE_PROPERTY = "webview.chromium.flags";
+    private static final String COMMAND_LINE_FILE = "/data/local/tmp/webview-command-line";
 
     // Initialization guarded by mLock.
     private AwBrowserContext mBrowserContext;
@@ -93,14 +90,8 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         ThreadUtils.runOnUiThreadBlocking(new Runnable() {
             @Override
             public void run() {
-                String commandLine = SystemProperties.get(COMMAND_LINE_PROPERTY);
-                if (Build.IS_DEBUGGABLE && commandLine != null) {
-                    if (new File(commandLine).isFile()) {
-                        CommandLine.initFromFile(commandLine);
-                    } else {
-                        CommandLine.init(
-                                CommandLine.tokenizeQuotedAruments(commandLine.toCharArray()));
-                    }
+                if (Build.IS_DEBUGGABLE) {
+                    CommandLine.initFromFile(COMMAND_LINE_FILE);
                 } else {
                     CommandLine.init(null);
                 }
