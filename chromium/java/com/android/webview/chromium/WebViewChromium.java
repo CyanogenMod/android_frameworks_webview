@@ -569,8 +569,7 @@ class WebViewChromium implements WebViewProvider,
     @Override
     public WebSettings getSettings() {
         if (mWebSettings == null) {
-            mWebSettings = new ContentSettingsAdapter(mAwContents.getContentSettings(),
-                    mAwContents.getSettings());
+            mWebSettings = new ContentSettingsAdapter(mAwContents.getSettings());
         }
         return mWebSettings;
     }
@@ -590,8 +589,7 @@ class WebViewChromium implements WebViewProvider,
         // This was deprecated in 2009 and hidden in JB MR1, so just provide the minimum needed
         // to stop very out-dated applications from crashing.
         Log.w(TAG, "WebView doesn't support getZoomControls");
-        return mAwContents.getContentSettings().supportZoom() ?
-            new View(mWebView.getContext()) : null;
+        return mAwContents.getSettings().supportZoom() ? new View(mWebView.getContext()) : null;
     }
 
     @Override

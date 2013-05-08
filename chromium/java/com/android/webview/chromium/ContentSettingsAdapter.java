@@ -23,20 +23,15 @@ import android.webkit.WebSettings.RenderPriority;
 import android.webkit.WebSettings.TextSize;
 import android.webkit.WebSettings.ZoomDensity;
 
-import org.chromium.content.browser.ContentSettings;
 import org.chromium.android_webview.AwSettings;
 
-// BUG(8296421): We must get rid of paired calls to ContentSettings and AwSettings,
-// making AwSettings a single entry point.
 public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     private static final String TAG = ContentSettingsAdapter.class.getSimpleName();
 
-    ContentSettings mContentSettings;
-    AwSettings mAwSettings;
+    private AwSettings mAwSettings;
 
-    public ContentSettingsAdapter(ContentSettings chromeSettings, AwSettings awSettings) {
-        mContentSettings = chromeSettings;
+    public ContentSettingsAdapter(AwSettings awSettings) {
         mAwSettings = awSettings;
     }
 
@@ -55,32 +50,32 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     @Override
     public void setSupportZoom(boolean support) {
-        mContentSettings.setSupportZoom(support);
+        mAwSettings.setSupportZoom(support);
     }
 
     @Override
     public boolean supportZoom() {
-        return mContentSettings.supportZoom();
+        return mAwSettings.supportZoom();
     }
 
     @Override
     public void setBuiltInZoomControls(boolean enabled) {
-        mContentSettings.setBuiltInZoomControls(enabled);
+        mAwSettings.setBuiltInZoomControls(enabled);
     }
 
     @Override
     public boolean getBuiltInZoomControls() {
-        return mContentSettings.getBuiltInZoomControls();
+        return mAwSettings.getBuiltInZoomControls();
     }
 
     @Override
     public void setDisplayZoomControls(boolean enabled) {
-        mContentSettings.setDisplayZoomControls(enabled);
+        mAwSettings.setDisplayZoomControls(enabled);
     }
 
     @Override
     public boolean getDisplayZoomControls() {
-        return mContentSettings.getDisplayZoomControls();
+        return mAwSettings.getDisplayZoomControls();
     }
 
     @Override
