@@ -17,8 +17,8 @@
 CMD_LINE_FILE=/data/local/tmp/webview-command-line
 
 if [ $# -eq 0 ] ; then
-  # If nothing specified, print the command line.
-  adb shell "cat $CMD_LINE_FILE 2>/dev/null"
+  # If nothing specified, print the command line (stripping off "webview").
+  adb shell "cat $CMD_LINE_FILE 2>/dev/null" | cut -d" " -f "2-"
 elif [ $# -eq 1 ] && [ "$1" = '' ] ; then
   # If given an empty string, delete the command line.
   set -x
@@ -26,7 +26,6 @@ elif [ $# -eq 1 ] && [ "$1" = '' ] ; then
 else
   # Else set it.
   set -x
-  adb shell "echo '$*' > $CMD_LINE_FILE"
-  # Prevent other apps from modifying flags -- this can create security issues.
+  adb shell "echo 'webview $*' > $CMD_LINE_FILE"
   adb shell chmod 0664 $CMD_LINE_FILE
 fi
