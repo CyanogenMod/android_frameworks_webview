@@ -59,8 +59,7 @@ final class WebViewDatabaseAdapter extends WebViewDatabase {
 
     @Override
     public boolean hasFormData() {
-        UnimplementedWebViewApi.invoke();
-        return false;
+        return mFormDatabase.hasFormData();
     }
 
     @Override
