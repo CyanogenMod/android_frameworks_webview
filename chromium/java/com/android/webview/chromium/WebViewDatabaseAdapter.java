@@ -19,6 +19,7 @@ package com.android.webview.chromium;
 import android.content.Context;
 import android.webkit.WebViewDatabase;
 
+import org.chromium.android_webview.AwFormDatabase;
 import org.chromium.android_webview.HttpAuthDatabase;
 
 /**
@@ -28,9 +29,11 @@ import org.chromium.android_webview.HttpAuthDatabase;
 final class WebViewDatabaseAdapter extends WebViewDatabase {
 
     private Context mContext;
+    private AwFormDatabase mFormDatabase;
 
-    public WebViewDatabaseAdapter(Context context) {
+    public WebViewDatabaseAdapter(Context context, AwFormDatabase formDatabase) {
         mContext = context;
+        mFormDatabase = formDatabase;
     }
 
     @Override
@@ -62,6 +65,6 @@ final class WebViewDatabaseAdapter extends WebViewDatabase {
 
     @Override
     public void clearFormData() {
-        UnimplementedWebViewApi.invoke();
+        mFormDatabase.clearFormData();
     }
 }
