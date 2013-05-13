@@ -34,6 +34,7 @@ import org.chromium.android_webview.AwBrowserContext;
 import org.chromium.android_webview.AwBrowserProcess;
 import org.chromium.android_webview.AwContents;
 import org.chromium.android_webview.AwCookieManager;
+import org.chromium.android_webview.AwFormDatabase;
 import org.chromium.android_webview.AwGeolocationPermissions;
 import org.chromium.android_webview.AwQuotaManagerBridge;
 import org.chromium.android_webview.AwSettings;
@@ -237,7 +238,8 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         synchronized (mLock) {
             if (mWebViewDatabase == null) {
                 ensureChromiumStartedLocked();
-                mWebViewDatabase = new WebViewDatabaseAdapter(context);
+                mWebViewDatabase = new WebViewDatabaseAdapter(context,
+                        getBrowserContextLocked().getFormDatabase());
             }
         }
         return mWebViewDatabase;
