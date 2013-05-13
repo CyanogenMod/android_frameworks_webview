@@ -36,10 +36,10 @@ import org.chromium.android_webview.AwContents;
 import org.chromium.android_webview.AwCookieManager;
 import org.chromium.android_webview.AwGeolocationPermissions;
 import org.chromium.android_webview.AwQuotaManagerBridge;
+import org.chromium.android_webview.AwSettings;
 import org.chromium.base.PathService;
 import org.chromium.base.ThreadUtils;
 import org.chromium.content.app.LibraryLoader;
-import org.chromium.content.browser.ContentSettings;
 import org.chromium.content.browser.ContentViewStatics;
 import org.chromium.content.browser.ResourceExtractor;
 import org.chromium.content.common.CommandLine;
@@ -50,7 +50,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     private final Object mLock = new Object();
 
     private static final String CHROMIUM_PREFS_NAME = "WebViewChromiumPrefs";
-    private static final String COMMAND_LINE_PROPERTY = "webview.chromium.flags";
+    private static final String COMMAND_LINE_FILE = "/data/local/tmp/webview-command-line";
 
     // Initialization guarded by mLock.
     private AwBrowserContext mBrowserContext;
@@ -74,6 +74,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     private void initPlatSupportLibrary() {
         DrawGLFunctor.setChromiumAwDrawGLFunction(AwContents.getAwDrawGLFunction());
         AwContents.setAwDrawSWFunctionTable(GraphicsUtils.getDrawSWFunctionTable());
+        AwContents.setAwDrawGLFunctionTable(GraphicsUtils.getDrawGLFunctionTable());
     }
 
     private void ensureChromiumStartedLocked() {
@@ -89,12 +90,16 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         ThreadUtils.runOnUiThreadBlocking(new Runnable() {
             @Override
             public void run() {
-                String[] flags = null;
-                String commandLine = System.getProperty(COMMAND_LINE_PROPERTY);
-                if (Build.IS_DEBUGGABLE && commandLine != null) {
-                    flags = CommandLine.tokenizeQuotedAruments(commandLine.toCharArray());
+                if (Build.IS_DEBUGGABLE) {
+                    CommandLine.initFromFile(COMMAND_LINE_FILE);
+                } else {
+                    CommandLine.init(null);
                 }
-                CommandLine.init(flags);
+
+                // Set 'no-merge-ui-and-compositor-threads' by default temporarily.
+                if (!CommandLine.getInstance().hasSwitch("merge-ui-and-compositor-threads")) {
+                    CommandLine.getInstance().appendSwitch("no-merge-ui-and-compositor-threads");
+                }
 
                 // TODO: currently in a relase build the DCHECKs only log. We either need to insall
                 // a report handler with SetLogReportHandler to make them assert, or else compile
@@ -149,7 +154,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
 
                     @Override
                     public String getDefaultUserAgent(Context context) {
-                        return ContentSettings.getDefaultUserAgent();
+                        return AwSettings.getDefaultUserAgent();
                     }
                 };
             }

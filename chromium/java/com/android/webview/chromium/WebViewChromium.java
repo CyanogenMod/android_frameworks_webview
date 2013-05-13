@@ -51,7 +51,6 @@ import android.webkit.WebViewProvider;
 
 import org.chromium.android_webview.AwBrowserContext;
 import org.chromium.android_webview.AwContents;
-import org.chromium.android_webview.AwNativeWindow;
 import org.chromium.content.browser.LoadUrlParams;
 import org.chromium.net.NetworkChangeNotifier;
 
@@ -693,14 +692,7 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void onDraw(Canvas canvas) {
-        if (canvas.isHardwareAccelerated() && mAwContents.onPrepareDrawGL(canvas)) {
-            if (mGLfunctor == null) {
-                mGLfunctor = new DrawGLFunctor(mAwContents.getAwDrawGLViewContext());
-            }
-            mGLfunctor.requestDrawGL((HardwareCanvas) canvas, mWebView.getViewRootImpl());
-        } else {
-            mAwContents.onDraw(canvas);
-        }
+        mAwContents.onDraw(canvas);
     }
 
     @Override
@@ -945,6 +937,14 @@ class WebViewChromium implements WebViewProvider,
         @Override
         public void setMeasuredDimension(int measuredWidth, int measuredHeight) {
             mWebViewPrivate.setMeasuredDimension(measuredWidth, measuredHeight);
+        }
+
+        @Override
+        public boolean requestDrawGL(Canvas canvas) {
+            if (mGLfunctor == null) {
+                mGLfunctor = new DrawGLFunctor(mAwContents.getAwDrawGLViewContext());
+            }
+            return mGLfunctor.requestDrawGL((HardwareCanvas)canvas, mWebView.getViewRootImpl());
         }
     }
 }

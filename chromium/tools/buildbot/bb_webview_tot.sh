@@ -18,11 +18,18 @@
 
 BB_INTERNAL_DIR="$(dirname ${0})"
 ANDROID_SRC_ROOT="$(cd "${BB_INTERNAL_DIR}/../../../../.."; pwd)"
-BB_DIR="${ANDROID_SRC_ROOT}/external/chromium_org/build/android/buildbot"
+if [ -e ${ANDROID_SRC_ROOT}/external/chromium_tot ]; then
+  BB_DIR="${ANDROID_SRC_ROOT}/external/chromium_tot/src/build/android/buildbot"
+else
+  BB_DIR="${ANDROID_SRC_ROOT}/external/chromium_org/build/android/buildbot"
+fi
+DEPOT_TOOLS_DIR="$(dirname $(which gclient))"
+WEBVIEW_TOOLS_DIR="${ANDROID_SRC_ROOT}/frameworks/webview/chromium/tools"
 . "$BB_DIR/buildbot_functions.sh"
 . "$BB_INTERNAL_DIR/webview_buildbot_functions.sh"
 
 bb_webview_baseline_setup "${ANDROID_SRC_ROOT}"
-bb_webview_smart_sync
-bb_webview_sync_and_merge
+bb_webview_remove_chromium_org
+bb_webview_sync_upstream_chromium
+bb_webview_gyp
 bb_webview_build_android

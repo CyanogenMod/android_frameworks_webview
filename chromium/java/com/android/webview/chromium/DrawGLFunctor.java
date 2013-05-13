@@ -53,13 +53,21 @@ class DrawGLFunctor {
         mDestroyRunnable.detachNativeFunctor();
     }
 
-    public void requestDrawGL(HardwareCanvas canvas, ViewRootImpl viewRootImpl) {
+    public boolean requestDrawGL(HardwareCanvas canvas, ViewRootImpl viewRootImpl) {
         if (mDestroyRunnable.mNativeDrawGLFunctor == 0) {
             throw new RuntimeException("requested DrawGL on already destroyed DrawGLFunctor");
         }
         mDestroyRunnable.mViewRootImpl = viewRootImpl;
-        int ret = canvas.callDrawGLFunction(mDestroyRunnable.mNativeDrawGLFunctor);
-        if (ret != DisplayList.STATUS_DONE) Log.e(TAG, "callDrawGLFunction error: " + ret);
+        if (canvas != null) {
+            int ret = canvas.callDrawGLFunction(mDestroyRunnable.mNativeDrawGLFunctor);
+            if (ret != DisplayList.STATUS_DONE) {
+                Log.e(TAG, "callDrawGLFunction error: " + ret);
+                return false;
+            }
+        } else {
+            viewRootImpl.attachFunctor(mDestroyRunnable.mNativeDrawGLFunctor);
+        }
+        return true;
     }
 
     public static void setChromiumAwDrawGLFunction(int functionPointer) {

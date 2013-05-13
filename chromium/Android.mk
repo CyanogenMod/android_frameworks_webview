@@ -91,6 +91,8 @@ LOCAL_REQUIRED_MODULES := \
 
 LOCAL_PROGUARD_ENABLED := disabled
 
+LOCAL_JAVACFLAGS := -Xlint:unchecked -Werror
+
 include $(BUILD_JAVA_LIBRARY)
 
 # Native support library (libwebviewchromium_plat_support.so) - does NOT link
@@ -103,17 +105,20 @@ LOCAL_SRC_FILES:=       \
         plat_support/draw_gl_functor.cpp \
         plat_support/jni_entry_point.cpp \
         plat_support/graphics_utils.cpp \
+        plat_support/graphic_buffer_impl.cpp \
 
 LOCAL_C_INCLUDES:= \
         $(CHROMIUM_PATH) \
         external/skia/include/core \
         frameworks/base/core/jni/android/graphics \
+        frameworks/native/include/ui \
 
 LOCAL_SHARED_LIBRARIES += \
         libandroid_runtime \
         liblog \
         libcutils \
         libskia \
+        libui \
         libutils \
 
 LOCAL_MODULE_TAGS := optional

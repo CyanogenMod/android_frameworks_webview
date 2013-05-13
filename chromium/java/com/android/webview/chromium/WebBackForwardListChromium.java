@@ -34,7 +34,7 @@ public class WebBackForwardListChromium extends WebBackForwardList {
 
     /* package */ WebBackForwardListChromium(NavigationHistory nav_history) {
         mCurrentIndex = nav_history.getCurrentEntryIndex();
-        mHistroryItemList = new ArrayList(nav_history.getEntryCount());
+        mHistroryItemList = new ArrayList<WebHistoryItemChromium>(nav_history.getEntryCount());
         for (int i = 0; i < nav_history.getEntryCount(); ++i) {
             mHistroryItemList.add(
                     new WebHistoryItemChromium(nav_history.getEntryAtIndex(i)));

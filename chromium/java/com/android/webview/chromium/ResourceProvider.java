@@ -36,13 +36,6 @@ public class ResourceProvider {
 
         Resources.Theme theme = context.getTheme();
 
-        // array
-
-        org.chromium.content.R.array.official_command_line =
-                com.android.internal.R.array.webviewchromium_official_command_line;
-
-        verifyFields(org.chromium.content.R.array.class);
-
         // dimen
 
         org.chromium.content.R.dimen.link_preview_overlay_radius =

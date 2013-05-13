@@ -22,7 +22,6 @@
   <add-resource type="layout" name="webviewchromium_date_time_picker_dialog" />
   <add-resource type="layout" name="webviewchromium_month_picker" />
   <add-resource type="dimen" name="webviewchromium_link_preview_overlay_radius" />
-  <add-resource type="array" name="webviewchromium_official_command_line" />
   <add-resource type="string" name="webviewchromium_actionbar_share" />
   <add-resource type="string" name="webviewchromium_actionbar_web_search" />
   <add-resource type="string" name="webviewchromium_accessibility_content_view" />
