@@ -1,4 +1,3 @@
-#!/bin/bash
 #
 # Copyright (C) 2013 The Android Open Source Project
 #
@@ -13,19 +12,15 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
 
-CMD_LINE_FILE=/data/local/tmp/webview-command-line
+LOCAL_PATH := $(call my-dir)
+include $(CLEAR_VARS)
 
-if [ $# -eq 0 ] ; then
-  # If nothing specified, print the command line (stripping off "webview").
-  adb shell "cat $CMD_LINE_FILE 2>/dev/null" | cut -d" " -f "2-"
-elif [ $# -eq 1 ] && [ "$1" = '' ] ; then
-  # If given an empty string, delete the command line.
-  set -x
-  adb shell rm $CMD_LINE_FILE >/dev/null
-else
-  # Else set it.
-  set -x
-  adb shell "echo 'webview $*' > $CMD_LINE_FILE"
-  adb shell chmod 0664 $CMD_LINE_FILE
-fi
+LOCAL_SRC_FILES := $(call all-subdir-java-files)
+
+LOCAL_PACKAGE_NAME := WebViewShell
+
+LOCAL_SDK_VERSION := 17
+
+include $(BUILD_PACKAGE)

@@ -42,8 +42,11 @@ def _MergeProjects(svn_revision):
     merge_common.GetCommandStdout(['git', 'checkout',
                                    '-b', 'merge-to-master',
                                    '-t', 'goog/master'], cwd=dest_dir)
+    merge_common.GetCommandStdout(['git', 'fetch', 'history',
+                                   'refs/archive/chromium-%s' % svn_revision],
+                                  cwd=dest_dir)
     merge_sha1 = merge_common.GetCommandStdout(['git', 'rev-parse',
-                                                'history/master-chromium'],
+                                                'FETCH_HEAD'],
                                                cwd=dest_dir).strip()
     old_sha1 = merge_common.GetCommandStdout(['git', 'rev-parse', 'HEAD'],
                                              cwd=dest_dir).strip()
@@ -84,13 +87,16 @@ def _MergeProjects(svn_revision):
     merge_common.GetCommandStdout(['git', 'checkout',
                                    '-b', 'merge-to-master',
                                    '-t', 'goog/master'], cwd=dest_dir)
+    merge_common.GetCommandStdout(['git', 'fetch', 'goog',
+                                   'refs/archive/chromium-%s' % svn_revision],
+                                  cwd=dest_dir)
     if merge_common.GetCommandStdout(['git', 'rev-list', '-1',
-                                      'HEAD..goog/master-chromium'],
+                                      'HEAD..FETCH_HEAD'],
                                      cwd=dest_dir):
       logging.debug('Merging project %s ...', path)
       # Merge conflicts cause 'git merge' to return 1, so ignore errors
       merge_common.GetCommandStdout(['git', 'merge', '--no-commit', '--no-ff',
-                                     'goog/master-chromium'],
+                                     'FETCH_HEAD'],
                                     cwd=dest_dir, ignore_errors=True)
       merge_common.CheckNoConflictsAndCommitMerge(
           'Merge from Chromium at DEPS revision r%s\n\n%s' %
@@ -103,7 +109,7 @@ def _GetSVNRevision():
   logging.debug('Getting SVN revision ...')
   commit = merge_common.GetCommandStdout([
       'git', 'log', '-n1', '--grep=git-svn-id:', '--format=%H%n%b',
-      'goog/master-chromium'])
+      'history/master-chromium'])
   svn_revision = re.search(r'^git-svn-id: .*@([0-9]+)', commit,
                            flags=re.MULTILINE).group(1)
   return svn_revision
@@ -115,7 +121,12 @@ def Push():
   for path in merge_common.ALL_PROJECTS:
     logging.debug('Pushing %s', path)
     dest_dir = os.path.join(merge_common.REPOSITORY_ROOT, path)
-    merge_common.GetCommandStdout(['git', 'push', '-f', 'goog',
+    # Delete the graft before pushing otherwise git will attempt to push all the
+    # grafted-in objects to the server as well as the ones we want.
+    graftfile = os.path.join(dest_dir, '.git', 'info', 'grafts')
+    if os.path.exists(graftfile):
+      os.remove(graftfile)
+    merge_common.GetCommandStdout(['git', 'push', 'goog',
                                    'merge-to-master:master'], cwd=dest_dir)
 
 
@@ -126,6 +137,11 @@ def main():
                    'projects in Android and merges them into master to publish '
                    'them.')
   parser.add_option(
+      '', '--svn_revision',
+      default=None,
+      help=('Merge to the specified archived master-chromium SVN revision,'
+            'rather than using HEAD.'))
+  parser.add_option(
       '', '--push',
       default=False, action='store_true',
       help=('Push the result of a previous merge to the server.'))
@@ -134,15 +150,13 @@ def main():
     parser.print_help()
     return 1
 
-  if 'ANDROID_BUILD_TOP' not in os.environ:
-    print >>sys.stderr, 'You need to run the Android envsetup.sh and lunch.'
-    return 1
-
   logging.basicConfig(format='%(message)s', level=logging.DEBUG,
                       stream=sys.stdout)
 
   if options.push:
     Push()
+  elif options.svn_revision:
+    _MergeProjects(options.svn_revision)
   else:
     svn_revision = _GetSVNRevision()
     _MergeProjects(svn_revision)
