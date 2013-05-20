@@ -124,12 +124,12 @@ jint GetDrawSWFunctionTable(JNIEnv* env, jclass) {
 
 jint GetDrawGLFunctionTable(JNIEnv* env, jclass) {
   static const AwDrawGLFunctionTable function_table = {
-      &GraphicBufferImpl::Create,
-      &GraphicBufferImpl::Release,
-      &GraphicBufferImpl::LockStatic,
-      &GraphicBufferImpl::UnlockStatic,
-      &GraphicBufferImpl::GetNativeBufferStatic,
-      &GraphicBufferImpl::GetStrideStatic,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
   };
   return reinterpret_cast<jint>(&function_table);
 }
