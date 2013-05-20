@@ -123,4 +123,4 @@ LOCAL_SHARED_LIBRARIES += \
 LOCAL_MODULE_TAGS := optional
 
 include $(BUILD_SHARED_LIBRARY)
-include $(call all-makefiles-under,$(LOCAL_PATH))
+include $(call first-makefiles-under,$(LOCAL_PATH))
