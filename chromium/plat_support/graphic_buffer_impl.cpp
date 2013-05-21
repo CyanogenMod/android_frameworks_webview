@@ -51,15 +51,15 @@ void GraphicBufferImpl::Release(int buffer_id) {
 }
 
 // static
-int GraphicBufferImpl::LockStatic(int buffer_id, int mode, void** vaddr) {
+int GraphicBufferImpl::MapStatic(int buffer_id, AwMapMode mode, void** vaddr) {
   GraphicBufferImpl* buffer = reinterpret_cast<GraphicBufferImpl*>(buffer_id);
-  return buffer->Lock(mode, vaddr);
+  return buffer->Map(mode, vaddr);
 }
 
 // static
-int GraphicBufferImpl::UnlockStatic(int buffer_id) {
+int GraphicBufferImpl::UnmapStatic(int buffer_id) {
   GraphicBufferImpl* buffer = reinterpret_cast<GraphicBufferImpl*>(buffer_id);
-  return buffer->Unlock();
+  return buffer->Unmap();
 }
 
 // static
@@ -74,17 +74,16 @@ uint32_t GraphicBufferImpl::GetStrideStatic(int buffer_id) {
   return buffer->GetStride();
 }
 
-status_t GraphicBufferImpl::Lock(int mode, void** vaddr) {
+status_t GraphicBufferImpl::Map(AwMapMode mode, void** vaddr) {
   int usage = 0;
   switch (mode) {
-    // TODO(kaanb): Use public enum constants instead of integers.
-    case 0:
+    case MAP_READ_ONLY:
       usage = android::GraphicBuffer::USAGE_SW_READ_OFTEN;
       break;
-    case 1:
+    case MAP_WRITE_ONLY:
       usage = android::GraphicBuffer::USAGE_SW_WRITE_OFTEN;
       break;
-    case 2:
+    case MAP_READ_WRITE:
       usage = android::GraphicBuffer::USAGE_SW_READ_OFTEN |
           android::GraphicBuffer::USAGE_SW_WRITE_OFTEN;
       break;
@@ -94,7 +93,7 @@ status_t GraphicBufferImpl::Lock(int mode, void** vaddr) {
   return mBuffer->lock(usage, vaddr);
 }
 
-status_t GraphicBufferImpl::Unlock() {
+status_t GraphicBufferImpl::Unmap() {
   return mBuffer->unlock();
 }
 

@@ -22,6 +22,8 @@
 
 #include <ui/GraphicBuffer.h>
 
+#include "android_webview/public/browser/draw_gl.h"
+
 namespace android {
 
 class GraphicBufferImpl {
@@ -30,14 +32,14 @@ class GraphicBufferImpl {
 
   static int Create(int w, int h);
   static void Release(int buffer_id);
-  static int LockStatic(int buffer_id, int mode, void** vaddr);
-  static int UnlockStatic(int buffer_id);
+  static int MapStatic(int buffer_id, AwMapMode mode, void** vaddr);
+  static int UnmapStatic(int buffer_id);
   static void* GetNativeBufferStatic(int buffer_id);
   static uint32_t GetStrideStatic(int buffer_id);
 
  private:
-  status_t Lock(int mode, void** vaddr);
-  status_t Unlock();
+  status_t Map(AwMapMode mode, void** vaddr);
+  status_t Unmap();
   status_t InitCheck() const;
   void* GetNativeBuffer() const;
   uint32_t GetStride() const;
@@ -46,6 +48,6 @@ class GraphicBufferImpl {
   sp<android::GraphicBuffer> mBuffer;
 };
 
-} // namespace android
+}  // namespace android
 
-#endif // ANDROID_GRAPHIC_BUFFER_IMPL_H
+#endif  // ANDROID_GRAPHIC_BUFFER_IMPL_H
