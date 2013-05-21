@@ -27,7 +27,6 @@ import sys
 # If you add or remove tests from this lists please update the CTS
 # spreadsheet!
 EXPECTED_FAILURES = set([
-  'android.webkit.cts.WebSettingsTest#testAccessSaveFormData',
   'android.webkit.cts.WebViewClientTest#testOnScaleChanged',
   'android.webkit.cts.WebViewTest#testCapturePicture',
   # BUG=crbug.com/162967
