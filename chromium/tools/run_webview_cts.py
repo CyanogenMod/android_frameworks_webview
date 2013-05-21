@@ -62,7 +62,7 @@ def main():
   signal.signal(signal.SIGINT, handler)
 
   proc = subprocess.Popen(
-      ['cts-tradefed', 'run', 'singleCommand', 'cts', '-p', 'android.webkit', '--screenshot-on-ui-failure'],
+      ['cts-tradefed', 'run', 'singleCommand', 'cts', '-p', 'android.webkit', '--screenshot-on-failure'],
       stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
   (stdout, stderr) = proc.communicate();
