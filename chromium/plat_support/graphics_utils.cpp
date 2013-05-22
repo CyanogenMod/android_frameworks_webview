@@ -50,7 +50,7 @@ struct PixelInfo : public AwPixelInfo {
 AwPixelInfo* GetPixels(JNIEnv* env, jobject java_canvas) {
   SkCanvas* canvas = GraphicsJNI::getNativeCanvas(env, java_canvas);
   if (!canvas) return NULL;
-  SkDevice* device = canvas->getDevice();
+  SkDevice* device = canvas->getTopDevice(true);
   if (!device) return NULL;
   const SkBitmap* bitmap = &device->accessBitmap(true);
   if (!bitmap->lockPixelsAreWritable()) return NULL;
