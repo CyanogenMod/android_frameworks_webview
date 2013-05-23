@@ -48,6 +48,8 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestAcceptOnce',
   # b/5006389
   'android.webkit.cts.WebViewTest#testFlingScroll',
+  # b/9103603
+  'android.webkit.cts.WebViewTest#testRequestImageRef',
   # Don't forget to update the spreadsheet! :)
 ])
 
