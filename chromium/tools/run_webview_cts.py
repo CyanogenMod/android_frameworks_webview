@@ -49,6 +49,8 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.WebViewTest#testFlingScroll',
   # b/9103603
   'android.webkit.cts.WebViewTest#testRequestImageRef',
+  # b/9121594
+  'android.webkit.cts.WebHistoryItemTest#testWebHistoryItem',
   # Don't forget to update the spreadsheet! :)
 ])
 
