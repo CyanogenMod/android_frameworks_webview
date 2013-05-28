@@ -45,6 +45,8 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestAcceptAlways',
   'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestReject',
   'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestAcceptOnce',
+  # b/9159785
+  'android.webkit.cts.WebViewTest#testFindNext',
   # b/5006389
   'android.webkit.cts.WebViewTest#testFlingScroll',
   # b/9103603
