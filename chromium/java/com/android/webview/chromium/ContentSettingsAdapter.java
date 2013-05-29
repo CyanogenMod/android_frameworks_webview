@@ -132,13 +132,12 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     @Override
     public void setSaveFormData(boolean save) {
-        UnimplementedWebViewApi.invoke();
+        mAwSettings.setSaveFormData(save);
     }
 
     @Override
     public boolean getSaveFormData() {
-        UnimplementedWebViewApi.invoke();
-        return false;
+        return mAwSettings.getSaveFormData();
     }
 
     @Override

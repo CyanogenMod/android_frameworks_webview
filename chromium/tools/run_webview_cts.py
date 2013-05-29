@@ -27,7 +27,6 @@ import sys
 # If you add or remove tests from this lists please update the CTS
 # spreadsheet!
 EXPECTED_FAILURES = set([
-  'android.webkit.cts.WebSettingsTest#testAccessSaveFormData',
   'android.webkit.cts.WebViewClientTest#testOnScaleChanged',
   'android.webkit.cts.WebViewTest#testCapturePicture',
   # BUG=crbug.com/162967
@@ -46,8 +45,14 @@ EXPECTED_FAILURES = set([
   'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestAcceptAlways',
   'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestReject',
   'android.webkit.cts.GeolocationTest#testSimpleGeolocationRequestAcceptOnce',
+  # b/9159785
+  'android.webkit.cts.WebViewTest#testFindNext',
   # b/5006389
   'android.webkit.cts.WebViewTest#testFlingScroll',
+  # b/9103603
+  'android.webkit.cts.WebViewTest#testRequestImageRef',
+  # b/9121594
+  'android.webkit.cts.WebHistoryItemTest#testWebHistoryItem',
   # Don't forget to update the spreadsheet! :)
 ])
 
@@ -62,7 +67,7 @@ def main():
   signal.signal(signal.SIGINT, handler)
 
   proc = subprocess.Popen(
-      ['cts-tradefed', 'run', 'singleCommand', 'cts', '-p', 'android.webkit', '--screenshot-on-ui-failure'],
+      ['cts-tradefed', 'run', 'singleCommand', 'cts', '-p', 'android.webkit', '--screenshot-on-failure'],
       stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
   (stdout, stderr) = proc.communicate();

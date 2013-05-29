@@ -654,12 +654,12 @@ class WebViewChromium implements WebViewProvider,
         mAwContents.onInitializeAccessibilityEvent(event);
     }
 
-    // TODO: Update WebView to mimic ContentView implementation for the
-    // real View#performAccessibilityAction(int, Bundle).  This method has different behavior.
-    // See ContentViewCore#performAccessibilityAction(int, Bundle) for more details.
     @Override
     public boolean performAccessibilityAction(int action, Bundle arguments) {
-        return mAwContents.performAccessibilityAction(action, arguments);
+        if (mAwContents.supportsAccessibilityAction(action)) {
+            return mAwContents.performAccessibilityAction(action, arguments);
+        }
+        return mWebViewPrivate.super_performAccessibilityAction(action, arguments);
     }
 
     @Override
