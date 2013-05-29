@@ -1,3 +1,8 @@
+# Most of the flags in this file are duplicated to refer to both the pre- and
+# post-jarjar remapping versions of the class names. This enables the same
+# config file to be used whether jarjar is enabled or not.
+
+
 # Keep the factory and its public members; it's the main entry point used by the
 # framework.
 -keep class com.android.webview.chromium.WebViewChromiumFactoryProvider {
@@ -22,24 +27,46 @@
 -keepclasseswithmembers class org.chromium.** {
   native <methods>;
 }
+-keepclasseswithmembers class com.android.internal.webviewchromium.** {
+  @**.AccessedByNative <fields>;
+}
+-keepclasseswithmembers class com.android.internal.webviewchromium.** {
+  @**.CalledByNative <methods>;
+}
+-keepclasseswithmembers class com.android.internal.webviewchromium.** {
+  @**.CalledByNativeUnchecked <methods>;
+}
+-keepclasseswithmembers class com.android.internal.webviewchromium.** {
+  native <methods>;
+}
 
-# Silence notes caused by use of @VisibleForTesting inside guava.
+# Silence notes caused by use of @VisibleForTesting inside guava. This doesn't
+# happen when using jarjar because @VisibleForTesting gets renamed as well.
 -dontnote com.google.common.cache.LocalCache$ReferenceEntry
 -dontnote com.google.common.collect.MapMakerInternalMap$ReferenceEntry
 
 # MediaPlayerBridge uses reflection to access internal metadata.
 -dontnote org.chromium.media.MediaPlayerBridge
+-dontnote com.android.internal.webviewchromium.media.MediaPlayerBridge
 
 # AndroidKeyStore uses reflection to access internal OpenSSL state.
 -dontnote org.chromium.net.AndroidKeyStore
+-dontnote com.android.internal.webviewchromium.net.AndroidKeyStore
 
 # TraceEvent uses reflection to access internal trace info.
 -dontnote org.chromium.content.common.TraceEvent
+-dontnote com.android.internal.webviewchromium.content.common.TraceEvent
 
 # Keep finalizer stuff from google-common used via reflection
 -keepclassmembers class com.google.common.** {
   *** finalizeReferent();
 }
 -keepclassmembers class com.google.common.** {
+  *** startFinalizer(java.lang.Class,java.lang.Object);
+}
+-keepclassmembers class com.android.internal.webviewchromium.guava.** {
+  *** finalizeReferent();
+}
+-keepclassmembers class com.android.internal.webviewchromium.guava.** {
   *** startFinalizer(java.lang.Class,java.lang.Object);
 }

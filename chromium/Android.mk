@@ -30,6 +30,8 @@ LOCAL_STATIC_JAVA_LIBRARIES += android_webview_java
 
 LOCAL_SRC_FILES := $(call all-java-files-under, java)
 
+LOCAL_JARJAR_RULES := $(CHROMIUM_PATH)/android_webview/build/jarjar-rules.txt
+
 # TODO: filter webviewchromium_webkit_strings based on PRODUCT_LOCALES.
 LOCAL_REQUIRED_MODULES := \
         libwebviewchromium \
