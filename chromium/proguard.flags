@@ -1,0 +1,34 @@
+# Keep the factory and its public members; it's the main entry point used by the
+# framework.
+-keep class com.android.webview.chromium.WebViewChromiumFactoryProvider {
+    public *;
+}
+
+# Keep everything related to the JNI interface.
+-keep class org.chromium.** {
+  @**.AccessedByNative <fields>;
+  @**.CalledByNative <methods>;
+  @**.CalledByNativeUnchecked <methods>;
+  native <methods>;
+}
+
+# Silence notes caused by use of @VisibleForTesting inside guava.
+-dontnote com.google.common.cache.LocalCache$ReferenceEntry
+-dontnote com.google.common.collect.MapMakerInternalMap$ReferenceEntry
+
+# MediaPlayerBridge uses reflection to access internal metadata.
+-dontnote org.chromium.media.MediaPlayerBridge
+
+# AndroidKeyStore uses reflection to access internal OpenSSL state.
+-dontnote org.chromium.net.AndroidKeyStore
+
+# TraceEvent uses reflection to access internal trace info.
+-dontnote org.chromium.content.common.TraceEvent
+
+# Keep finalizer stuff from google-common used via reflection
+-keepclassmembers class com.google.common.** {
+  *** finalizeReferent();
+}
+-keepclassmembers class com.google.common.** {
+  *** startFinalizer(java.lang.Class,java.lang.Object);
+}
