@@ -480,7 +480,8 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public int findAll(String searchString) {
-        return mAwContents.findAllSync(searchString);
+        mAwContents.findAllAsync(searchString);
+        return 0;
     }
 
     @Override
