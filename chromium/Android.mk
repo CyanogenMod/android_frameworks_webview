@@ -89,7 +89,7 @@ LOCAL_REQUIRED_MODULES := \
         webviewchromium_webkit_strings_zh-CN.pak \
         webviewchromium_webkit_strings_zh-TW.pak
 
-LOCAL_PROGUARD_ENABLED := disabled
+LOCAL_PROGUARD_ENABLED := full
 LOCAL_PROGUARD_FLAG_FILES := proguard.flags
 
 LOCAL_JAVACFLAGS := -Xlint:unchecked -Werror
