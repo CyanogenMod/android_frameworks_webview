@@ -4,11 +4,22 @@
     public *;
 }
 
-# Keep everything related to the JNI interface.
--keep class org.chromium.** {
+# Keep the native methods bound to plat_support.
+-keepclasseswithmembers class com.android.webview.chromium.** {
+  native <methods>;
+}
+
+# Keep everything related to the org.chromium JNI interface.
+-keepclasseswithmembers class org.chromium.** {
   @**.AccessedByNative <fields>;
+}
+-keepclasseswithmembers class org.chromium.** {
   @**.CalledByNative <methods>;
+}
+-keepclasseswithmembers class org.chromium.** {
   @**.CalledByNativeUnchecked <methods>;
+}
+-keepclasseswithmembers class org.chromium.** {
   native <methods>;
 }
 
