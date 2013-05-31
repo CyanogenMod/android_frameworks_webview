@@ -21,6 +21,7 @@
   <add-resource type="drawable" name="webviewchromium_ondemand_overlay" />
   <add-resource type="drawable" name="webviewchromium_color_advanced_select_handle" />
   <add-resource type="drawable" name="webviewchromium_color_picker_border" />
+  <add-resource type="layout" name="webviewchromium_autofill_text" />
   <add-resource type="layout" name="webviewchromium_date_time_picker_dialog" />
   <add-resource type="layout" name="webviewchromium_two_field_date_picker" />
   <add-resource type="layout" name="webviewchromium_color_picker_advanced_component" />
@@ -56,4 +57,6 @@
   <add-resource type="string" name="webviewchromium_color_picker_dialog_title" />
   <add-resource type="string" name="webviewchromium_low_memory_error" />
   <add-resource type="string" name="webviewchromium_opening_file_error" />
+
+  <add-resource type="style" name="webviewchromium_AutofillPopupWindow" />
 </resources>

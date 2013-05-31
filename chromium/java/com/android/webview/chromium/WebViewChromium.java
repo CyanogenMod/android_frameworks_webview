@@ -448,9 +448,12 @@ class WebViewChromium implements WebViewProvider,
         mAwContents.clearCache(includeDiskFiles);
     }
 
+    /**
+     * This is a poorly named method, but we keep it for historical reasons.
+     */
     @Override
     public void clearFormData() {
-        UnimplementedWebViewApi.invoke();
+        mAwContents.hideAutofillPopup();
     }
 
     @Override

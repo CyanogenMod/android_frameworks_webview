@@ -85,6 +85,10 @@ public class ResourceProvider {
                 com.android.internal.R.id.webviewchromium_color_picker_text;
         org.chromium.ui.R.id.seek_bar =
                 com.android.internal.R.id.webviewchromium_color_picker_seek_bar;
+        org.chromium.ui.R.id.autofill_label =
+                com.android.internal.R.id.webviewchromium_autofill_label;
+        org.chromium.ui.R.id.autofill_sublabel =
+                com.android.internal.R.id.webviewchromium_autofill_sublabel;
 
         // layout
 
@@ -99,6 +103,8 @@ public class ResourceProvider {
                 com.android.internal.R.layout.webviewchromium_color_picker_dialog_content;
         org.chromium.ui.R.layout.color_picker_advanced_component =
                 com.android.internal.R.layout.webviewchromium_color_picker_advanced_component;
+        org.chromium.ui.R.layout.autofill_text =
+                com.android.internal.R.layout.webviewchromium_autofill_text;
 
         // string
 
@@ -159,6 +165,11 @@ public class ResourceProvider {
                 com.android.internal.R.string.webviewchromium_color_picker_button_cancel;
         org.chromium.ui.R.string.color_picker_dialog_title =
                 com.android.internal.R.string.webviewchromium_color_picker_dialog_title;
+
+        // style
+
+        org.chromium.ui.R.style.AutofillPopupWindow =
+                com.android.internal.R.style.webviewchromium_AutofillPopupWindow;
 
         if (Build.IS_DEBUGGABLE) {
             // Ensure that we aren't missing any resource mappings.

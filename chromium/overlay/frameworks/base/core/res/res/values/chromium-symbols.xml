@@ -29,6 +29,7 @@
   <java-symbol type="layout" name="webviewchromium_color_picker_dialog_title" />
   <java-symbol type="layout" name="webviewchromium_color_picker_dialog_content" />
   <java-symbol type="layout" name="webviewchromium_color_picker_advanced_component" />
+  <java-symbol type="layout" name="webviewchromium_autofill_text" />
   <java-symbol type="dimen" name="webviewchromium_link_preview_overlay_radius" />
   <java-symbol type="dimen" name="webviewchromium_color_picker_gradient_margin" />
   <java-symbol type="string" name="webviewchromium_actionbar_share" />
@@ -60,6 +61,8 @@
   <java-symbol type="string" name="webviewchromium_low_memory_error" />
   <java-symbol type="string" name="webviewchromium_opening_file_error" />
 
+  <java-symbol type="id" name="webviewchromium_autofill_label" />
+  <java-symbol type="id" name="webviewchromium_autofill_sublabel" />
   <java-symbol type="id" name="webviewchromium_time_picker" />
   <java-symbol type="id" name="webviewchromium_date_picker" />
   <java-symbol type="id" name="webviewchromium_position_in_year" />
@@ -76,4 +79,6 @@
   <java-symbol type="id" name="webviewchromium_color_picker_simple" />
   <java-symbol type="id" name="webviewchromium_color_picker_more_colors_button_border" />
   <java-symbol type="id" name="webviewchromium_color_picker_more_colors_button" />
+
+  <java-symbol type="style" name="webviewchromium_AutofillPopupWindow" />
 </resources>
