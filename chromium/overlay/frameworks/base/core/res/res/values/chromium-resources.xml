@@ -19,9 +19,15 @@
 
 <resources>
   <add-resource type="drawable" name="webviewchromium_ondemand_overlay" />
+  <add-resource type="drawable" name="webviewchromium_color_advanced_select_handle" />
+  <add-resource type="drawable" name="webviewchromium_color_picker_border" />
   <add-resource type="layout" name="webviewchromium_date_time_picker_dialog" />
   <add-resource type="layout" name="webviewchromium_month_picker" />
+  <add-resource type="layout" name="webviewchromium_color_picker_advanced_component" />
+  <add-resource type="layout" name="webviewchromium_color_picker_dialog_content" />
+  <add-resource type="layout" name="webviewchromium_color_picker_dialog_title" />
   <add-resource type="dimen" name="webviewchromium_link_preview_overlay_radius" />
+  <add-resource type="dimen" name="webviewchromium_color_picker_gradient_margin" />
   <add-resource type="string" name="webviewchromium_actionbar_share" />
   <add-resource type="string" name="webviewchromium_actionbar_web_search" />
   <add-resource type="string" name="webviewchromium_accessibility_content_view" />
@@ -39,4 +45,13 @@
   <add-resource type="string" name="webviewchromium_media_player_error_text_unknown" />
   <add-resource type="string" name="webviewchromium_media_player_error_button" />
   <add-resource type="string" name="webviewchromium_media_player_loading_video" />
+  <add-resource type="string" name="webviewchromium_color_picker_button_more" />
+  <add-resource type="string" name="webviewchromium_color_picker_hue" />
+  <add-resource type="string" name="webviewchromium_color_picker_saturation" />
+  <add-resource type="string" name="webviewchromium_color_picker_value" />
+  <add-resource type="string" name="webviewchromium_color_picker_button_set" />
+  <add-resource type="string" name="webviewchromium_color_picker_button_cancel" />
+  <add-resource type="string" name="webviewchromium_color_picker_dialog_title" />
+  <add-resource type="string" name="webviewchromium_low_memory_error" />
+  <add-resource type="string" name="webviewchromium_opening_file_error" />
 </resources>

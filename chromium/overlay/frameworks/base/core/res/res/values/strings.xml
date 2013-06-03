@@ -49,4 +49,27 @@
     <string name="webviewchromium_media_player_error_button">OK</string>
     <!-- NO DESCRIPTION [CHAR-LIMIT=16] -->
     <string name="webviewchromium_media_player_loading_video">Loading video</string>
+
+    <!-- Text for Color Picker button to go to advanced view. [CHAR-LIMIT=20] -->
+    <string name="webviewchromium_color_picker_button_more">More</string>
+    <!-- Label for hue slider in Color Picker. -->
+    <string name="webviewchromium_color_picker_hue">Hue</string>
+    <!-- Label for saturation slider in Color Picker. -->
+    <string name="webviewchromium_color_picker_saturation">Saturation</string>
+    <!-- Label for value slider in Color Picker. -->
+    <string name="webviewchromium_color_picker_value">Value</string>
+    <!-- Label for button in Color Picker dialog for user to accept the currently
+         chosen color. [CHAR-LIMIT=20] -->
+    <string name="webviewchromium_color_picker_button_set">Set</string>
+    <!-- Label for button in Color Picker dialog for user to cancel picking a
+         color. [CHAR-LIMIT=20] -->
+    <string name="webviewchromium_color_picker_button_cancel">Cancel</string>
+    <!-- Title of Color Picker dialog. [CHAR-LIMIT=20] -->
+    <string name="webviewchromium_color_picker_dialog_title">Select color</string>
+
+    <!-- Error shown when the browser is restarted due to low memory during a file picker operation. [CHAR-LIMIT=NONE] -->
+    <string name="webviewchromium_low_memory_error">Unable to complete previous operation due to low memory</string>
+
+    <!--Toast when the browser is unable to open a file for upload. [CHAR-LIMIT=32] -->
+    <string name="webviewchromium_opening_file_error">Failed to open selected file</string>
 </resources>
