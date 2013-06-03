@@ -639,10 +639,11 @@ class WebViewChromium implements WebViewProvider,
 
     // WebViewProvider.ViewDelegate implementation ------------------------------------------------
 
-    @Override
+    // TODO: remove from WebViewProvider and use default implementation from
+    // ViewGroup.
+    // @Override
     public boolean shouldDelayChildPressedState() {
-        UnimplementedWebViewApi.invoke();
-        return false;
+        return true;
     }
 
     @Override
