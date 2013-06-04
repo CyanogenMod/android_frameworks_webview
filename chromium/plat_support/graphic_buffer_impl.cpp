@@ -106,7 +106,8 @@ void* GraphicBufferImpl::GetNativeBuffer() const {
 }
 
 uint32_t GraphicBufferImpl::GetStride() const {
-  return mBuffer->getStride();
+  static const int kBytesPerPixel = 4;
+  return mBuffer->getStride() * kBytesPerPixel;
 }
 
 } // namespace android
