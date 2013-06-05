@@ -36,6 +36,7 @@ import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
+import android.view.accessibility.AccessibilityNodeProvider;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.webkit.DownloadListener;
@@ -654,6 +655,11 @@ class WebViewChromium implements WebViewProvider,
     // @Override
     public boolean shouldDelayChildPressedState() {
         return true;
+    }
+
+//    @Override
+    public AccessibilityNodeProvider getAccessibilityNodeProvider() {
+        return mAwContents.getAccessibilityNodeProvider();
     }
 
     @Override
