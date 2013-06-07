@@ -27,16 +27,16 @@
 -keepclasseswithmembers class org.chromium.** {
   native <methods>;
 }
--keepclasseswithmembers class com.android.internal.webviewchromium.** {
+-keepclasseswithmembers class com.android.org.chromium.** {
   @**.AccessedByNative <fields>;
 }
--keepclasseswithmembers class com.android.internal.webviewchromium.** {
+-keepclasseswithmembers class com.android.org.chromium.** {
   @**.CalledByNative <methods>;
 }
--keepclasseswithmembers class com.android.internal.webviewchromium.** {
+-keepclasseswithmembers class com.android.org.chromium.** {
   @**.CalledByNativeUnchecked <methods>;
 }
--keepclasseswithmembers class com.android.internal.webviewchromium.** {
+-keepclasseswithmembers class com.android.org.chromium.** {
   native <methods>;
 }
 
@@ -47,15 +47,15 @@
 
 # MediaPlayerBridge uses reflection to access internal metadata.
 -dontnote org.chromium.media.MediaPlayerBridge
--dontnote com.android.internal.webviewchromium.media.MediaPlayerBridge
+-dontnote com.android.org.chromium.media.MediaPlayerBridge
 
 # AndroidKeyStore uses reflection to access internal OpenSSL state.
 -dontnote org.chromium.net.AndroidKeyStore
--dontnote com.android.internal.webviewchromium.net.AndroidKeyStore
+-dontnote com.android.org.chromium.net.AndroidKeyStore
 
 # TraceEvent uses reflection to access internal trace info.
 -dontnote org.chromium.content.common.TraceEvent
--dontnote com.android.internal.webviewchromium.content.common.TraceEvent
+-dontnote com.android.org.chromium.content.common.TraceEvent
 
 # Keep finalizer stuff from google-common used via reflection
 -keepclassmembers class com.google.common.** {
@@ -64,9 +64,9 @@
 -keepclassmembers class com.google.common.** {
   *** startFinalizer(java.lang.Class,java.lang.Object);
 }
--keepclassmembers class com.android.internal.webviewchromium.guava.** {
+-keepclassmembers class com.android.org.chromium.guava.** {
   *** finalizeReferent();
 }
--keepclassmembers class com.android.internal.webviewchromium.guava.** {
+-keepclassmembers class com.android.org.chromium.guava.** {
   *** startFinalizer(java.lang.Class,java.lang.Object);
 }
