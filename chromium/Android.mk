@@ -101,7 +101,7 @@ include $(BUILD_JAVA_LIBRARY)
 ifneq ($(strip $(LOCAL_JARJAR_RULES)),)
 # Add build rules to check that the jarjar'ed jar only contains whitelisted
 # packages. Only enable this when we are running jarjar.
-LOCAL_JAR_CHECK_WHITELIST := $(LOCAL_PATH)/package_whitelist.txt
+LOCAL_JAR_CHECK_WHITELIST := $(LOCAL_PATH)/jar_package_whitelist.txt
 
 jar_check_ok := $(intermediates.COMMON)/jar_check_ok
 $(jar_check_ok): PRIVATE_JAR_CHECK := $(LOCAL_PATH)/tools/jar_check.py
