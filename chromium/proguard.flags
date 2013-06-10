@@ -64,9 +64,9 @@
 -keepclassmembers class com.google.common.** {
   *** startFinalizer(java.lang.Class,java.lang.Object);
 }
--keepclassmembers class com.android.org.chromium.guava.** {
+-keepclassmembers class com.android.org.chromium.com.google.common.** {
   *** finalizeReferent();
 }
--keepclassmembers class com.android.org.chromium.guava.** {
+-keepclassmembers class com.android.org.chromium.com.google.common.** {
   *** startFinalizer(java.lang.Class,java.lang.Object);
 }
