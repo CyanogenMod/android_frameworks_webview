@@ -30,6 +30,8 @@ LOCAL_STATIC_JAVA_LIBRARIES += android_webview_java
 
 LOCAL_SRC_FILES := $(call all-java-files-under, java)
 
+LOCAL_JARJAR_RULES := $(CHROMIUM_PATH)/android_webview/build/jarjar-rules.txt
+
 # TODO: filter webviewchromium_webkit_strings based on PRODUCT_LOCALES.
 LOCAL_REQUIRED_MODULES := \
         libwebviewchromium \
@@ -89,11 +91,30 @@ LOCAL_REQUIRED_MODULES := \
         webviewchromium_webkit_strings_zh-CN.pak \
         webviewchromium_webkit_strings_zh-TW.pak
 
-LOCAL_PROGUARD_ENABLED := disabled
+LOCAL_PROGUARD_ENABLED := full
+LOCAL_PROGUARD_FLAG_FILES := proguard.flags
 
 LOCAL_JAVACFLAGS := -Xlint:unchecked -Werror
 
 include $(BUILD_JAVA_LIBRARY)
+
+ifneq ($(strip $(LOCAL_JARJAR_RULES)),)
+# Add build rules to check that the jarjar'ed jar only contains whitelisted
+# packages. Only enable this when we are running jarjar.
+LOCAL_JAR_CHECK_WHITELIST := $(LOCAL_PATH)/jar_package_whitelist.txt
+
+jar_check_ok := $(intermediates.COMMON)/jar_check_ok
+$(jar_check_ok): PRIVATE_JAR_CHECK := $(LOCAL_PATH)/tools/jar_check.py
+$(jar_check_ok): PRIVATE_JAR_CHECK_WHITELIST := $(LOCAL_JAR_CHECK_WHITELIST)
+$(jar_check_ok): $(full_classes_jarjar_jar) $(LOCAL_PATH)/tools/jar_check.py $(LOCAL_JAR_CHECK_WHITELIST)
+	@echo Jar check: $@
+	$(hide) $(PRIVATE_JAR_CHECK) $< $(PRIVATE_JAR_CHECK_WHITELIST)
+	$(hide) touch $@
+
+$(LOCAL_BUILT_MODULE): $(jar_check_ok)
+endif
+
+
 
 # Native support library (libwebviewchromium_plat_support.so) - does NOT link
 # any native chromium code.

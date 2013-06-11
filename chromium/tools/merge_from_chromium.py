@@ -324,6 +324,12 @@ def _GenerateLastChange(svn_revision):
             'w') as f:
     f.write('LASTCHANGE=%s\n' % svn_revision)
   merge_common.GetCommandStdout(['git', 'add', '-f', 'build/util/LASTCHANGE'])
+  logging.debug('Updating LASTCHANGE.blink ...')
+  with open(os.path.join(merge_common.REPOSITORY_ROOT,
+                         'build/util/LASTCHANGE.blink'), 'w') as f:
+    f.write('LASTCHANGE=%s\n' % _GetBlinkRevision())
+  merge_common.GetCommandStdout(['git', 'add', '-f',
+                                 'build/util/LASTCHANGE.blink'])
   if _ModifiedFilesInIndex():
     merge_common.GetCommandStdout([
         'git', 'commit', '-m',
@@ -394,6 +400,13 @@ def _GetSVNRevisionAndSHA1(git_branch, svn_revision, sha1=None):
   # overwhelmingly likely to be the correct commit.
   sha1 = output.split()[-1]
   return (svn_revision, sha1)
+
+
+def _GetBlinkRevision():
+  commit = merge_common.GetCommandStdout([
+      'git', 'log', '-n1', '--grep=git-svn-id:', '--format=%H%n%b'],
+      cwd=os.path.join(merge_common.REPOSITORY_ROOT, 'third_party', 'WebKit'))
+  return _ParseSvnRevisionFromGitCommitMessage(commit)
 
 
 def Snapshot(svn_revision, root_sha1, unattended):

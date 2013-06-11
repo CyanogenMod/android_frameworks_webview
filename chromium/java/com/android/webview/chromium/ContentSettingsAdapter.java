@@ -163,13 +163,15 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
 
     @Override
     public void setDefaultZoom(ZoomDensity zoom) {
-        UnimplementedWebViewApi.invoke();
+        if (zoom != ZoomDensity.MEDIUM) {
+            Log.w(TAG, "setDefaultZoom not supported, zoom=" + zoom);
+        }
     }
 
     @Override
     public ZoomDensity getDefaultZoom() {
-        UnimplementedWebViewApi.invoke();
-        return null;
+        // Intentional no-op.
+        return ZoomDensity.MEDIUM;
     }
 
     @Override
@@ -189,7 +191,7 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
         if (ua == 0) {
             setUserAgentString(null);
         } else {
-            Log.w(TAG, "setUserAgent not suported, ua=" + ua);
+            Log.w(TAG, "setUserAgent not supported, ua=" + ua);
         }
     }
 

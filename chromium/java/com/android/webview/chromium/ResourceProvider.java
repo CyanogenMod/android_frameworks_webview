@@ -18,6 +18,7 @@ package com.android.webview.chromium;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.Build;
 import android.util.TypedValue;
 
 import org.chromium.android_webview.AwResource;
@@ -41,8 +42,6 @@ public class ResourceProvider {
         org.chromium.content.R.dimen.link_preview_overlay_radius =
                 com.android.internal.R.dimen.webviewchromium_link_preview_overlay_radius;
 
-        verifyFields(org.chromium.content.R.dimen.class);
-
         // drawable
 
         org.chromium.content.R.drawable.ic_menu_share_holo_light =
@@ -52,8 +51,6 @@ public class ResourceProvider {
         org.chromium.content.R.drawable.ondemand_overlay =
                 com.android.internal.R.drawable.webviewchromium_ondemand_overlay;
 
-        verifyFields(org.chromium.content.R.drawable.class);
-
         //id
 
         org.chromium.content.R.id.month = com.android.internal.R.id.webviewchromium_month;
@@ -62,16 +59,12 @@ public class ResourceProvider {
         org.chromium.content.R.id.date_picker = com.android.internal.R.id.webviewchromium_date_picker;
         org.chromium.content.R.id.time_picker = com.android.internal.R.id.webviewchromium_time_picker;
 
-        verifyFields(org.chromium.content.R.id.class);
-
         // layout
 
         org.chromium.content.R.layout.date_time_picker_dialog =
                 com.android.internal.R.layout.webviewchromium_date_time_picker_dialog;
         org.chromium.content.R.layout.month_picker =
                 com.android.internal.R.layout.webviewchromium_month_picker;
-
-        verifyFields(org.chromium.content.R.layout.class);
 
         // string
 
@@ -110,7 +103,13 @@ public class ResourceProvider {
         org.chromium.content.R.string.month_picker_dialog_title =
                 com.android.internal.R.string.webviewchromium_month_picker_dialog_title;
 
-        verifyFields(org.chromium.content.R.string.class);
+        if (Build.IS_DEBUGGABLE) {
+            // Ensure that we aren't missing any resource mappings.
+            verifyFields(org.chromium.content.R.class);
+
+            // TODO: enable verifying fields for the ui package once we've got mappings for them.
+            //verifyFields(org.chromium.ui.R.class);
+        }
 
         // Resources needed by android_webview/
 
@@ -129,16 +128,19 @@ public class ResourceProvider {
         return valueHolder.resourceId;
     }
 
-    // Verify that all the fields defined in |R| have a valid mapping. This
-    // ensures that if a resource is added upstream, we won't miss providing
+    // Verify that all the fields of the inner classes of |R| have a valid mapping.
+    // This ensures that if a resource is added upstream, we won't miss providing
     // a mapping downstream.
     private static void verifyFields(Class<?> R) {
-        Field[] fields = R.getDeclaredFields();
-        for (int i = 0; i < fields.length; i++) {
+        for (Class<?> c : R.getDeclaredClasses()) {
+            verifyFields(c);  // recursively check inner classes.
+        }
+
+        for (Field f : R.getDeclaredFields()) {
             try {
-                if (fields[i].getInt(null) == 0) {
+                if (f.getInt(null) == 0) {
                     throw new RuntimeException("Missing resource mapping for " +
-                            R.getName() + "." + fields[i].getName());
+                            R.getName() + "." + f.getName());
                 }
             } catch (IllegalAccessException e) { }
         }

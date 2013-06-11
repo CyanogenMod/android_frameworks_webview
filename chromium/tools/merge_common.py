@@ -45,6 +45,7 @@ THIRD_PARTY_PROJECTS_WITH_FULL_HISTORY = [
     'third_party/libjingle/source',
     'third_party/libphonenumber/src/phonenumbers',
     'third_party/libphonenumber/src/resources',
+    'third_party/mesa/src',
     'third_party/openssl',
     'third_party/opus/src',
     'third_party/ots',

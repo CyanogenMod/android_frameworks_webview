@@ -480,7 +480,8 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public int findAll(String searchString) {
-        return mAwContents.findAllSync(searchString);
+        mAwContents.findAllAsync(searchString);
+        return 0;
     }
 
     @Override
@@ -638,10 +639,11 @@ class WebViewChromium implements WebViewProvider,
 
     // WebViewProvider.ViewDelegate implementation ------------------------------------------------
 
-    @Override
+    // TODO: remove from WebViewProvider and use default implementation from
+    // ViewGroup.
+    // @Override
     public boolean shouldDelayChildPressedState() {
-        UnimplementedWebViewApi.invoke();
-        return false;
+        return true;
     }
 
     @Override

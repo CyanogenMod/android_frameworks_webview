@@ -149,7 +149,7 @@ function bb_webview_sync_upstream_chromium {
 
   cd ${CHROMIUM_TOT_DIR}/src
   echo "Updating"
-  git crup -j8 --no-hooks
+  git crup -j8
 
   echo "@@@BUILD_STEP Print checked out chromium revision@@@"
   git log -1
