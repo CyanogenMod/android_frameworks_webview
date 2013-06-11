@@ -100,11 +100,6 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
                     CommandLine.init(null);
                 }
 
-                // Set 'no-merge-ui-and-compositor-threads' by default temporarily.
-                if (!CommandLine.getInstance().hasSwitch("merge-ui-and-compositor-threads")) {
-                    CommandLine.getInstance().appendSwitch("no-merge-ui-and-compositor-threads");
-                }
-
                 // TODO: currently in a relase build the DCHECKs only log. We either need to insall
                 // a report handler with SetLogReportHandler to make them assert, or else compile
                 // them out of the build altogether (b/8284203). Either way, so long they're
