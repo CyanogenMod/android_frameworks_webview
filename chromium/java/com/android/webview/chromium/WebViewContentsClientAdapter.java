@@ -111,17 +111,13 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
                     case NEW_WEBVIEW_CREATED:
                         WebView.WebViewTransport t = (WebView.WebViewTransport) msg.obj;
                         WebView newWebView = t.getWebView();
-                        if (newWebView == null) {
-                            throw new IllegalArgumentException(
-                                    "Must provide a new WebView for the new window.");
-                        }
                         if (newWebView == mWebView) {
                             throw new IllegalArgumentException(
                                     "Parent WebView cannot host it's own popup window. Please " +
                                     "use WebSettings.setSupportMultipleWindows(false)");
                         }
 
-                        if (newWebView.copyBackForwardList().getSize() != 0) {
+                        if (newWebView != null && newWebView.copyBackForwardList().getSize() != 0) {
                             throw new IllegalArgumentException(
                                     "New WebView for popup window must not have been previously " +
                                     "navigated.");
