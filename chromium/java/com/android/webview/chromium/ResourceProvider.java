@@ -51,7 +51,10 @@ public class ResourceProvider {
         org.chromium.content.R.drawable.ondemand_overlay =
                 com.android.internal.R.drawable.webviewchromium_ondemand_overlay;
 
-        //id
+        org.chromium.ui.R.drawable.color_picker_advanced_select_handle =
+                com.android.internal.R.drawable.webviewchromium_color_picker_advanced_select_handle;
+
+        // id
 
         org.chromium.content.R.id.month = com.android.internal.R.id.webviewchromium_month;
         org.chromium.content.R.id.year = com.android.internal.R.id.webviewchromium_year;
@@ -59,12 +62,40 @@ public class ResourceProvider {
         org.chromium.content.R.id.date_picker = com.android.internal.R.id.webviewchromium_date_picker;
         org.chromium.content.R.id.time_picker = com.android.internal.R.id.webviewchromium_time_picker;
 
+        org.chromium.ui.R.id.selected_color_view =
+                com.android.internal.R.id.webviewchromium_color_picker_selected_color_view;
+        org.chromium.ui.R.id.title =
+                com.android.internal.R.id.webviewchromium_color_picker_title;
+        org.chromium.ui.R.id.more_colors_button =
+                com.android.internal.R.id.webviewchromium_color_picker_more_colors_button;
+        org.chromium.ui.R.id.color_picker_advanced =
+                com.android.internal.R.id.webviewchromium_color_picker_advanced;
+        org.chromium.ui.R.id.color_picker_simple =
+                com.android.internal.R.id.webviewchromium_color_picker_simple;
+        org.chromium.ui.R.id.more_colors_button_border =
+                com.android.internal.R.id.webviewchromium_color_picker_more_colors_button_border;
+        org.chromium.ui.R.id.color_picker_simple_border =
+                com.android.internal.R.id.webviewchromium_color_picker_simple_border;
+        org.chromium.ui.R.id.gradient =
+                com.android.internal.R.id.webviewchromium_color_picker_gradient;
+        org.chromium.ui.R.id.text =
+                com.android.internal.R.id.webviewchromium_color_picker_text;
+        org.chromium.ui.R.id.seek_bar =
+                com.android.internal.R.id.webviewchromium_color_picker_seek_bar;
+
         // layout
 
         org.chromium.content.R.layout.date_time_picker_dialog =
                 com.android.internal.R.layout.webviewchromium_date_time_picker_dialog;
         org.chromium.content.R.layout.month_picker =
                 com.android.internal.R.layout.webviewchromium_month_picker;
+
+        org.chromium.ui.R.layout.color_picker_dialog_title =
+                com.android.internal.R.layout.webviewchromium_color_picker_dialog_title;
+        org.chromium.ui.R.layout.color_picker_dialog_content =
+                com.android.internal.R.layout.webviewchromium_color_picker_dialog_content;
+        org.chromium.ui.R.layout.color_picker_advanced_component =
+                com.android.internal.R.layout.webviewchromium_color_picker_advanced_component;
 
         // string
 
@@ -103,12 +134,29 @@ public class ResourceProvider {
         org.chromium.content.R.string.month_picker_dialog_title =
                 com.android.internal.R.string.webviewchromium_month_picker_dialog_title;
 
+        org.chromium.ui.R.string.low_memory_error =
+                com.android.internal.R.string.webviewchromium_low_memory_error;
+        org.chromium.ui.R.string.opening_file_error =
+                com.android.internal.R.string.webviewchromium_opening_file_error;
+        org.chromium.ui.R.string.color_picker_button_more =
+                com.android.internal.R.string.webviewchromium_color_picker_button_more;
+        org.chromium.ui.R.string.color_picker_hue =
+                com.android.internal.R.string.webviewchromium_color_picker_hue;
+        org.chromium.ui.R.string.color_picker_saturation =
+                com.android.internal.R.string.webviewchromium_color_picker_saturation;
+        org.chromium.ui.R.string.color_picker_value =
+                com.android.internal.R.string.webviewchromium_color_picker_value;
+        org.chromium.ui.R.string.color_picker_button_set =
+                com.android.internal.R.string.webviewchromium_color_picker_button_set;
+        org.chromium.ui.R.string.color_picker_button_cancel =
+                com.android.internal.R.string.webviewchromium_color_picker_button_cancel;
+        org.chromium.ui.R.string.color_picker_dialog_title =
+                com.android.internal.R.string.webviewchromium_color_picker_dialog_title;
+
         if (Build.IS_DEBUGGABLE) {
             // Ensure that we aren't missing any resource mappings.
             verifyFields(org.chromium.content.R.class);
-
-            // TODO: enable verifying fields for the ui package once we've got mappings for them.
-            //verifyFields(org.chromium.ui.R.class);
+            verifyFields(org.chromium.ui.R.class);
         }
 
         // Resources needed by android_webview/

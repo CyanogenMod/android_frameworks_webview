@@ -65,14 +65,11 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     // Read/write protected by mLock.
     private boolean mStarted;
 
-    static {
+    public WebViewChromiumFactoryProvider() {
         // Load chromium library.
         AwBrowserProcess.loadLibrary();
         // Load glue-layer support library.
         System.loadLibrary("webviewchromium_plat_support");
-    }
-
-    public WebViewChromiumFactoryProvider() {
     }
 
     private void initPlatSupportLibrary() {

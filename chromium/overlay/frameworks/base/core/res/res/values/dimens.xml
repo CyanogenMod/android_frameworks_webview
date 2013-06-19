@@ -7,5 +7,11 @@
 
 <resources>
     <!-- Link Preview dimensions -->
-   <dimen name="webviewchromium_link_preview_overlay_radius">7dp</dimen>
+    <dimen name="webviewchromium_link_preview_overlay_radius">7dp</dimen>
+
+    <!--
+        14.5 = Seekbar thumb width - border width, but it depends on the width
+            of the seek bar icon.
+    -->
+    <dimen name="webviewchromium_color_picker_gradient_margin">14.5dp</dimen>
 </resources>
