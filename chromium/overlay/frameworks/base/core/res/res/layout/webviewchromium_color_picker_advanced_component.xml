@@ -21,7 +21,7 @@
         android:id="@+id/webview_chromium_color_picker_gradient_border"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_below="@id/text"
+        android:layout_below="@id/webviewchromium_color_picker_text"
         android:layout_marginStart="@dimen/webviewchromium_color_picker_gradient_margin"
         android:layout_marginEnd="@dimen/webviewchromium_color_picker_gradient_margin"
         android:layout_marginTop="3dp"
