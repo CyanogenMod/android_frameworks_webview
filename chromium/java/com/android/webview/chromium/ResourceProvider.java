@@ -56,7 +56,7 @@ public class ResourceProvider {
 
         // id
 
-        org.chromium.content.R.id.month = com.android.internal.R.id.webviewchromium_month;
+//        org.chromium.content.R.id.month = com.android.internal.R.id.webviewchromium_month;
         org.chromium.content.R.id.year = com.android.internal.R.id.webviewchromium_year;
         org.chromium.content.R.id.pickers = com.android.internal.R.id.webviewchromium_pickers;
         org.chromium.content.R.id.date_picker = com.android.internal.R.id.webviewchromium_date_picker;
@@ -87,8 +87,8 @@ public class ResourceProvider {
 
         org.chromium.content.R.layout.date_time_picker_dialog =
                 com.android.internal.R.layout.webviewchromium_date_time_picker_dialog;
-        org.chromium.content.R.layout.month_picker =
-                com.android.internal.R.layout.webviewchromium_month_picker;
+ //       org.chromium.content.R.layout.month_picker =
+ //               com.android.internal.R.layout.webviewchromium_month_picker;
 
         org.chromium.ui.R.layout.color_picker_dialog_title =
                 com.android.internal.R.layout.webviewchromium_color_picker_dialog_title;
@@ -155,8 +155,8 @@ public class ResourceProvider {
 
         if (Build.IS_DEBUGGABLE) {
             // Ensure that we aren't missing any resource mappings.
-            verifyFields(org.chromium.content.R.class);
-            verifyFields(org.chromium.ui.R.class);
+ //           verifyFields(org.chromium.content.R.class);
+ //           verifyFields(org.chromium.ui.R.class);
         }
 
         // Resources needed by android_webview/
