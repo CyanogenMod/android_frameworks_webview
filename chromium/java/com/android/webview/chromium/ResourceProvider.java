@@ -56,11 +56,14 @@ public class ResourceProvider {
 
         // id
 
-//        org.chromium.content.R.id.month = com.android.internal.R.id.webviewchromium_month;
+        org.chromium.content.R.id.position_in_year =
+                com.android.internal.R.id.webviewchromium_position_in_year;
         org.chromium.content.R.id.year = com.android.internal.R.id.webviewchromium_year;
         org.chromium.content.R.id.pickers = com.android.internal.R.id.webviewchromium_pickers;
-        org.chromium.content.R.id.date_picker = com.android.internal.R.id.webviewchromium_date_picker;
-        org.chromium.content.R.id.time_picker = com.android.internal.R.id.webviewchromium_time_picker;
+        org.chromium.content.R.id.date_picker =
+                com.android.internal.R.id.webviewchromium_date_picker;
+        org.chromium.content.R.id.time_picker =
+                com.android.internal.R.id.webviewchromium_time_picker;
 
         org.chromium.ui.R.id.selected_color_view =
                 com.android.internal.R.id.webviewchromium_color_picker_selected_color_view;
@@ -87,8 +90,8 @@ public class ResourceProvider {
 
         org.chromium.content.R.layout.date_time_picker_dialog =
                 com.android.internal.R.layout.webviewchromium_date_time_picker_dialog;
- //       org.chromium.content.R.layout.month_picker =
- //               com.android.internal.R.layout.webviewchromium_month_picker;
+        org.chromium.content.R.layout.two_field_date_picker =
+                com.android.internal.R.layout.webviewchromium_two_field_date_picker;
 
         org.chromium.ui.R.layout.color_picker_dialog_title =
                 com.android.internal.R.layout.webviewchromium_color_picker_dialog_title;
@@ -103,6 +106,8 @@ public class ResourceProvider {
                 com.android.internal.R.string.webviewchromium_accessibility_content_view;
         org.chromium.content.R.string.accessibility_date_picker_month =
                 com.android.internal.R.string.webviewchromium_accessibility_date_picker_month;
+        org.chromium.content.R.string.accessibility_date_picker_week =
+                com.android.internal.R.string.webviewchromium_accessibility_date_picker_week;
         org.chromium.content.R.string.accessibility_date_picker_year =
                 com.android.internal.R.string.webviewchromium_accessibility_date_picker_year;
         org.chromium.content.R.string.accessibility_datetime_picker_date =
@@ -133,6 +138,8 @@ public class ResourceProvider {
                 com.android.internal.R.string.webviewchromium_media_player_loading_video;
         org.chromium.content.R.string.month_picker_dialog_title =
                 com.android.internal.R.string.webviewchromium_month_picker_dialog_title;
+        org.chromium.content.R.string.week_picker_dialog_title =
+                com.android.internal.R.string.webviewchromium_week_picker_dialog_title;
 
         org.chromium.ui.R.string.low_memory_error =
                 com.android.internal.R.string.webviewchromium_low_memory_error;
@@ -155,8 +162,8 @@ public class ResourceProvider {
 
         if (Build.IS_DEBUGGABLE) {
             // Ensure that we aren't missing any resource mappings.
- //           verifyFields(org.chromium.content.R.class);
- //           verifyFields(org.chromium.ui.R.class);
+            verifyFields(org.chromium.content.R.class);
+            verifyFields(org.chromium.ui.R.class);
         }
 
         // Resources needed by android_webview/

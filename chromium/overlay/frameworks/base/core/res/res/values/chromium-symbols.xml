@@ -25,7 +25,7 @@
   <java-symbol type="drawable" name="webviewchromium_color_picker_advanced_select_handle" />
   <java-symbol type="drawable" name="webviewchromium_color_picker_border" />
   <java-symbol type="layout" name="webviewchromium_date_time_picker_dialog" />
-  <java-symbol type="layout" name="webviewchromium_month_picker" />
+  <java-symbol type="layout" name="webviewchromium_two_field_date_picker" />
   <java-symbol type="layout" name="webviewchromium_color_picker_dialog_title" />
   <java-symbol type="layout" name="webviewchromium_color_picker_dialog_content" />
   <java-symbol type="layout" name="webviewchromium_color_picker_advanced_component" />
@@ -39,9 +39,11 @@
   <java-symbol type="string" name="webviewchromium_date_picker_dialog_title" />
   <java-symbol type="string" name="webviewchromium_date_time_picker_dialog_title" />
   <java-symbol type="string" name="webviewchromium_month_picker_dialog_title" />
+  <java-symbol type="string" name="webviewchromium_week_picker_dialog_title" />
   <java-symbol type="string" name="webviewchromium_accessibility_datetime_picker_date" />
   <java-symbol type="string" name="webviewchromium_accessibility_datetime_picker_time" />
   <java-symbol type="string" name="webviewchromium_accessibility_date_picker_month" />
+  <java-symbol type="string" name="webviewchromium_accessibility_date_picker_week" />
   <java-symbol type="string" name="webviewchromium_accessibility_date_picker_year" />
   <java-symbol type="string" name="webviewchromium_media_player_error_title" />
   <java-symbol type="string" name="webviewchromium_media_player_error_text_invalid_progressive_playback" />
@@ -60,7 +62,7 @@
 
   <java-symbol type="id" name="webviewchromium_time_picker" />
   <java-symbol type="id" name="webviewchromium_date_picker" />
-  <java-symbol type="id" name="webviewchromium_month" />
+  <java-symbol type="id" name="webviewchromium_position_in_year" />
   <java-symbol type="id" name="webviewchromium_year" />
   <java-symbol type="id" name="webviewchromium_pickers" />
 

@@ -27,12 +27,16 @@
     <string name="webviewchromium_date_time_picker_dialog_title">Set date and time</string>
     <!-- Title for the month picker dialog, which can be used to choose a month. [CHAR-LIMIT=32] -->
     <string name="webviewchromium_month_picker_dialog_title">Set month</string>
+    <!-- Title for the week picker dialog, which can be used to choose a week. [CHAR-LIMIT=32] -->
+    <string name="webviewchromium_week_picker_dialog_title">Set week</string>
     <!-- Content description for the date time picker date component. [CHAR-LIMIT=32] -->
     <string name="webviewchromium_accessibility_datetime_picker_date">Date</string>
     <!-- Content description for the date time picker time component. [CHAR-LIMIT=32] -->
     <string name="webviewchromium_accessibility_datetime_picker_time">Time</string>
     <!-- Content description for the date time picker month component. [CHAR-LIMIT=32] -->
     <string name="webviewchromium_accessibility_date_picker_month">Month</string>
+    <!-- Content description for the date time picker week component. [CHAR-LIMIT=32] -->
+    <string name="webviewchromium_accessibility_date_picker_week">Week</string>
     <!-- Content description for the date time picker year component. [CHAR-LIMIT=32] -->
     <string name="webviewchromium_accessibility_date_picker_year">Year</string>
 

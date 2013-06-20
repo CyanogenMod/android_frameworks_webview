@@ -22,7 +22,7 @@
   <add-resource type="drawable" name="webviewchromium_color_advanced_select_handle" />
   <add-resource type="drawable" name="webviewchromium_color_picker_border" />
   <add-resource type="layout" name="webviewchromium_date_time_picker_dialog" />
-  <add-resource type="layout" name="webviewchromium_month_picker" />
+  <add-resource type="layout" name="webviewchromium_two_field_date_picker" />
   <add-resource type="layout" name="webviewchromium_color_picker_advanced_component" />
   <add-resource type="layout" name="webviewchromium_color_picker_dialog_content" />
   <add-resource type="layout" name="webviewchromium_color_picker_dialog_title" />
@@ -36,9 +36,11 @@
   <add-resource type="string" name="webviewchromium_date_picker_dialog_title" />
   <add-resource type="string" name="webviewchromium_date_time_picker_dialog_title" />
   <add-resource type="string" name="webviewchromium_month_picker_dialog_title" />
+  <add-resource type="string" name="webviewchromium_week_picker_dialog_title" />
   <add-resource type="string" name="webviewchromium_accessibility_datetime_picker_date" />
   <add-resource type="string" name="webviewchromium_accessibility_datetime_picker_time" />
   <add-resource type="string" name="webviewchromium_accessibility_date_picker_month" />
+  <add-resource type="string" name="webviewchromium_accessibility_date_picker_week" />
   <add-resource type="string" name="webviewchromium_accessibility_date_picker_year" />
   <add-resource type="string" name="webviewchromium_media_player_error_title" />
   <add-resource type="string" name="webviewchromium_media_player_error_text_invalid_progressive_playback" />
