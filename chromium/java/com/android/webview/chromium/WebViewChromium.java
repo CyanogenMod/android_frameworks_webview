@@ -933,13 +933,6 @@ class WebViewChromium implements WebViewProvider,
         }
 
         @Override
-        public void onScrollChanged(int l, int t, int oldl, int oldt) {
-            mWebViewPrivate.setScrollXRaw(l);
-            mWebViewPrivate.setScrollYRaw(t);
-            mWebViewPrivate.onScrollChanged(l, t, oldl, oldt);
-        }
-
-        @Override
         public boolean awakenScrollBars() {
             mWebViewPrivate.awakenScrollBars(0);
             // TODO: modify the WebView.PrivateAccess to provide a return value.
@@ -951,6 +944,30 @@ class WebViewChromium implements WebViewProvider,
             // TODO: need method on WebView.PrivateAccess?
             UnimplementedWebViewApi.invoke();
             return false;
+        }
+
+        @Override
+        public void onScrollChanged(int l, int t, int oldl, int oldt) {
+            mWebViewPrivate.setScrollXRaw(l);
+            mWebViewPrivate.setScrollYRaw(t);
+            mWebViewPrivate.onScrollChanged(l, t, oldl, oldt);
+        }
+
+        // TODO(mkosiba): Uncomment once upstream CL lands.
+        // @Override
+        public void overScrollBy(int deltaX, int deltaY,
+            int scrollX, int scrollY,
+            int scrollRangeX, int scrollRangeY,
+            int maxOverScrollX, int maxOverScrollY,
+            boolean isTouchEvent) {
+            mWebViewPrivate.overScrollBy(deltaX, deltaY, scrollX, scrollY,
+                    scrollRangeX, scrollRangeY, maxOverScrollX, maxOverScrollY, isTouchEvent);
+        }
+
+        // TODO(mkosiba): Uncomment once upstream CL lands.
+        // @Override
+        public void super_scrollTo(int scrollX, int scrollY) {
+            mWebViewPrivate.super_scrollTo(scrollX, scrollY);
         }
 
         @Override
