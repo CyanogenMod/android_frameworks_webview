@@ -28,12 +28,12 @@ import org.chromium.android_webview.HttpAuthDatabase;
  */
 final class WebViewDatabaseAdapter extends WebViewDatabase {
 
-    private Context mContext;
     private AwFormDatabase mFormDatabase;
+    private HttpAuthDatabase mHttpAuthDatabase;
 
-    public WebViewDatabaseAdapter(Context context, AwFormDatabase formDatabase) {
-        mContext = context;
+    public WebViewDatabaseAdapter(AwFormDatabase formDatabase, HttpAuthDatabase httpAuthDatabase) {
         mFormDatabase = formDatabase;
+        mHttpAuthDatabase = httpAuthDatabase;
     }
 
     @Override
@@ -49,14 +49,12 @@ final class WebViewDatabaseAdapter extends WebViewDatabase {
 
     @Override
     public boolean hasHttpAuthUsernamePassword() {
-        // FIXME: commented out by primiano@ just to make the automerger happy.
-        return false; // HttpAuthDatabase.getInstance(mContext).hasHttpAuthUsernamePassword();
+        return mHttpAuthDatabase.hasHttpAuthUsernamePassword();
     }
 
     @Override
     public void clearHttpAuthUsernamePassword() {
-        // FIXME: commented out by primiano@ just to make the automerger happy.
-        // HttpAuthDatabase.getInstance(mContext).clearHttpAuthUsernamePassword();
+        mHttpAuthDatabase.clearHttpAuthUsernamePassword();
     }
 
     @Override
