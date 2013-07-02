@@ -49,12 +49,14 @@ final class WebViewDatabaseAdapter extends WebViewDatabase {
 
     @Override
     public boolean hasHttpAuthUsernamePassword() {
-        return HttpAuthDatabase.getInstance(mContext).hasHttpAuthUsernamePassword();
+        // FIXME: commented out by primiano@ just to make the automerger happy.
+        return false; // HttpAuthDatabase.getInstance(mContext).hasHttpAuthUsernamePassword();
     }
 
     @Override
     public void clearHttpAuthUsernamePassword() {
-        HttpAuthDatabase.getInstance(mContext).clearHttpAuthUsernamePassword();
+        // FIXME: commented out by primiano@ just to make the automerger happy.
+        // HttpAuthDatabase.getInstance(mContext).clearHttpAuthUsernamePassword();
     }
 
     @Override
