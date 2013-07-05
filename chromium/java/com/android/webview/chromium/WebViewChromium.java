@@ -701,7 +701,7 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void onOverScrolled(int scrollX, int scrollY, boolean clampedX, boolean clampedY) {
-        UnimplementedWebViewApi.invoke();
+        mAwContents.onContainerViewOverScrolled(scrollX, scrollY, clampedX, clampedY);
     }
 
     @Override
@@ -953,8 +953,7 @@ class WebViewChromium implements WebViewProvider,
             mWebViewPrivate.onScrollChanged(l, t, oldl, oldt);
         }
 
-        // TODO(mkosiba): Uncomment once upstream CL lands.
-        // @Override
+        @Override
         public void overScrollBy(int deltaX, int deltaY,
             int scrollX, int scrollY,
             int scrollRangeX, int scrollRangeY,
@@ -964,8 +963,7 @@ class WebViewChromium implements WebViewProvider,
                     scrollRangeX, scrollRangeY, maxOverScrollX, maxOverScrollY, isTouchEvent);
         }
 
-        // TODO(mkosiba): Uncomment once upstream CL lands.
-        // @Override
+        @Override
         public void super_scrollTo(int scrollX, int scrollY) {
             mWebViewPrivate.super_scrollTo(scrollX, scrollY);
         }
