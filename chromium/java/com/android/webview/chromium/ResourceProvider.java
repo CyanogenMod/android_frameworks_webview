@@ -87,6 +87,8 @@ public class ResourceProvider {
                 com.android.internal.R.id.webviewchromium_color_picker_seek_bar;
         org.chromium.ui.R.id.autofill_label =
                 com.android.internal.R.id.webviewchromium_autofill_label;
+        org.chromium.ui.R.id.autofill_popup_window =
+                com.android.internal.R.id.webviewchromium_autofill_popup_window;
         org.chromium.ui.R.id.autofill_sublabel =
                 com.android.internal.R.id.webviewchromium_autofill_sublabel;
 
