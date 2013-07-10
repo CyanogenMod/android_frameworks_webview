@@ -233,8 +233,10 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         synchronized (mLock) {
             if (mWebViewDatabase == null) {
                 ensureChromiumStartedLocked();
-                mWebViewDatabase = new WebViewDatabaseAdapter(context,
-                        getBrowserContextLocked().getFormDatabase());
+                AwBrowserContext browserContext =  getBrowserContextLocked();
+                mWebViewDatabase = new WebViewDatabaseAdapter(
+                        browserContext.getFormDatabase(),
+                        browserContext.getHttpAuthDatabase(context));
             }
         }
         return mWebViewDatabase;

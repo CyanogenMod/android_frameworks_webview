@@ -36,6 +36,7 @@ import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
+import android.view.accessibility.AccessibilityNodeProvider;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.webkit.DownloadListener;
@@ -110,19 +111,28 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void init(Map<String, Object> javaScriptInterfaces, boolean privateBrowsing) {
-        // TODO: BUG=6790250 javaScriptInterfaces were only ever used by DumpRenderTree and should
-        // probably be implemented as a hidden hook in WebViewClassic.
-        if (privateBrowsing) {
-            throw new IllegalArgumentException(
-                    "Private browsing is not supported in this version of the WebView.");
-        }
-
+        // BUG=6790250 |javaScriptInterfaces| was only ever used by the obsolete DumpRenderTree
+        // so is ignored. TODO: remove it from WebViewProvider.
+        final int targetSdkVersion = mWebView.getContext().getApplicationInfo().targetSdkVersion;
         final boolean isAccessFromFileURLsGrantedByDefault =
-                mWebView.getContext().getApplicationInfo().targetSdkVersion <
-                Build.VERSION_CODES.JELLY_BEAN;
+                targetSdkVersion < Build.VERSION_CODES.JELLY_BEAN;
         mContentsClientAdapter = new WebViewContentsClientAdapter(mWebView);
         mAwContents = new AwContents(mBrowserContext, mWebView, new InternalAccessAdapter(),
                 mContentsClientAdapter, isAccessFromFileURLsGrantedByDefault);
+
+        if (privateBrowsing) {
+            final String msg = "Private browsing is not supported in WebView.";
+            if (targetSdkVersion >= Build.VERSION_CODES.KEY_LIME_PIE) {
+                throw new IllegalArgumentException(msg);
+            } else {
+                Log.w(TAG, msg);
+                // Intentionally irreversibly disable the webview instance, so that private
+                // user data cannot leak through misuse of a non-privateBrowing WebView instance.
+                // Can't just null out mAwContents as we never null-check it before use.
+                mAwContents.destroy();
+            }
+        }
+
     }
 
     @Override
@@ -448,9 +458,12 @@ class WebViewChromium implements WebViewProvider,
         mAwContents.clearCache(includeDiskFiles);
     }
 
+    /**
+     * This is a poorly named method, but we keep it for historical reasons.
+     */
     @Override
     public void clearFormData() {
-        UnimplementedWebViewApi.invoke();
+        mAwContents.hideAutofillPopup();
     }
 
     @Override
@@ -645,6 +658,11 @@ class WebViewChromium implements WebViewProvider,
     // @Override
     public boolean shouldDelayChildPressedState() {
         return true;
+    }
+
+//    @Override
+    public AccessibilityNodeProvider getAccessibilityNodeProvider() {
+        return mAwContents.getAccessibilityNodeProvider();
     }
 
     @Override
