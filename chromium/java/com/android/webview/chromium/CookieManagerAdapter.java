@@ -16,12 +16,16 @@
 
 package com.android.webview.chromium;
 
+import android.net.ParseException;
 import android.net.WebAddress;
+import android.util.Log;
 import android.webkit.CookieManager;
 
 import org.chromium.android_webview.AwCookieManager;
 
 public class CookieManagerAdapter extends CookieManager {
+
+    private static final String LOGTAG = "CookieManager";
 
     AwCookieManager mChromeCookieManager;
 
@@ -41,17 +45,26 @@ public class CookieManagerAdapter extends CookieManager {
 
     @Override
     public void setCookie(String url, String value) {
-        mChromeCookieManager.setCookie(url, value);
+        try {
+            mChromeCookieManager.setCookie(fixupUrl(url), value);
+        } catch (ParseException e) {
+            Log.e(LOGTAG, "Not setting cookie due to error parsing URL: " + url, e);
+        }
     }
 
     @Override
     public String getCookie(String url) {
-        return mChromeCookieManager.getCookie(url);
+        try {
+            return mChromeCookieManager.getCookie(fixupUrl(url));
+        } catch (ParseException e) {
+            Log.e(LOGTAG, "Unable to get cookies due to error parsing URL: " + url, e);
+            return null;
+        }
     }
 
     @Override
     public String getCookie(String url, boolean privateBrowsing) {
-        return mChromeCookieManager.getCookie(url);
+        return getCookie(url);
     }
 
     @Override
@@ -98,4 +111,13 @@ public class CookieManagerAdapter extends CookieManager {
     protected void setAcceptFileSchemeCookiesImpl(boolean accept) {
         mChromeCookieManager.setAcceptFileSchemeCookies(accept);
     }
+
+    private static String fixupUrl(String url) throws ParseException {
+        // WebAddress is a private API in the android framework and a "quirk"
+        // of the Classic WebView implementation that allowed embedders to
+        // be relaxed about what URLs they passed into the CookieManager, so we
+        // do the same normalisation before entering the chromium stack.
+        return new WebAddress(url).toString();
+    }
+
 }
