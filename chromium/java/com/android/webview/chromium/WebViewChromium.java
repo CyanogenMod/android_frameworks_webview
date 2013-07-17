@@ -92,12 +92,15 @@ class WebViewChromium implements WebViewProvider,
 
     private final WebView.HitTestResult mHitTestResult;
 
+    private final int mAppTargetSdkVersion;
+
     public WebViewChromium(WebView webView, WebView.PrivateAccess webViewPrivate,
             AwBrowserContext browserContext) {
         mWebView = webView;
         mWebViewPrivate = webViewPrivate;
         mHitTestResult = new WebView.HitTestResult();
         mBrowserContext = browserContext;
+        mAppTargetSdkVersion = mWebView.getContext().getApplicationInfo().targetSdkVersion;
     }
 
     static void completeWindowCreation(WebView parent, WebView child) {
@@ -113,16 +116,15 @@ class WebViewChromium implements WebViewProvider,
     public void init(Map<String, Object> javaScriptInterfaces, boolean privateBrowsing) {
         // BUG=6790250 |javaScriptInterfaces| was only ever used by the obsolete DumpRenderTree
         // so is ignored. TODO: remove it from WebViewProvider.
-        final int targetSdkVersion = mWebView.getContext().getApplicationInfo().targetSdkVersion;
         final boolean isAccessFromFileURLsGrantedByDefault =
-                targetSdkVersion < Build.VERSION_CODES.JELLY_BEAN;
+                 mAppTargetSdkVersion < Build.VERSION_CODES.JELLY_BEAN;
         mContentsClientAdapter = new WebViewContentsClientAdapter(mWebView);
         mAwContents = new AwContents(mBrowserContext, mWebView, new InternalAccessAdapter(),
                 mContentsClientAdapter, isAccessFromFileURLsGrantedByDefault);
 
         if (privateBrowsing) {
             final String msg = "Private browsing is not supported in WebView.";
-            if (targetSdkVersion >= Build.VERSION_CODES.KEY_LIME_PIE) {
+            if (mAppTargetSdkVersion >= Build.VERSION_CODES.KEY_LIME_PIE) {
                 throw new IllegalArgumentException(msg);
             } else {
                 Log.w(TAG, msg);
@@ -232,6 +234,18 @@ class WebViewChromium implements WebViewProvider,
     @Override
     public void loadUrl(String url, Map<String, String> additionalHttpHeaders) {
         // TODO: We may actually want to do some sanity checks here (like filter about://chrome).
+
+        // For backwards compatibility, apps targeting less than K will have JS URLs evaluated
+        // directly and any result of the evaluation will not replace the current page content.
+        // Matching Chrome behavior more closely; apps targetting >= K that load a JS URL will
+        // have the result of that URL replace the content of the current page.
+        final String JAVASCRIPT_SCHEME = "javascript:";
+        if (mAppTargetSdkVersion < Build.VERSION_CODES.KEY_LIME_PIE &&
+                url.startsWith(JAVASCRIPT_SCHEME)) {
+            evaluateJavaScript(url.substring(JAVASCRIPT_SCHEME.length()), null);
+            return;
+        }
+
         LoadUrlParams params = new LoadUrlParams(url);
         if (additionalHttpHeaders != null) params.setExtraHeaders(additionalHttpHeaders);
         mAwContents.loadUrl(params);
@@ -267,6 +281,10 @@ class WebViewChromium implements WebViewProvider,
         // as the charset, as long as it's not "base64".
         mAwContents.loadUrl(LoadUrlParams.createLoadDataParamsWithBaseUrl(
                 data, mimeType, isBase64, baseUrl, historyUrl, isBase64 ? null : encoding));
+    }
+
+    public void evaluateJavaScript(String script, ValueCallback<String> resultCallback) {
+        mAwContents.evaluateJavaScript(script, resultCallback);
     }
 
     @Override
@@ -562,15 +580,13 @@ class WebViewChromium implements WebViewProvider,
     public void setPictureListener(WebView.PictureListener listener) {
         mContentsClientAdapter.setPictureListener(listener);
         mAwContents.enableOnNewPicture(listener != null,
-                mWebView.getContext().getApplicationInfo().targetSdkVersion >=
-                Build.VERSION_CODES.JELLY_BEAN_MR2);
+                mAppTargetSdkVersion >= Build.VERSION_CODES.JELLY_BEAN_MR2);
     }
 
     @Override
     public void addJavascriptInterface(Object obj, String interfaceName) {
         Class<? extends Annotation> requiredAnnotation = null;
-        if (mWebView.getContext().getApplicationInfo().targetSdkVersion >=
-                Build.VERSION_CODES.JELLY_BEAN_MR1) {
+        if (mAppTargetSdkVersion >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
            requiredAnnotation = JavascriptInterface.class;
         }
         mAwContents.addPossiblyUnsafeJavascriptInterface(obj, interfaceName, requiredAnnotation);
@@ -701,7 +717,7 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void onOverScrolled(int scrollX, int scrollY, boolean clampedX, boolean clampedY) {
-        UnimplementedWebViewApi.invoke();
+        mAwContents.onContainerViewOverScrolled(scrollX, scrollY, clampedX, clampedY);
     }
 
     @Override
@@ -933,13 +949,6 @@ class WebViewChromium implements WebViewProvider,
         }
 
         @Override
-        public void onScrollChanged(int l, int t, int oldl, int oldt) {
-            mWebViewPrivate.setScrollXRaw(l);
-            mWebViewPrivate.setScrollYRaw(t);
-            mWebViewPrivate.onScrollChanged(l, t, oldl, oldt);
-        }
-
-        @Override
         public boolean awakenScrollBars() {
             mWebViewPrivate.awakenScrollBars(0);
             // TODO: modify the WebView.PrivateAccess to provide a return value.
@@ -951,6 +960,28 @@ class WebViewChromium implements WebViewProvider,
             // TODO: need method on WebView.PrivateAccess?
             UnimplementedWebViewApi.invoke();
             return false;
+        }
+
+        @Override
+        public void onScrollChanged(int l, int t, int oldl, int oldt) {
+            mWebViewPrivate.setScrollXRaw(l);
+            mWebViewPrivate.setScrollYRaw(t);
+            mWebViewPrivate.onScrollChanged(l, t, oldl, oldt);
+        }
+
+        @Override
+        public void overScrollBy(int deltaX, int deltaY,
+            int scrollX, int scrollY,
+            int scrollRangeX, int scrollRangeY,
+            int maxOverScrollX, int maxOverScrollY,
+            boolean isTouchEvent) {
+            mWebViewPrivate.overScrollBy(deltaX, deltaY, scrollX, scrollY,
+                    scrollRangeX, scrollRangeY, maxOverScrollX, maxOverScrollY, isTouchEvent);
+        }
+
+        @Override
+        public void super_scrollTo(int scrollX, int scrollY) {
+            mWebViewPrivate.super_scrollTo(scrollX, scrollY);
         }
 
         @Override
