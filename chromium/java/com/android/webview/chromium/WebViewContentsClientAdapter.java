@@ -51,6 +51,7 @@ import org.chromium.android_webview.JsPromptResultReceiver;
 import org.chromium.android_webview.JsResultReceiver;
 import org.chromium.content.browser.ContentView;
 import org.chromium.content.browser.ContentViewClient;
+import org.chromium.content.common.TraceEvent;
 
 import java.net.URISyntaxException;
 
@@ -222,7 +223,7 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     }
 
     //--------------------------------------------------------------------------------------------
-    //                        Adapter for WebContentsDelegate methods.
+    //                        Adapter for all the methods.
     //--------------------------------------------------------------------------------------------
 
     /**
@@ -230,7 +231,9 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
      */
     @Override
     public void getVisitedHistory(ValueCallback<String[]> callback) {
+        TraceEvent.begin();
         mWebChromeClient.getVisitedHistory(callback);
+        TraceEvent.end();
     }
 
     /**
@@ -238,7 +241,9 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
      */
     @Override
     public void doUpdateVisitedHistory(String url, boolean isReload) {
+        TraceEvent.begin();
         mWebViewClient.doUpdateVisitedHistory(mWebView, url, isReload);
+        TraceEvent.end();
     }
 
     /**
@@ -246,7 +251,9 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
      */
     @Override
     public void onProgressChanged(int progress) {
+        TraceEvent.begin();
         mWebChromeClient.onProgressChanged(mWebView, progress);
+        TraceEvent.end();
     }
 
     /**
@@ -254,7 +261,9 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
      */
     @Override
     public InterceptedRequestData shouldInterceptRequest(String url) {
+        TraceEvent.begin();
         WebResourceResponse response = mWebViewClient.shouldInterceptRequest(mWebView, url);
+        TraceEvent.end();
         if (response == null) return null;
         return new InterceptedRequestData(
                 response.getMimeType(),
@@ -262,17 +271,15 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
                 response.getData());
     }
 
-    // TODO: remove this overload, and mark shouldOverrideUrlLoading as @Override
-    public boolean shouldIgnoreNavigation(String url) {
-        return this.shouldOverrideUrlLoading(url);
-    }
-
     /**
      * @see AwContentsClient#shouldOverrideUrlLoading(java.lang.String)
      */
-    //@Override
+    @Override
     public boolean shouldOverrideUrlLoading(String url) {
-      return mWebViewClient.shouldOverrideUrlLoading(mWebView, url);
+        TraceEvent.begin();
+        boolean result = mWebViewClient.shouldOverrideUrlLoading(mWebView, url);
+        TraceEvent.end();
+        return result;
     }
 
     /**
@@ -280,7 +287,9 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
      */
     @Override
     public void onUnhandledKeyEvent(KeyEvent event) {
+        TraceEvent.begin();
         mWebViewClient.onUnhandledKeyEvent(mWebView, event);
+        TraceEvent.end();
     }
 
     /**
@@ -288,7 +297,10 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
      */
     @Override
     public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
-        return mWebChromeClient.onConsoleMessage(consoleMessage);
+        TraceEvent.begin();
+        boolean result = mWebChromeClient.onConsoleMessage(consoleMessage);
+        TraceEvent.end();
+        return result;
     }
 
     /**
@@ -298,7 +310,9 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     public void onFindResultReceived(int activeMatchOrdinal, int numberOfMatches,
             boolean isDoneCounting) {
         if (mFindListener == null) return;
+        TraceEvent.begin();
         mFindListener.onFindResultReceived(activeMatchOrdinal, numberOfMatches, isDoneCounting);
+        TraceEvent.end();
     }
 
     /**
@@ -307,35 +321,46 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     @Override
     public void onNewPicture(Picture picture) {
         if (mPictureListener == null) return;
+        TraceEvent.begin();
         mPictureListener.onNewPicture(mWebView, picture);
+        TraceEvent.end();
     }
 
     @Override
     public void onLoadResource(String url) {
+        TraceEvent.begin();
         mWebViewClient.onLoadResource(mWebView, url);
+        TraceEvent.end();
     }
 
     @Override
     public boolean onCreateWindow(boolean isDialog, boolean isUserGesture) {
         Message m = mUiThreadHandler.obtainMessage(
                 NEW_WEBVIEW_CREATED, mWebView.new WebViewTransport());
-        return mWebChromeClient.onCreateWindow(mWebView, isDialog, isUserGesture, m);
+        TraceEvent.begin();
+        boolean result = mWebChromeClient.onCreateWindow(mWebView, isDialog, isUserGesture, m);
+        TraceEvent.end();
+        return result;
     }
 
     /**
      * @see AwContentsClient#onCloseWindow()
      */
-    /* @Override */
+    @Override
     public void onCloseWindow() {
+        TraceEvent.begin();
         mWebChromeClient.onCloseWindow(mWebView);
+        TraceEvent.end();
     }
 
     /**
      * @see AwContentsClient#onRequestFocus()
      */
-    /* @Override */
+    @Override
     public void onRequestFocus() {
+        TraceEvent.begin();
         mWebChromeClient.onRequestFocus(mWebView);
+        TraceEvent.end();
     }
 
     /**
@@ -343,7 +368,9 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
      */
     @Override
     public void onReceivedTouchIconUrl(String url, boolean precomposed) {
+        TraceEvent.begin();
         mWebChromeClient.onReceivedTouchIconUrl(mWebView, url, precomposed);
+        TraceEvent.end();
     }
 
     /**
@@ -351,19 +378,19 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
      */
     @Override
     public void onReceivedIcon(Bitmap bitmap) {
+        TraceEvent.begin();
         mWebChromeClient.onReceivedIcon(mWebView, bitmap);
+        TraceEvent.end();
     }
-
-    //--------------------------------------------------------------------------------------------
-    //                        Trivial Chrome -> WebViewClient mappings.
-    //--------------------------------------------------------------------------------------------
 
     /**
      * @see ContentViewClient#onPageStarted(String)
      */
     @Override
     public void onPageStarted(String url) {
+        TraceEvent.begin();
         mWebViewClient.onPageStarted(mWebView, url, mWebView.getFavicon());
+        TraceEvent.end();
     }
 
     /**
@@ -371,7 +398,9 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
      */
     @Override
     public void onPageFinished(String url) {
+        TraceEvent.begin();
         mWebViewClient.onPageFinished(mWebView, url);
+        TraceEvent.end();
 
         // See b/8208948
         // This fakes an onNewPicture callback after onPageFinished to allow
@@ -410,20 +439,19 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
             // (like in the case for intercepted requests) AwContents will pass in null.
             description = ErrorStrings.getString(errorCode, mWebView.getContext());
         }
+        TraceEvent.begin();
         mWebViewClient.onReceivedError(mWebView, errorCode, description, failingUrl);
-    }
-
-    // TODO: remove this method, and mark onReceivedTitle as @Override
-    public void onUpdateTitle(String title) {
-        onReceivedTitle(title);
+        TraceEvent.end();
     }
 
     /**
      * @see ContentViewClient#onReceivedTitle(String)
      */
-    //@Override
+    @Override
     public void onReceivedTitle(String title) {
+        TraceEvent.begin();
         mWebChromeClient.onReceivedTitle(mWebView, title);
+        TraceEvent.end();
     }
 
 
@@ -437,8 +465,11 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
         //    before shouldOverrideKeyEvent() is called at all.
         // 2. shouldOverrideKeyEvent() should be called in onKeyDown/onKeyUp, not from
         //    dispatchKeyEvent().
-        return event.isSystem() ||
-            mWebViewClient.shouldOverrideKeyEvent(mWebView, event);
+        if (event.isSystem()) return true;
+        TraceEvent.begin();
+        boolean result = mWebViewClient.shouldOverrideKeyEvent(mWebView, event);
+        TraceEvent.end();
+        return result;
     }
 
 
@@ -448,18 +479,24 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
      */
     // TODO: Delete this method when removed from base class.
     public void onStartContentIntent(Context context, String contentUrl) {
+        TraceEvent.begin();
         mWebViewClient.shouldOverrideUrlLoading(mWebView, contentUrl);
+        TraceEvent.end();
     }
 
     @Override
     public void onGeolocationPermissionsShowPrompt(String origin,
             GeolocationPermissions.Callback callback) {
+        TraceEvent.begin();
         mWebChromeClient.onGeolocationPermissionsShowPrompt(origin, callback);
+        TraceEvent.end();
     }
 
     @Override
     public void onGeolocationPermissionsHidePrompt() {
+        TraceEvent.begin();
         mWebChromeClient.onGeolocationPermissionsHidePrompt();
+        TraceEvent.end();
     }
 
     private static class JsPromptResultReceiverAdapter implements JsResult.ResultReceiver {
@@ -501,45 +538,55 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
 
     @Override
     public void handleJsAlert(String url, String message, JsResultReceiver receiver) {
+        TraceEvent.begin();
         final JsPromptResult res = new JsPromptResultReceiverAdapter(receiver).getPromptResult();
         if (!mWebChromeClient.onJsAlert(mWebView, url, message, res)) {
             new JsDialogHelper(res, JsDialogHelper.ALERT, null, message, url)
                     .showDialog(mWebView.getContext());
         }
+        TraceEvent.end();
     }
 
     @Override
     public void handleJsBeforeUnload(String url, String message, JsResultReceiver receiver) {
+        TraceEvent.begin();
         final JsPromptResult res = new JsPromptResultReceiverAdapter(receiver).getPromptResult();
         if (!mWebChromeClient.onJsBeforeUnload(mWebView, url, message, res)) {
             new JsDialogHelper(res, JsDialogHelper.UNLOAD, null, message, url)
                     .showDialog(mWebView.getContext());
         }
+        TraceEvent.end();
     }
 
     @Override
     public void handleJsConfirm(String url, String message, JsResultReceiver receiver) {
+        TraceEvent.begin();
         final JsPromptResult res = new JsPromptResultReceiverAdapter(receiver).getPromptResult();
         if (!mWebChromeClient.onJsConfirm(mWebView, url, message, res)) {
             new JsDialogHelper(res, JsDialogHelper.CONFIRM, null, message, url)
                     .showDialog(mWebView.getContext());
         }
+        TraceEvent.end();
     }
 
     @Override
     public void handleJsPrompt(String url, String message, String defaultValue,
             JsPromptResultReceiver receiver) {
+        TraceEvent.begin();
         final JsPromptResult res = new JsPromptResultReceiverAdapter(receiver).getPromptResult();
         if (!mWebChromeClient.onJsPrompt(mWebView, url, message, defaultValue, res)) {
             new JsDialogHelper(res, JsDialogHelper.PROMPT, defaultValue, message, url)
                     .showDialog(mWebView.getContext());
         }
+        TraceEvent.end();
     }
 
     @Override
     public void onReceivedHttpAuthRequest(AwHttpAuthHandler handler, String host, String realm) {
+        TraceEvent.begin();
         mWebViewClient.onReceivedHttpAuthRequest(mWebView,
                 new AwHttpAuthHandlerAdapter(handler), host, realm);
+        TraceEvent.end();
     }
 
     @Override
@@ -562,17 +609,23 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
                     });
             }
         };
+        TraceEvent.begin();
         mWebViewClient.onReceivedSslError(mWebView, handler, error);
+        TraceEvent.end();
     }
 
     @Override
     public void onReceivedLoginRequest(String realm, String account, String args) {
+        TraceEvent.begin();
         mWebViewClient.onReceivedLoginRequest(mWebView, realm, account, args);
+        TraceEvent.end();
     }
 
     @Override
     public void onFormResubmission(Message dontResend, Message resend) {
+        TraceEvent.begin();
         mWebViewClient.onFormResubmission(mWebView, dontResend, resend);
+        TraceEvent.end();
     }
 
     @Override
@@ -582,37 +635,51 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
                                 String mimeType,
                                 long contentLength) {
         if (mDownloadListener != null) {
+            TraceEvent.begin();
             mDownloadListener.onDownloadStart(url,
                                               userAgent,
                                               contentDisposition,
                                               mimeType,
                                               contentLength);
+            TraceEvent.end();
         }
     }
 
     @Override
     public void onScaleChangedScaled(float oldScale, float newScale) {
+        TraceEvent.begin();
         mWebViewClient.onScaleChanged(mWebView, oldScale, newScale);
+        TraceEvent.end();
     }
 
     @Override
     public void onShowCustomView(View view, CustomViewCallback cb) {
+        TraceEvent.begin();
         mWebChromeClient.onShowCustomView(view, cb);
+        TraceEvent.end();
     }
 
     @Override
     public void onHideCustomView() {
+        TraceEvent.begin();
         mWebChromeClient.onHideCustomView();
+        TraceEvent.end();
     }
 
     @Override
     protected View getVideoLoadingProgressView() {
-        return mWebChromeClient.getVideoLoadingProgressView();
+        TraceEvent.begin();
+        View result = mWebChromeClient.getVideoLoadingProgressView();
+        TraceEvent.end();
+        return result;
     }
 
     @Override
     public Bitmap getDefaultVideoPoster() {
-        return mWebChromeClient.getDefaultVideoPoster();
+        TraceEvent.begin();
+        Bitmap result = mWebChromeClient.getDefaultVideoPoster();
+        TraceEvent.end();
+        return result;
     }
 
     private static class AwHttpAuthHandlerAdapter extends android.webkit.HttpAuthHandler {
