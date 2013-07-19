@@ -57,6 +57,11 @@
 -dontnote org.chromium.content.common.TraceEvent
 -dontnote com.android.org.chromium.content.common.TraceEvent
 
+# We need to keep these explicitly as they are parameters to methods which
+# are entry points via @calledByNative.
+-keep class com.android.org.chromium.ui.autofill.AutofillSuggestion
+-keep class com.android.org.chromium.content.browser.ContentVideoViewClient
+
 # Keep finalizer stuff from google-common used via reflection
 -keepclassmembers class com.google.common.** {
   *** finalizeReferent();
