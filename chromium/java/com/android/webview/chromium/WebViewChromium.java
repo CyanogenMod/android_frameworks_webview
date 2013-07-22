@@ -27,6 +27,7 @@ import android.net.http.SslCertificate;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
+import android.util.Base64;
 import android.util.Log;
 import android.view.HardwareCanvas;
 import android.view.KeyEvent;
@@ -274,13 +275,31 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void loadDataWithBaseURL(String baseUrl, String data, String mimeType, String encoding,
-                                    String historyUrl) {
-        if (baseUrl == null || baseUrl.length() == 0) baseUrl = "about:blank";
-        boolean isBase64 = isBase64Encoded(encoding);
-        // For backwards compatibility with WebViewClassic, we use the value of |encoding|
-        // as the charset, as long as it's not "base64".
-        mAwContents.loadUrl(LoadUrlParams.createLoadDataParamsWithBaseUrl(
-                data, mimeType, isBase64, baseUrl, historyUrl, isBase64 ? null : encoding));
+            String historyUrl) {
+        LoadUrlParams loadUrlParams;
+
+        if (baseUrl != null && baseUrl.startsWith("data:")) {
+            // For backwards compatibility with WebViewClassic, we use the value of |encoding|
+            // as the charset, as long as it's not "base64".
+            boolean isBase64 = isBase64Encoded(encoding);
+            loadUrlParams = LoadUrlParams.createLoadDataParamsWithBaseUrl(
+                    data, mimeType, isBase64, baseUrl, historyUrl, isBase64 ? null : encoding);
+        } else {
+            if (baseUrl == null || baseUrl.length() == 0) baseUrl = "about:blank";
+            // When loading data with a non-data: base URL, the classic WebView would effectively
+            // "dump" that string of data into the WebView without going through regular URL
+            // loading steps such as decoding URL-encoded entities. We achieve this same behavior by
+            // base64 encoding the data that is passed here and then loading that as a data: URL.
+            try {
+                loadUrlParams = LoadUrlParams.createLoadDataParamsWithBaseUrl(
+                        Base64.encodeToString(data.getBytes("utf-8"), Base64.DEFAULT), mimeType,
+                        true, baseUrl, historyUrl, "utf-8");
+            } catch (java.io.UnsupportedEncodingException e) {
+                Log.wtf(TAG, "Unable to load data string " + data, e);
+                return;
+            }
+        }
+        mAwContents.loadUrl(loadUrlParams);
     }
 
     public void evaluateJavaScript(String script, ValueCallback<String> resultCallback) {
