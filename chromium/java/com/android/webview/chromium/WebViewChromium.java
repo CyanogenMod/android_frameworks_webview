@@ -884,7 +884,7 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void setBackgroundColor(int color) {
-        UnimplementedWebViewApi.invoke();
+        mAwContents.setBackgroundColor(color);
     }
 
     @Override
