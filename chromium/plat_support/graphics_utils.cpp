@@ -50,7 +50,9 @@ struct PixelInfo : public AwPixelInfo {
 AwPixelInfo* GetPixels(JNIEnv* env, jobject java_canvas) {
   SkCanvas* canvas = GraphicsJNI::getNativeCanvas(env, java_canvas);
   if (!canvas) return NULL;
-  SkDevice* device = canvas->getTopDevice(true);
+  SkCanvas::LayerIter layer(SkCanvas::LayerIter(canvas, false));
+  if (layer.done()) return NULL;
+  SkDevice* device = layer.device();
   if (!device) return NULL;
   const SkBitmap* bitmap = &device->accessBitmap(true);
   if (!bitmap->lockPixelsAreWritable()) return NULL;
@@ -61,14 +63,12 @@ AwPixelInfo* GetPixels(JNIEnv* env, jobject java_canvas) {
   pixels->height = bitmap->height();
   pixels->row_bytes = bitmap->rowBytes();
   pixels->pixels = bitmap->getPixels();
-  const SkMatrix& matrix = canvas->getTotalMatrix();
+  const SkMatrix& matrix = layer.matrix();
   for (int i = 0; i < 9; i++) {
     pixels->matrix[i] = matrix.get(i);
   }
-  // TODO: getTotalClip() is now marked as deprecated, but the replacement,
-  // getClipDeviceBounds, does not return the exact region, just the bounds.
-  // Work out what we should use instead.
-  const SkRegion& region = canvas->getTotalClip();
+
+  const SkRegion& region = layer.clip();
   pixels->clip_region = NULL;
   pixels->clip_region_size = region.writeToMemory(NULL);
   if (pixels->clip_region_size) {
