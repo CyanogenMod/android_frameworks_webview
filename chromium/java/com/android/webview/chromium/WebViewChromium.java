@@ -720,7 +720,9 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void setOverScrollMode(int mode) {
-        UnimplementedWebViewApi.invoke();
+        if (mAwContents != null) {
+            mAwContents.setOverScrollMode(mode);
+        }
     }
 
     @Override
