@@ -720,7 +720,13 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void setOverScrollMode(int mode) {
-        UnimplementedWebViewApi.invoke();
+        // This gets called from the android.view.View c'tor that WebView inherits from. This
+        // causes the method to be called when mAwContents == null.
+        // It's safe to ignore these calls however since AwContents will read the current value of
+        // this setting when it's created.
+        if (mAwContents != null) {
+            mAwContents.setOverScrollMode(mode);
+        }
     }
 
     @Override
