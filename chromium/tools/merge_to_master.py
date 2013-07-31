@@ -39,6 +39,8 @@ def _MergeProjects(svn_revision):
   """
   for path in merge_common.PROJECTS_WITH_FLAT_HISTORY:
     dest_dir = os.path.join(merge_common.REPOSITORY_ROOT, path)
+    merge_common.GetCommandStdout(['git', 'remote', 'update',
+                                   'goog', 'history'], cwd=dest_dir)
     merge_common.GetCommandStdout(['git', 'checkout',
                                    '-b', 'merge-to-master',
                                    '-t', 'goog/master'], cwd=dest_dir)
@@ -84,6 +86,8 @@ def _MergeProjects(svn_revision):
 
   for path in merge_common.PROJECTS_WITH_FULL_HISTORY:
     dest_dir = os.path.join(merge_common.REPOSITORY_ROOT, path)
+    merge_common.GetCommandStdout(['git', 'remote', 'update', 'goog'],
+                                  cwd=dest_dir)
     merge_common.GetCommandStdout(['git', 'checkout',
                                    '-b', 'merge-to-master',
                                    '-t', 'goog/master'], cwd=dest_dir)
@@ -105,14 +109,56 @@ def _MergeProjects(svn_revision):
       logging.debug('No new commits to merge in project %s', path)
 
 
-def _GetSVNRevision():
+def _GetSVNRevision(commitish='history/master-chromium'):
   logging.debug('Getting SVN revision ...')
   commit = merge_common.GetCommandStdout([
-      'git', 'log', '-n1', '--grep=git-svn-id:', '--format=%H%n%b',
-      'history/master-chromium'])
+      'git', 'log', '-n1', '--grep=git-svn-id:', '--format=%H%n%b', commitish])
   svn_revision = re.search(r'^git-svn-id: .*@([0-9]+)', commit,
                            flags=re.MULTILINE).group(1)
   return svn_revision
+
+
+def _MergeWithRepoProp(repo_prop_file):
+  chromium_sha = None
+  webview_sha = None
+  with open(repo_prop_file) as prop:
+    for line in prop:
+      project, sha = line.split()
+      if project == 'platform/external/chromium_org-history':
+        chromium_sha = sha
+      elif project == 'platform/frameworks/webview':
+        webview_sha = sha
+  if not chromium_sha or not webview_sha:
+    logging.error('SHA1s for projects not found; invalid build.prop?')
+    return 1
+  chromium_revision = _GetSVNRevision(chromium_sha)
+  logging.info('Merging Chromium at r%s and WebView at %s', chromium_revision,
+               webview_sha)
+  _MergeProjects(chromium_revision)
+
+  dest_dir = os.path.join(os.environ['ANDROID_BUILD_TOP'], 'frameworks/webview')
+  merge_common.GetCommandStdout(['git', 'remote', 'update', 'goog'],
+                                cwd=dest_dir)
+  merge_common.GetCommandStdout(['git', 'checkout',
+                                 '-b', 'merge-to-master',
+                                 '-t', 'goog/master'], cwd=dest_dir)
+  if merge_common.GetCommandStdout(['git', 'rev-list', '-1',
+                                    'HEAD..' + webview_sha], cwd=dest_dir):
+    logging.debug('Creating merge for framework...')
+    # Merge conflicts cause 'git merge' to return 1, so ignore errors
+    merge_common.GetCommandStdout(['git', 'merge', '--no-commit', '--no-ff',
+                                   webview_sha], cwd=dest_dir,
+                                  ignore_errors=True)
+    merge_common.CheckNoConflictsAndCommitMerge(
+        'Merge master-chromium into master at r%s\n\n%s' %
+        (chromium_revision, AUTOGEN_MESSAGE), cwd=dest_dir)
+    upload = merge_common.GetCommandStdout(['git', 'push', 'goog',
+                                            'HEAD:refs/for/master'],
+                                           cwd=dest_dir)
+    logging.debug(upload)
+  else:
+    logging.debug('No new commits to merge in framework')
+  return 0
 
 
 def Push():
@@ -142,6 +188,10 @@ def main():
       help=('Merge to the specified archived master-chromium SVN revision,'
             'rather than using HEAD.'))
   parser.add_option(
+      '', '--repo-prop',
+      default=None, metavar='FILE',
+      help=('Merge to the revisions specified in this repo.prop file.'))
+  parser.add_option(
       '', '--push',
       default=False, action='store_true',
       help=('Push the result of a previous merge to the server.'))
@@ -155,6 +205,8 @@ def main():
 
   if options.push:
     Push()
+  elif options.repo_prop:
+    return _MergeWithRepoProp(os.path.expanduser(options.repo_prop))
   elif options.svn_revision:
     _MergeProjects(options.svn_revision)
   else:
