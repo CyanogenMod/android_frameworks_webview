@@ -37,6 +37,10 @@ public class ResourceProvider {
 
         Resources.Theme theme = context.getTheme();
 
+        // color
+        org.chromium.ui.R.color.color_picker_border_color =
+                com.android.internal.R.color.webviewchromium_color_picker_border_color;
+
         // dimen
 
         org.chromium.content.R.dimen.link_preview_overlay_radius =

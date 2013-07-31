@@ -20,7 +20,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/webviewchromium_color_picker_border"
-        android:padding="1dp">
+        android:paddingStart="1px"
+        android:paddingEnd="1px"
+        android:paddingTop="1px">
+
 
         <com.android.org.chromium.ui.ColorPickerSimple
             android:id="@+id/webviewchromium_color_picker_simple"
@@ -34,7 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/webviewchromium_color_picker_simple_border"
         android:background="@drawable/webviewchromium_color_picker_border"
-        android:padding="1dp">
+        android:padding="1px">
 
         <Button
             android:id="@+id/webviewchromium_color_picker_more_colors_button"
