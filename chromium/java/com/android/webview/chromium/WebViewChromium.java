@@ -59,6 +59,7 @@ import org.chromium.net.NetworkChangeNotifier;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.util.Map;
 
@@ -395,6 +396,13 @@ class WebViewChromium implements WebViewProvider,
     @Override
     public Picture capturePicture() {
         return mAwContents.capturePicture();
+    }
+
+    @Override
+    public void exportToPdf(OutputStream stream, int width, int height,
+        ValueCallback<Boolean> resultCallback) {
+        // TODO(sgurun) enable this only after upstream part lands
+        //mAwContents.exportToPdf(stream, width, height, resultCallback);
     }
 
     @Override
