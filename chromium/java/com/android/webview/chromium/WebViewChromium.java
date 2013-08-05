@@ -53,6 +53,7 @@ import android.webkit.WebViewProvider;
 
 import org.chromium.android_webview.AwBrowserContext;
 import org.chromium.android_webview.AwContents;
+import org.chromium.base.ThreadUtils;
 import org.chromium.content.browser.LoadUrlParams;
 import org.chromium.net.NetworkChangeNotifier;
 
@@ -249,7 +250,7 @@ class WebViewChromium implements WebViewProvider,
 
         LoadUrlParams params = new LoadUrlParams(url);
         if (additionalHttpHeaders != null) params.setExtraHeaders(additionalHttpHeaders);
-        mAwContents.loadUrl(params);
+        loadUrlOnUiThread(params);
     }
 
     @Override
@@ -259,8 +260,7 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void postUrl(String url, byte[] postData) {
-        mAwContents.loadUrl(LoadUrlParams.createLoadHttpPostParams(
-                url, postData));
+        loadUrlOnUiThread(LoadUrlParams.createLoadHttpPostParams(url, postData));
     }
 
     private static boolean isBase64Encoded(String encoding) {
@@ -269,8 +269,8 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void loadData(String data, String mimeType, String encoding) {
-        mAwContents.loadUrl(LoadUrlParams.createLoadDataParams(
-                  data, mimeType, isBase64Encoded(encoding)));
+        loadUrlOnUiThread(LoadUrlParams.createLoadDataParams(
+                data, mimeType, isBase64Encoded(encoding)));
     }
 
     @Override
@@ -299,7 +299,22 @@ class WebViewChromium implements WebViewProvider,
                 return;
             }
         }
-        mAwContents.loadUrl(loadUrlParams);
+        loadUrlOnUiThread(loadUrlParams);
+    }
+
+    private void loadUrlOnUiThread(final LoadUrlParams loadUrlParams) {
+        if (ThreadUtils.runningOnUiThread()) {
+            mAwContents.loadUrl(loadUrlParams);
+        } else {
+            // Disallowed in WebView API for apps targetting a new SDK
+            assert mAppTargetSdkVersion < Build.VERSION_CODES.JELLY_BEAN_MR2;
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mAwContents.loadUrl(loadUrlParams);
+                }
+            });
+        }
     }
 
     public void evaluateJavaScript(String script, ValueCallback<String> resultCallback) {
