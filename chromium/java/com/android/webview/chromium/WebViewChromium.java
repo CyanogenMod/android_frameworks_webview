@@ -933,8 +933,7 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void computeScroll() {
-        // BUG=http://b/6029133
-        // Too much log spam: UnimplementedWebViewApi.invoke();
+        mAwContents.computeScroll();
     }
 
     // AwContents.InternalAccessDelegate implementation --------------------------------------

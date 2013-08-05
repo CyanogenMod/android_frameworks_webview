@@ -18,6 +18,8 @@
 -->
 
 <resources>
+  <add-resource type="color" name="webviewchromium_color_picker_border_color" />
+
   <add-resource type="dimen" name="webviewchromium_color_picker_gradient_margin" />
   <add-resource type="dimen" name="webviewchromium_link_preview_overlay_radius" />
 

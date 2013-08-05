@@ -21,6 +21,8 @@
 <resources>
   <private-symbols package="com.android.internal" />
 
+  <java-symbol type="color" name="webviewchromium_color_picker_border_color" />
+
   <java-symbol type="dimen" name="webviewchromium_color_picker_gradient_margin" />
   <java-symbol type="dimen" name="webviewchromium_link_preview_overlay_radius" />
 
