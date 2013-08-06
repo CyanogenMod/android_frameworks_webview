@@ -222,6 +222,9 @@ def _MergeProjects(git_branch, svn_revision, root_sha1, unattended):
                                      'Exclude unwanted directories'],
                                     cwd=dest_dir)
 
+
+def _CheckLicenses():
+  """Check that no incompatibly licensed directories exist."""
   directories_left_over = webview_licenses.GetIncompatibleDirectories()
   if directories_left_over:
     raise merge_common.TemporaryMergeError(
@@ -439,14 +442,17 @@ def Snapshot(svn_revision, root_sha1, unattended):
   # 1. Merge, accounting for excluded directories
   _MergeProjects(git_branch, svn_revision, root_sha1, unattended)
 
-  # 2. Generate Android NOTICE file
+  # 2. Generate Android makefiles
+  _GenerateMakefiles(svn_revision, unattended)
+
+  # 3. Check for incompatible licenses
+  _CheckLicenses()
+
+  # 4. Generate Android NOTICE file
   _GenerateNoticeFile(svn_revision)
 
-  # 3. Generate LASTCHANGE file
+  # 5. Generate LASTCHANGE file
   _GenerateLastChange(svn_revision)
-
-  # 4. Generate Android makefiles
-  _GenerateMakefiles(svn_revision, unattended)
 
   return True
 
