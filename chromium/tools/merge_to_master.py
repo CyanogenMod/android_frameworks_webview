@@ -155,7 +155,7 @@ def _MergeWithRepoProp(repo_prop_file):
     upload = merge_common.GetCommandStdout(['git', 'push', 'goog',
                                             'HEAD:refs/for/master'],
                                            cwd=dest_dir)
-    logging.debug(upload)
+    logging.info(upload)
   else:
     logging.debug('No new commits to merge in framework')
   return 0

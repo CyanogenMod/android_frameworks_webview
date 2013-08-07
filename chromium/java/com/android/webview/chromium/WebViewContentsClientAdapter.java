@@ -421,7 +421,7 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
                 public void run() {
                     UnimplementedWebViewApi.invoke();
                     if (mPictureListener != null) {
-                        mPictureListener.onNewPicture(mWebView, null);
+                        mPictureListener.onNewPicture(mWebView, new Picture());
                     }
                 }
             }, 100);
