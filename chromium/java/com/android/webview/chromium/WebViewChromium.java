@@ -987,6 +987,11 @@ class WebViewChromium implements WebViewProvider,
             UnimplementedWebViewApi.invoke();
         }
 
+        // TODO(mkosiba): @Override
+        public int super_getScrollBarStyle() {
+            return mWebViewPrivate.super_getScrollBarStyle();
+        }
+
         @Override
         public boolean awakenScrollBars() {
             mWebViewPrivate.awakenScrollBars(0);
