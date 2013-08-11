@@ -68,10 +68,12 @@ class ClipValidator : public SkCanvas::ClipVisitor {
   bool failed_;
 };
 
-
 PixelInfo::PixelInfo(SkCanvas* canvas, const SkBitmap* bitmap)
     : bitmap_(bitmap),
-      bitmap_locker_(*bitmap) {}
+      bitmap_locker_(*bitmap) {
+  memset(this, 0, sizeof(AwPixelInfo));
+  version = kAwPixelInfoVersion;
+}
 
 PixelInfo::~PixelInfo() {}
 
@@ -122,8 +124,6 @@ PixelInfo* TryToCreatePixelInfo(SkCanvas* canvas) {
     pixels->matrix[i] = matrix.get(i);
   }
 
-  pixels->clip_rects = NULL;
-  pixels->clip_rect_count = 0;
   const SkRegion& region = layer.clip();
   if (region.isEmpty()) {
     pixels->AddRectToClip(region.getBounds());
@@ -133,9 +133,6 @@ PixelInfo* TryToCreatePixelInfo(SkCanvas* canvas) {
       pixels->AddRectToClip(clip_iterator.rect());
     }
   }
-  // TODO: Remove these when chromium no longer reads them
-  pixels->clip_region = NULL;
-  pixels->clip_region_size = 0;
 
   // WebViewClassic used the DrawFilter for its own purposes (e.g. disabling
   // dithering when zooming/scrolling) so for now at least, just ignore any
