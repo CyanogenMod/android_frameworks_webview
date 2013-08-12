@@ -34,7 +34,6 @@ THIRD_PARTY_PROJECTS_WITH_FLAT_HISTORY = [
 ]
 
 THIRD_PARTY_PROJECTS_WITH_FULL_HISTORY = [
-    'googleurl',
     'sdch/open-vcdiff',
     'testing/gtest',
     'third_party/angle_dx11',

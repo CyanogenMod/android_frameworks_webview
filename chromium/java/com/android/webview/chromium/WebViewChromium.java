@@ -141,24 +141,22 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void setHorizontalScrollbarOverlay(boolean overlay) {
-        UnimplementedWebViewApi.invoke();
+        mAwContents.setHorizontalScrollbarOverlay(overlay);
     }
 
     @Override
     public void setVerticalScrollbarOverlay(boolean overlay) {
-        UnimplementedWebViewApi.invoke();
+        mAwContents.setVerticalScrollbarOverlay(overlay);
     }
 
     @Override
     public boolean overlayHorizontalScrollbar() {
-        UnimplementedWebViewApi.invoke();
-        return false;
+        return mAwContents.overlayHorizontalScrollbar();
     }
 
     @Override
     public boolean overlayVerticalScrollbar() {
-        UnimplementedWebViewApi.invoke();
-        return false;
+        return mAwContents.overlayVerticalScrollbar();
     }
 
     @Override
@@ -746,13 +744,16 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void setScrollBarStyle(int style) {
-        UnimplementedWebViewApi.invoke();
+        mAwContents.setScrollBarStyle(style);
     }
 
     @Override
     public void onDrawVerticalScrollBar(Canvas canvas, Drawable scrollBar,
                                         int l, int t, int r, int b) {
-        UnimplementedWebViewApi.invoke();
+        // WebViewClassic was overriding this method to handle rubberband over-scroll. Since
+        // WebViewChromium doesn't support that the vanilla implementation of this method can be
+        // used.
+        mWebViewPrivate.super_onDrawVerticalScrollBar(canvas, scrollBar, l, t, r, b);
     }
 
     @Override
@@ -987,7 +988,7 @@ class WebViewChromium implements WebViewProvider,
             UnimplementedWebViewApi.invoke();
         }
 
-        // TODO(mkosiba): @Override
+        @Override
         public int super_getScrollBarStyle() {
             return mWebViewPrivate.super_getScrollBarStyle();
         }

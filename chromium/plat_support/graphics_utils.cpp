@@ -25,6 +25,8 @@
 #include <cstdlib>
 #include <jni.h>
 #include <utils/Log.h>
+#include <utils/UniquePtr.h>
+#include <utils/Vector.h>
 #include "graphic_buffer_impl.h"
 #include "GraphicsJNI.h"
 #include "SkGraphics.h"
@@ -35,30 +37,84 @@
 namespace android {
 namespace {
 
-struct PixelInfo : public AwPixelInfo {
-  PixelInfo(const SkBitmap* bitmap)
-      : bitmap_(bitmap) {
-    this->bitmap_->lockPixels();
-  }
-  ~PixelInfo() {
-    this->bitmap_->unlockPixels();
-    free(clip_region);
-  };
+class PixelInfo : public AwPixelInfo {
+ public:
+  PixelInfo(SkCanvas* canvas, const SkBitmap* bitmap);
+  ~PixelInfo();
+
+  void AddRectToClip(const SkIRect& rect);
+
+ private:
   const SkBitmap* bitmap_;
+  SkAutoLockPixels bitmap_locker_;
+  Vector<int> clip_rect_storage_;
 };
 
-AwPixelInfo* GetPixels(JNIEnv* env, jobject java_canvas) {
-  SkCanvas* canvas = GraphicsJNI::getNativeCanvas(env, java_canvas);
-  if (!canvas) return NULL;
-  SkCanvas::LayerIter layer(SkCanvas::LayerIter(canvas, false));
-  if (layer.done()) return NULL;
-  SkDevice* device = layer.device();
-  if (!device) return NULL;
-  const SkBitmap* bitmap = &device->accessBitmap(true);
-  if (!bitmap->lockPixelsAreWritable()) return NULL;
+class ClipValidator : public SkCanvas::ClipVisitor {
+ public:
+  ClipValidator() : failed_(false) {}
+  bool failed() { return failed_; }
 
-  PixelInfo* pixels = new PixelInfo(bitmap);
-  pixels->config = bitmap->config();
+  // ClipVisitor
+  virtual void clipRect(const SkRect& rect, SkRegion::Op op, bool antialias) {
+    failed_ |= antialias;
+  }
+
+  virtual void clipPath(const SkPath&, SkRegion::Op, bool antialias) {
+    failed_ |= antialias;
+  }
+
+ private:
+  bool failed_;
+};
+
+PixelInfo::PixelInfo(SkCanvas* canvas, const SkBitmap* bitmap)
+    : bitmap_(bitmap),
+      bitmap_locker_(*bitmap) {
+  memset(this, 0, sizeof(AwPixelInfo));
+  version = kAwPixelInfoVersion;
+}
+
+PixelInfo::~PixelInfo() {}
+
+void PixelInfo::AddRectToClip(const SkIRect& rect) {
+  ALOG_ASSERT(rect.width() >= 0 && rect.height() >= 0);
+  clip_rect_storage_.push_back(rect.x());
+  clip_rect_storage_.push_back(rect.y());
+  clip_rect_storage_.push_back(rect.width());
+  clip_rect_storage_.push_back(rect.height());
+  clip_rects = const_cast<int*>(clip_rect_storage_.array());
+  clip_rect_count = clip_rect_storage_.size() / 4;
+}
+
+PixelInfo* TryToCreatePixelInfo(SkCanvas* canvas) {
+  // Check the clip can decompose into simple rectangles. This validator is
+  // not a perfect guarantee, but it's the closest I can do with the current
+  // API. TODO: compile this out in release builds as currently Java canvases
+  // do not allow for antialiased clip.
+  ClipValidator validator;
+  canvas->replayClips(&validator);
+  if (validator.failed())
+    return NULL;
+
+  SkCanvas::LayerIter layer(SkCanvas::LayerIter(canvas, false));
+  if (layer.done())
+    return NULL;
+  SkDevice* device = layer.device();
+  if (!device)
+    return NULL;
+  const SkBitmap* bitmap = &device->accessBitmap(true);
+  if (!bitmap->lockPixelsAreWritable())
+    return NULL;
+
+  UniquePtr<PixelInfo> pixels(new PixelInfo(canvas, bitmap));
+  pixels->config =
+      bitmap->config() == SkBitmap::kARGB_8888_Config ? AwConfig_ARGB_8888 :
+      bitmap->config() == SkBitmap::kARGB_4444_Config ? AwConfig_ARGB_4444 :
+      bitmap->config() == SkBitmap::kRGB_565_Config ? AwConfig_RGB_565 : -1;
+  if (pixels->config < 0)
+    return NULL;
+
   pixels->width = bitmap->width();
   pixels->height = bitmap->height();
   pixels->row_bytes = bitmap->rowBytes();
@@ -69,19 +125,29 @@ AwPixelInfo* GetPixels(JNIEnv* env, jobject java_canvas) {
   }
 
   const SkRegion& region = layer.clip();
-  pixels->clip_region = NULL;
-  pixels->clip_region_size = region.writeToMemory(NULL);
-  if (pixels->clip_region_size) {
-    pixels->clip_region = malloc(pixels->clip_region_size);
-    size_t written = region.writeToMemory(pixels->clip_region);
-    ALOG_ASSERT(written == pixels->clip_region_size);
+  if (region.isEmpty()) {
+    pixels->AddRectToClip(region.getBounds());
+  } else {
+    SkRegion::Iterator clip_iterator(region);
+    for (; !clip_iterator.done(); clip_iterator.next()) {
+      pixels->AddRectToClip(clip_iterator.rect());
+    }
   }
+
   // WebViewClassic used the DrawFilter for its own purposes (e.g. disabling
   // dithering when zooming/scrolling) so for now at least, just ignore any
   // client supplied DrawFilter.
   ALOGW_IF(canvas->getDrawFilter(),
            "DrawFilter not supported in webviewchromium, will be ignored");
-  return pixels;
+  return pixels.release();
+}
+
+AwPixelInfo* GetPixels(JNIEnv* env, jobject java_canvas) {
+  SkCanvas* canvas = GraphicsJNI::getNativeCanvas(env, java_canvas);
+  if (!canvas)
+    return NULL;
+
+  return TryToCreatePixelInfo(canvas);
 }
 
 void ReleasePixels(AwPixelInfo* pixels) {
