@@ -568,6 +568,8 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
                 new JsDialogHelper(res, JsDialogHelper.ALERT, null, message, url)
                         .showDialog(mWebView.getContext());
             }
+        } else {
+            receiver.cancel();
         }
         TraceEvent.end();
     }
@@ -582,6 +584,8 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
                 new JsDialogHelper(res, JsDialogHelper.UNLOAD, null, message, url)
                         .showDialog(mWebView.getContext());
             }
+        } else {
+            receiver.cancel();
         }
         TraceEvent.end();
     }
@@ -596,6 +600,8 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
                 new JsDialogHelper(res, JsDialogHelper.CONFIRM, null, message, url)
                         .showDialog(mWebView.getContext());
             }
+        } else {
+            receiver.cancel();
         }
         TraceEvent.end();
     }
@@ -611,6 +617,8 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
                 new JsDialogHelper(res, JsDialogHelper.PROMPT, defaultValue, message, url)
                         .showDialog(mWebView.getContext());
             }
+        } else {
+            receiver.cancel();
         }
         TraceEvent.end();
     }
