@@ -60,6 +60,7 @@ import org.chromium.net.NetworkChangeNotifier;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.lang.annotation.Annotation;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -260,7 +261,11 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void postUrl(String url, byte[] postData) {
-        loadUrlOnUiThread(LoadUrlParams.createLoadHttpPostParams(url, postData));
+        LoadUrlParams params = LoadUrlParams.createLoadHttpPostParams(url, postData);
+        Map<String,String> headers = new HashMap<String,String>();
+        headers.put("Content-Type", "application/x-www-form-urlencoded");
+        params.setExtraHeaders(headers);
+        loadUrlOnUiThread(params);
     }
 
     private static boolean isBase64Encoded(String encoding) {
