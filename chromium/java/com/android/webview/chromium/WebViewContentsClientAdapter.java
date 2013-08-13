@@ -78,7 +78,7 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     private final WebView mWebView;
     // The WebViewClient instance that was passed to WebView.setWebViewClient().
     private WebViewClient mWebViewClient;
-    // The WebViewClient instance that was passed to WebView.setContentViewClient().
+    // The WebChromeClient instance that was passed to WebView.setContentViewClient().
     private WebChromeClient mWebChromeClient;
     // The listener receiving find-in-page API results.
     private WebView.FindListener mFindListener;
@@ -103,7 +103,6 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
 
         mWebView = webView;
         setWebViewClient(null);
-        setWebChromeClient(null);
 
         mUiThreadHandler = new Handler() {
 
@@ -202,12 +201,7 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     }
 
     void setWebChromeClient(WebChromeClient client) {
-        if (client != null) {
-            mWebChromeClient = client;
-        } else {
-            // WebViewClassic doesn't implement any special behavior for a null WebChromeClient.
-            mWebChromeClient = new WebChromeClient();
-        }
+        mWebChromeClient = client;
     }
 
     void setDownloadListener(DownloadListener listener) {
@@ -232,7 +226,9 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     @Override
     public void getVisitedHistory(ValueCallback<String[]> callback) {
         TraceEvent.begin();
-        mWebChromeClient.getVisitedHistory(callback);
+        if (mWebChromeClient != null) {
+            mWebChromeClient.getVisitedHistory(callback);
+        }
         TraceEvent.end();
     }
 
@@ -252,7 +248,9 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     @Override
     public void onProgressChanged(int progress) {
         TraceEvent.begin();
-        mWebChromeClient.onProgressChanged(mWebView, progress);
+        if (mWebChromeClient != null) {
+            mWebChromeClient.onProgressChanged(mWebView, progress);
+        }
         TraceEvent.end();
     }
 
@@ -298,7 +296,12 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     @Override
     public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
         TraceEvent.begin();
-        boolean result = mWebChromeClient.onConsoleMessage(consoleMessage);
+        boolean result;
+        if (mWebChromeClient != null) {
+            result = mWebChromeClient.onConsoleMessage(consoleMessage);
+        } else {
+            result = false;
+        }
         TraceEvent.end();
         return result;
     }
@@ -338,7 +341,12 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
         Message m = mUiThreadHandler.obtainMessage(
                 NEW_WEBVIEW_CREATED, mWebView.new WebViewTransport());
         TraceEvent.begin();
-        boolean result = mWebChromeClient.onCreateWindow(mWebView, isDialog, isUserGesture, m);
+        boolean result;
+        if (mWebChromeClient != null) {
+            result = mWebChromeClient.onCreateWindow(mWebView, isDialog, isUserGesture, m);
+        } else {
+            result = false;
+        }
         TraceEvent.end();
         return result;
     }
@@ -349,7 +357,9 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     @Override
     public void onCloseWindow() {
         TraceEvent.begin();
-        mWebChromeClient.onCloseWindow(mWebView);
+        if (mWebChromeClient != null) {
+            mWebChromeClient.onCloseWindow(mWebView);
+        }
         TraceEvent.end();
     }
 
@@ -359,7 +369,9 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     @Override
     public void onRequestFocus() {
         TraceEvent.begin();
-        mWebChromeClient.onRequestFocus(mWebView);
+        if (mWebChromeClient != null) {
+            mWebChromeClient.onRequestFocus(mWebView);
+        }
         TraceEvent.end();
     }
 
@@ -369,7 +381,9 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     @Override
     public void onReceivedTouchIconUrl(String url, boolean precomposed) {
         TraceEvent.begin();
-        mWebChromeClient.onReceivedTouchIconUrl(mWebView, url, precomposed);
+        if (mWebChromeClient != null) {
+            mWebChromeClient.onReceivedTouchIconUrl(mWebView, url, precomposed);
+        }
         TraceEvent.end();
     }
 
@@ -379,7 +393,9 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     @Override
     public void onReceivedIcon(Bitmap bitmap) {
         TraceEvent.begin();
-        mWebChromeClient.onReceivedIcon(mWebView, bitmap);
+        if (mWebChromeClient != null) {
+            mWebChromeClient.onReceivedIcon(mWebView, bitmap);
+        }
         TraceEvent.end();
     }
 
@@ -450,7 +466,9 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     @Override
     public void onReceivedTitle(String title) {
         TraceEvent.begin();
-        mWebChromeClient.onReceivedTitle(mWebView, title);
+        if (mWebChromeClient != null) {
+            mWebChromeClient.onReceivedTitle(mWebView, title);
+        }
         TraceEvent.end();
     }
 
@@ -488,14 +506,18 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     public void onGeolocationPermissionsShowPrompt(String origin,
             GeolocationPermissions.Callback callback) {
         TraceEvent.begin();
-        mWebChromeClient.onGeolocationPermissionsShowPrompt(origin, callback);
+        if (mWebChromeClient != null) {
+            mWebChromeClient.onGeolocationPermissionsShowPrompt(origin, callback);
+        }
         TraceEvent.end();
     }
 
     @Override
     public void onGeolocationPermissionsHidePrompt() {
         TraceEvent.begin();
-        mWebChromeClient.onGeolocationPermissionsHidePrompt();
+        if (mWebChromeClient != null) {
+            mWebChromeClient.onGeolocationPermissionsHidePrompt();
+        }
         TraceEvent.end();
     }
 
@@ -539,10 +561,13 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     @Override
     public void handleJsAlert(String url, String message, JsResultReceiver receiver) {
         TraceEvent.begin();
-        final JsPromptResult res = new JsPromptResultReceiverAdapter(receiver).getPromptResult();
-        if (!mWebChromeClient.onJsAlert(mWebView, url, message, res)) {
-            new JsDialogHelper(res, JsDialogHelper.ALERT, null, message, url)
-                    .showDialog(mWebView.getContext());
+        if (mWebChromeClient != null) {
+            final JsPromptResult res =
+                    new JsPromptResultReceiverAdapter(receiver).getPromptResult();
+            if (!mWebChromeClient.onJsAlert(mWebView, url, message, res)) {
+                new JsDialogHelper(res, JsDialogHelper.ALERT, null, message, url)
+                        .showDialog(mWebView.getContext());
+            }
         }
         TraceEvent.end();
     }
@@ -550,10 +575,13 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     @Override
     public void handleJsBeforeUnload(String url, String message, JsResultReceiver receiver) {
         TraceEvent.begin();
-        final JsPromptResult res = new JsPromptResultReceiverAdapter(receiver).getPromptResult();
-        if (!mWebChromeClient.onJsBeforeUnload(mWebView, url, message, res)) {
-            new JsDialogHelper(res, JsDialogHelper.UNLOAD, null, message, url)
-                    .showDialog(mWebView.getContext());
+        if (mWebChromeClient != null) {
+            final JsPromptResult res =
+                    new JsPromptResultReceiverAdapter(receiver).getPromptResult();
+            if (!mWebChromeClient.onJsBeforeUnload(mWebView, url, message, res)) {
+                new JsDialogHelper(res, JsDialogHelper.UNLOAD, null, message, url)
+                        .showDialog(mWebView.getContext());
+            }
         }
         TraceEvent.end();
     }
@@ -561,10 +589,13 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     @Override
     public void handleJsConfirm(String url, String message, JsResultReceiver receiver) {
         TraceEvent.begin();
-        final JsPromptResult res = new JsPromptResultReceiverAdapter(receiver).getPromptResult();
-        if (!mWebChromeClient.onJsConfirm(mWebView, url, message, res)) {
-            new JsDialogHelper(res, JsDialogHelper.CONFIRM, null, message, url)
-                    .showDialog(mWebView.getContext());
+        if (mWebChromeClient != null) {
+            final JsPromptResult res =
+                    new JsPromptResultReceiverAdapter(receiver).getPromptResult();
+            if (!mWebChromeClient.onJsConfirm(mWebView, url, message, res)) {
+                new JsDialogHelper(res, JsDialogHelper.CONFIRM, null, message, url)
+                        .showDialog(mWebView.getContext());
+            }
         }
         TraceEvent.end();
     }
@@ -573,10 +604,13 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     public void handleJsPrompt(String url, String message, String defaultValue,
             JsPromptResultReceiver receiver) {
         TraceEvent.begin();
-        final JsPromptResult res = new JsPromptResultReceiverAdapter(receiver).getPromptResult();
-        if (!mWebChromeClient.onJsPrompt(mWebView, url, message, defaultValue, res)) {
-            new JsDialogHelper(res, JsDialogHelper.PROMPT, defaultValue, message, url)
-                    .showDialog(mWebView.getContext());
+        if (mWebChromeClient != null) {
+            final JsPromptResult res =
+                    new JsPromptResultReceiverAdapter(receiver).getPromptResult();
+            if (!mWebChromeClient.onJsPrompt(mWebView, url, message, defaultValue, res)) {
+                new JsDialogHelper(res, JsDialogHelper.PROMPT, defaultValue, message, url)
+                        .showDialog(mWebView.getContext());
+            }
         }
         TraceEvent.end();
     }
@@ -655,21 +689,30 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     @Override
     public void onShowCustomView(View view, CustomViewCallback cb) {
         TraceEvent.begin();
-        mWebChromeClient.onShowCustomView(view, cb);
+        if (mWebChromeClient != null) {
+            mWebChromeClient.onShowCustomView(view, cb);
+        }
         TraceEvent.end();
     }
 
     @Override
     public void onHideCustomView() {
         TraceEvent.begin();
-        mWebChromeClient.onHideCustomView();
+        if (mWebChromeClient != null) {
+            mWebChromeClient.onHideCustomView();
+        }
         TraceEvent.end();
     }
 
     @Override
     protected View getVideoLoadingProgressView() {
         TraceEvent.begin();
-        View result = mWebChromeClient.getVideoLoadingProgressView();
+        View result;
+        if (mWebChromeClient != null) {
+            result = mWebChromeClient.getVideoLoadingProgressView();
+        } else {
+            result = null;
+        }
         TraceEvent.end();
         return result;
     }
@@ -677,7 +720,12 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     @Override
     public Bitmap getDefaultVideoPoster() {
         TraceEvent.begin();
-        Bitmap result = mWebChromeClient.getDefaultVideoPoster();
+        Bitmap result;
+        if (mWebChromeClient != null) {
+            result = mWebChromeClient.getDefaultVideoPoster();
+        } else {
+            result = null;
+        }
         TraceEvent.end();
         return result;
     }
