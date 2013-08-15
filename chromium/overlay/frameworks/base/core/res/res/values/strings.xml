@@ -25,6 +25,18 @@
     <string name="webviewchromium_date_picker_dialog_title">Set date</string>
     <!-- Title for the date/time picker dialog, which can be used to choose a date and time. [CHAR-LIMIT=32] -->
     <string name="webviewchromium_date_time_picker_dialog_title">Set date and time</string>
+    <!-- Title for the time picker dialog, which can be used to choose a time.  [CHAR-LIMIT=32] -->
+    <string name="webviewchromium_time_picker_dialog_title">Set time</string>
+    <!-- Value for AM in AM/PM in the time picker dialog. AM represents the morning (ante-meridiem). [CHAR-LIMIT=2] -->
+    <string name="webviewchromium_time_picker_dialog_am">AM</string>
+    <!-- Value for PM in AM/PM in the time picker dialog. PM represents the afternoon (post-meridiem). [CHAR-LIMIT=2]-->
+    <string name="webviewchromium_time_picker_dialog_pm">PM</string>
+    <!-- Separator used between hours and minutes in the time pickerr dialog (hh:mm) [CHAR-LIMIT=1] -->
+    <string name="webviewchromium_time_picker_dialog_hour_minute_separator">:</string>
+    <!-- Separator used between minutes and seconds in the time picker dialog (hh:mm:ss) [CHAR-LIMIT=1] -->
+    <string name="webviewchromium_time_picker_dialog_minute_second_separator">:</string>
+    <!-- Separator used between seconds and subseconds in the time picker dialog (hh:mm:ss.sss) [CHAR-LIMIT=1] -->
+    <string name="webviewchromium_time_picker_dialog_second_subsecond_separator">.</string>
     <!-- Title for the month picker dialog, which can be used to choose a month. [CHAR-LIMIT=32] -->
     <string name="webviewchromium_month_picker_dialog_title">Set month</string>
     <!-- Title for the week picker dialog, which can be used to choose a week. [CHAR-LIMIT=32] -->
@@ -39,6 +51,16 @@
     <string name="webviewchromium_accessibility_date_picker_week">Week</string>
     <!-- Content description for the date time picker year component. [CHAR-LIMIT=32] -->
     <string name="webviewchromium_accessibility_date_picker_year">Year</string>
+    <!-- Content description for the time picker hour component.  [CHAR-LIMIT=32] -->
+    <string name="webviewchromium_accessibility_time_picker_hour">Hour</string>
+    <!-- Content description for the time picker minute component. [CHAR-LIMIT=32] -->
+    <string name="webviewchromium_accessibility_time_picker_minute">Minute</string>
+    <!-- Content description for the time picker second component. [CHAR-LIMIT=32] -->
+    <string name="webviewchromium_accessibility_time_picker_second">Second</string>
+    <!-- Content description for the time picker milli component. [CHAR-LIMIT=32] -->
+    <string name="webviewchromium_accessibility_time_picker_milli">Millisecond</string>
+    <!-- Content description for the time picker AM/PM component. [CHAR-LIMIT=32] -->
+    <string name="webviewchromium_accessibility_time_picker_ampm">AM/PM</string>
 
     <!-- Media player -->
     <!-- NO DESCRIPTION [CHAR-LIMIT=32] -->

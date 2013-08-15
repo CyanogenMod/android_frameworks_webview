@@ -36,6 +36,7 @@
   <java-symbol type="layout" name="webviewchromium_color_picker_dialog_title" />
   <java-symbol type="layout" name="webviewchromium_date_time_picker_dialog" />
   <java-symbol type="layout" name="webviewchromium_two_field_date_picker" />
+  <java-symbol type="layout" name="webviewchromium_multi_field_time_picker_dialog" />
 
   <java-symbol type="string" name="webviewchromium_accessibility_content_view" />
   <java-symbol type="string" name="webviewchromium_accessibility_date_picker_month" />
@@ -43,6 +44,12 @@
   <java-symbol type="string" name="webviewchromium_accessibility_date_picker_year" />
   <java-symbol type="string" name="webviewchromium_accessibility_datetime_picker_date" />
   <java-symbol type="string" name="webviewchromium_accessibility_datetime_picker_time" />
+  <java-symbol type="string" name="webviewchromium_accessibility_time_picker_ampm" />
+  <java-symbol type="string" name="webviewchromium_accessibility_time_picker_hour" />
+  <java-symbol type="string" name="webviewchromium_accessibility_time_picker_milli" />
+  <java-symbol type="string" name="webviewchromium_accessibility_time_picker_milli" />
+  <java-symbol type="string" name="webviewchromium_accessibility_time_picker_minute" />
+  <java-symbol type="string" name="webviewchromium_accessibility_time_picker_second" />
   <java-symbol type="string" name="webviewchromium_actionbar_share" />
   <java-symbol type="string" name="webviewchromium_actionbar_web_search" />
   <java-symbol type="string" name="webviewchromium_color_picker_button_cancel" />
@@ -64,6 +71,12 @@
   <java-symbol type="string" name="webviewchromium_media_player_loading_video" />
   <java-symbol type="string" name="webviewchromium_month_picker_dialog_title" />
   <java-symbol type="string" name="webviewchromium_opening_file_error" />
+  <java-symbol type="string" name="webviewchromium_time_picker_dialog_am" />
+  <java-symbol type="string" name="webviewchromium_time_picker_dialog_hour_minute_separator" />
+  <java-symbol type="string" name="webviewchromium_time_picker_dialog_minute_second_separator" />
+  <java-symbol type="string" name="webviewchromium_time_picker_dialog_pm" />
+  <java-symbol type="string" name="webviewchromium_time_picker_dialog_second_subsecond_separator" />
+  <java-symbol type="string" name="webviewchromium_time_picker_dialog_title" />
   <java-symbol type="string" name="webviewchromium_week_picker_dialog_title" />
 
   <java-symbol type="id" name="webviewchromium_autofill_label" />
@@ -79,9 +92,16 @@
   <java-symbol type="id" name="webviewchromium_color_picker_simple_border" />
   <java-symbol type="id" name="webviewchromium_color_picker_text" />
   <java-symbol type="id" name="webviewchromium_color_picker_title" />
+  <java-symbol type="id" name="webviewchromium_ampm" />
   <java-symbol type="id" name="webviewchromium_date_picker" />
+  <java-symbol type="id" name="webviewchromium_hour" />
+  <java-symbol type="id" name="webviewchromium_milli" />
+  <java-symbol type="id" name="webviewchromium_minute" />
   <java-symbol type="id" name="webviewchromium_pickers" />
   <java-symbol type="id" name="webviewchromium_position_in_year" />
+  <java-symbol type="id" name="webviewchromium_second" />
+  <java-symbol type="id" name="webviewchromium_second_colon" />
+  <java-symbol type="id" name="webviewchromium_second_dot" />
   <java-symbol type="id" name="webviewchromium_time_picker" />
   <java-symbol type="id" name="webviewchromium_year" />
 

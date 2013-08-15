@@ -60,14 +60,23 @@ public class ResourceProvider {
 
         // id
 
-        org.chromium.content.R.id.position_in_year =
-                com.android.internal.R.id.webviewchromium_position_in_year;
-        org.chromium.content.R.id.year = com.android.internal.R.id.webviewchromium_year;
-        org.chromium.content.R.id.pickers = com.android.internal.R.id.webviewchromium_pickers;
+        org.chromium.content.R.id.ampm = com.android.internal.R.id.webviewchromium_ampm;
         org.chromium.content.R.id.date_picker =
                 com.android.internal.R.id.webviewchromium_date_picker;
+        org.chromium.content.R.id.hour = com.android.internal.R.id.webviewchromium_hour;
+        org.chromium.content.R.id.milli = com.android.internal.R.id.webviewchromium_milli;
+        org.chromium.content.R.id.minute = com.android.internal.R.id.webviewchromium_minute;
+        org.chromium.content.R.id.pickers = com.android.internal.R.id.webviewchromium_pickers;
+        org.chromium.content.R.id.position_in_year =
+                com.android.internal.R.id.webviewchromium_position_in_year;
+        org.chromium.content.R.id.second = com.android.internal.R.id.webviewchromium_second;
+        org.chromium.content.R.id.second_colon =
+                com.android.internal.R.id.webviewchromium_second_colon;
+        org.chromium.content.R.id.second_dot =
+                com.android.internal.R.id.webviewchromium_second_dot;
         org.chromium.content.R.id.time_picker =
                 com.android.internal.R.id.webviewchromium_time_picker;
+        org.chromium.content.R.id.year = com.android.internal.R.id.webviewchromium_year;
 
         org.chromium.ui.R.id.selected_color_view =
                 com.android.internal.R.id.webviewchromium_color_picker_selected_color_view;
@@ -102,6 +111,8 @@ public class ResourceProvider {
                 com.android.internal.R.layout.webviewchromium_date_time_picker_dialog;
         org.chromium.content.R.layout.two_field_date_picker =
                 com.android.internal.R.layout.webviewchromium_two_field_date_picker;
+        org.chromium.content.R.layout.multi_field_time_picker_dialog =
+                com.android.internal.R.layout.webviewchromium_multi_field_time_picker_dialog;
 
         org.chromium.ui.R.layout.color_picker_dialog_title =
                 com.android.internal.R.layout.webviewchromium_color_picker_dialog_title;
@@ -150,6 +161,10 @@ public class ResourceProvider {
                 com.android.internal.R.string.webviewchromium_media_player_loading_video;
         org.chromium.content.R.string.month_picker_dialog_title =
                 com.android.internal.R.string.webviewchromium_month_picker_dialog_title;
+        org.chromium.content.R.string.time_picker_dialog_am =
+                com.android.internal.R.string.webviewchromium_time_picker_dialog_am;
+        org.chromium.content.R.string.time_picker_dialog_pm =
+                com.android.internal.R.string.webviewchromium_time_picker_dialog_pm;
         org.chromium.content.R.string.week_picker_dialog_title =
                 com.android.internal.R.string.webviewchromium_week_picker_dialog_title;
 
