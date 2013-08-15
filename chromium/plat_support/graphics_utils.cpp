@@ -106,6 +106,12 @@ PixelInfo* TryToCreatePixelInfo(SkCanvas* canvas) {
   const SkBitmap* bitmap = &device->accessBitmap(true);
   if (!bitmap->lockPixelsAreWritable())
     return NULL;
+  const SkRegion& region = layer.clip();
+  layer.next();
+  // Currently don't handle multiple layers well, so early out
+  // TODO: Return all layers in PixelInfo
+  if (!layer.done())
+    return NULL;
 
   UniquePtr<PixelInfo> pixels(new PixelInfo(canvas, bitmap));
   pixels->config =
@@ -124,7 +130,6 @@ PixelInfo* TryToCreatePixelInfo(SkCanvas* canvas) {
     pixels->matrix[i] = matrix.get(i);
   }
 
-  const SkRegion& region = layer.clip();
   if (region.isEmpty()) {
     pixels->AddRectToClip(region.getBounds());
   } else {
