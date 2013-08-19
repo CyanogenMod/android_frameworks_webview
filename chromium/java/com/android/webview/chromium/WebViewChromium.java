@@ -50,6 +50,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.WebViewProvider;
+import android.widget.TextView;
 
 import org.chromium.android_webview.AwBrowserContext;
 import org.chromium.android_webview.AwContents;
@@ -128,7 +129,7 @@ class WebViewChromium implements WebViewProvider,
 
         if (privateBrowsing) {
             final String msg = "Private browsing is not supported in WebView.";
-            if (mAppTargetSdkVersion >= Build.VERSION_CODES.KEY_LIME_PIE) {
+                       if (mAppTargetSdkVersion >= Build.VERSION_CODES.KEY_LIME_PIE) {
                 throw new IllegalArgumentException(msg);
             } else {
                 Log.w(TAG, msg);
@@ -136,6 +137,10 @@ class WebViewChromium implements WebViewProvider,
                 // user data cannot leak through misuse of a non-privateBrowing WebView instance.
                 // Can't just null out mAwContents as we never null-check it before use.
                 mAwContents.destroy();
+                TextView warningLabel = new TextView(mWebView.getContext());
+                warningLabel.setText(mWebView.getContext().getString(
+                        com.android.internal.R.string.webviewchromium_private_browsing_warning));
+                mWebView.addView(warningLabel);
             }
         }
 

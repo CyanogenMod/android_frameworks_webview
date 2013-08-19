@@ -64,6 +64,7 @@
   <java-symbol type="string" name="webviewchromium_media_player_loading_video" />
   <java-symbol type="string" name="webviewchromium_month_picker_dialog_title" />
   <java-symbol type="string" name="webviewchromium_opening_file_error" />
+  <java-symbol type="string" name="webviewchromium_private_browsing_warning" />
   <java-symbol type="string" name="webviewchromium_week_picker_dialog_title" />
 
   <java-symbol type="id" name="webviewchromium_autofill_label" />
