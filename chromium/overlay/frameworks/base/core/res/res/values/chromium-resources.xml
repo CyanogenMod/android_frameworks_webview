@@ -69,6 +69,7 @@
   <add-resource type="string" name="webviewchromium_media_player_loading_video" />
   <add-resource type="string" name="webviewchromium_month_picker_dialog_title" />
   <add-resource type="string" name="webviewchromium_opening_file_error" />
+  <add-resource type="string" name="webviewchromium_private_browsing_warning" />
   <add-resource type="string" name="webviewchromium_time_picker_dialog_am" />
   <add-resource type="string" name="webviewchromium_time_picker_dialog_hour_minute_separator" />
   <add-resource type="string" name="webviewchromium_time_picker_dialog_minute_second_separator" />

@@ -98,4 +98,8 @@
 
     <!--Toast when the browser is unable to open a file for upload. [CHAR-LIMIT=32] -->
     <string name="webviewchromium_opening_file_error">Failed to open selected file</string>
+
+    <!-- Warning shown when the app tries to create a private browsing WebView,
+         which is not supported. [CHAR-LIMIT=NONE] -->
+    <string name="webviewchromium_private_browsing_warning">This functionality is not supported in this version of Android.</string>
 </resources>
