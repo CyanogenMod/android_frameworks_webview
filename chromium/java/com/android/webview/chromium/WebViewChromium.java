@@ -26,6 +26,7 @@ import android.graphics.drawable.Drawable;
 import android.net.http.SslCertificate;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CancellationSignal;
 import android.os.Message;
 import android.util.Base64;
 import android.util.Log;
@@ -403,9 +404,9 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void exportToPdf(OutputStream stream, int width, int height,
-        ValueCallback<Boolean> resultCallback) {
-        // TODO(sgurun) enable this only after upstream part lands
-        //mAwContents.exportToPdf(stream, width, height, resultCallback);
+            ValueCallback<Boolean> resultCallback, CancellationSignal cancellationSignal) {
+        mAwContents.getPdfExporter().exportToPdf(stream, width, height, resultCallback,
+                cancellationSignal);
     }
 
     @Override
