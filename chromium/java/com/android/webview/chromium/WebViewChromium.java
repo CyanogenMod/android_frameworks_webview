@@ -250,7 +250,8 @@ class WebViewChromium implements WebViewProvider,
         final String JAVASCRIPT_SCHEME = "javascript:";
         if (mAppTargetSdkVersion < Build.VERSION_CODES.KEY_LIME_PIE &&
                 url.startsWith(JAVASCRIPT_SCHEME)) {
-            evaluateJavaScript(url.substring(JAVASCRIPT_SCHEME.length()), null);
+            mAwContents.evaluateJavaScriptEvenIfNotYetNavigated(
+                    url.substring(JAVASCRIPT_SCHEME.length()));
             return;
         }
 
