@@ -17,8 +17,7 @@
     <string name="webviewchromium_month_picker_dialog_title" msgid="4740794532390369330">"ወር ያዘጋጁ"</string>
     <string name="webviewchromium_week_picker_dialog_title" msgid="7510337683315786995">"ሳምንት ያዘጋጁ"</string>
     <string name="webviewchromium_accessibility_datetime_picker_date" msgid="3048311035284429477">"ቀን"</string>
-    <!-- no translation found for webviewchromium_accessibility_datetime_picker_time (7658727779659492209) -->
-    <skip />
+    <string name="webviewchromium_accessibility_datetime_picker_time" msgid="7658727779659492209">"ጊዜ"</string>
     <string name="webviewchromium_accessibility_date_picker_month" msgid="3073851955733780910">"ወር"</string>
     <string name="webviewchromium_accessibility_date_picker_week" msgid="3705851794085779778">"ሳምንት"</string>
     <string name="webviewchromium_accessibility_date_picker_year" msgid="1016706432863812811">"አመት"</string>
