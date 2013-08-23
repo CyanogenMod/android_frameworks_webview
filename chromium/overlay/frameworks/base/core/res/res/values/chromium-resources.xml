@@ -32,6 +32,7 @@
   <add-resource type="layout" name="webviewchromium_color_picker_dialog_content" />
   <add-resource type="layout" name="webviewchromium_color_picker_dialog_title" />
   <add-resource type="layout" name="webviewchromium_date_time_picker_dialog" />
+  <add-resource type="layout" name="webviewchromium_multi_field_time_picker_dialog" />
   <add-resource type="layout" name="webviewchromium_two_field_date_picker" />
 
   <add-resource type="id" name="webviewchromium_autofill_popup_window" />
@@ -42,6 +43,11 @@
   <add-resource type="string" name="webviewchromium_accessibility_date_picker_year" />
   <add-resource type="string" name="webviewchromium_accessibility_datetime_picker_date" />
   <add-resource type="string" name="webviewchromium_accessibility_datetime_picker_time" />
+  <add-resource type="string" name="webviewchromium_accessibility_time_picker_ampm" />
+  <add-resource type="string" name="webviewchromium_accessibility_time_picker_hour" />
+  <add-resource type="string" name="webviewchromium_accessibility_time_picker_milli" />
+  <add-resource type="string" name="webviewchromium_accessibility_time_picker_minute" />
+  <add-resource type="string" name="webviewchromium_accessibility_time_picker_second" />
   <add-resource type="string" name="webviewchromium_actionbar_share" />
   <add-resource type="string" name="webviewchromium_actionbar_web_search" />
   <add-resource type="string" name="webviewchromium_color_picker_button_cancel" />
@@ -63,6 +69,13 @@
   <add-resource type="string" name="webviewchromium_media_player_loading_video" />
   <add-resource type="string" name="webviewchromium_month_picker_dialog_title" />
   <add-resource type="string" name="webviewchromium_opening_file_error" />
+  <add-resource type="string" name="webviewchromium_private_browsing_warning" />
+  <add-resource type="string" name="webviewchromium_time_picker_dialog_am" />
+  <add-resource type="string" name="webviewchromium_time_picker_dialog_hour_minute_separator" />
+  <add-resource type="string" name="webviewchromium_time_picker_dialog_minute_second_separator" />
+  <add-resource type="string" name="webviewchromium_time_picker_dialog_pm" />
+  <add-resource type="string" name="webviewchromium_time_picker_dialog_second_subsecond_separator" />
+  <add-resource type="string" name="webviewchromium_time_picker_dialog_title" />
   <add-resource type="string" name="webviewchromium_week_picker_dialog_title" />
 
   <add-resource type="style" name="webviewchromium_AutofillPopupWindow" />
