@@ -919,8 +919,7 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public boolean requestChildRectangleOnScreen(View child, Rect rect, boolean immediate) {
-        UnimplementedWebViewApi.invoke();
-        return false;
+        return mAwContents.requestChildRectangleOnScreen(child, rect, immediate);
     }
 
     @Override
