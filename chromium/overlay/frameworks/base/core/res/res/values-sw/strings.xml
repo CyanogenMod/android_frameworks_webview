@@ -9,7 +9,7 @@
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="webviewchromium_actionbar_share" msgid="8265707764014979342">"Shiriki"</string>
     <string name="webviewchromium_actionbar_web_search" msgid="539283440381511128">"Tafuta kwenye wavuti"</string>
-    <string name="webviewchromium_accessibility_content_view" msgid="4892710761369744296">"Muonekano wa Wavuti"</string>
+    <string name="webviewchromium_accessibility_content_view" msgid="4892710761369744296">"Mwonekano wa Wavuti"</string>
     <string name="webviewchromium_date_picker_dialog_set" msgid="1106446820088863527">"Weka"</string>
     <string name="webviewchromium_date_picker_dialog_clear" msgid="6439296286509386196">"Futa"</string>
     <string name="webviewchromium_date_picker_dialog_title" msgid="2526916586861043590">"Weka tarehe"</string>
@@ -27,13 +27,13 @@
     <string name="webviewchromium_media_player_error_button" msgid="3693971589377075815">"Sawa"</string>
     <string name="webviewchromium_media_player_loading_video" msgid="2617709614462333117">"Inapakia video"</string>
     <string name="webviewchromium_color_picker_button_more" msgid="4501948174158855274">"Zaidi"</string>
-    <string name="webviewchromium_color_picker_hue" msgid="3167662698702871296">"Rangi"</string>
+    <string name="webviewchromium_color_picker_hue" msgid="3167662698702871296">"Uzito wa rangi"</string>
     <string name="webviewchromium_color_picker_saturation" msgid="4190681539297946213">"Ukolezaji"</string>
     <string name="webviewchromium_color_picker_value" msgid="2922652345694917211">"Thamani"</string>
     <string name="webviewchromium_color_picker_button_set" msgid="6981883782092158499">"Weka"</string>
     <string name="webviewchromium_color_picker_button_cancel" msgid="11751988208172211">"Ghairi"</string>
     <string name="webviewchromium_color_picker_dialog_title" msgid="709749370892752246">"Chagua rangi"</string>
-    <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"Haikuweza kukamilisha oparesheni iliyotangulia kutokana na kumbukumbu ndogo"</string>
+    <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"Haikuweza kukamilisha utendaji uliotangulia kutokana na kumbukumbu ndogo"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"Ilishindwa kufungua faili iliyochaguliwa"</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"Utendaji huu hauwezi kutumika katika toleo hili la Android."</string>
 </resources>

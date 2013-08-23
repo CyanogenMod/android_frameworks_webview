@@ -33,7 +33,7 @@
     <string name="webviewchromium_color_picker_button_set" msgid="6981883782092158499">"Indstil"</string>
     <string name="webviewchromium_color_picker_button_cancel" msgid="11751988208172211">"Annuller"</string>
     <string name="webviewchromium_color_picker_dialog_title" msgid="709749370892752246">"Vælg farve"</string>
-    <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"Den foregående handling kunne ikke fuldføres på grund af lav hukommelse"</string>
+    <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"Den foregående handling kunne ikke fuldføres på grund af manglende hukommelse"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"Den valgte fil kunne ikke åbnes"</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"Denne funktion understøttes ikke i denne version af Android."</string>
 </resources>

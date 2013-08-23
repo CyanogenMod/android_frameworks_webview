@@ -22,7 +22,7 @@
     <string name="webviewchromium_accessibility_date_picker_week" msgid="3705851794085779778">"Týden"</string>
     <string name="webviewchromium_accessibility_date_picker_year" msgid="1016706432863812811">"Rok"</string>
     <string name="webviewchromium_media_player_error_title" msgid="1520808434237404056">"Video nelze přehrát"</string>
-    <string name="webviewchromium_media_player_error_text_invalid_progressive_playback" msgid="7520069921018550187">"Omlouváme se, ale toto video nelze přenášet datovým proudem do tohoto zařízení."</string>
+    <string name="webviewchromium_media_player_error_text_invalid_progressive_playback" msgid="7520069921018550187">"Omlouváme se, ale toto video nelze streamovat do tohoto zařízení."</string>
     <string name="webviewchromium_media_player_error_text_unknown" msgid="7167964728541888883">"Toto video bohužel nelze přehrát."</string>
     <string name="webviewchromium_media_player_error_button" msgid="3693971589377075815">"OK"</string>
     <string name="webviewchromium_media_player_loading_video" msgid="2617709614462333117">"Načítání videa"</string>
