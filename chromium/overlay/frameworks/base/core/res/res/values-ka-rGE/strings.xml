@@ -33,7 +33,7 @@
     <string name="webviewchromium_color_picker_button_set" msgid="6981883782092158499">"დაყენება"</string>
     <string name="webviewchromium_color_picker_button_cancel" msgid="11751988208172211">"გაუქმება"</string>
     <string name="webviewchromium_color_picker_dialog_title" msgid="709749370892752246">"აირჩიეთ ფერი"</string>
-    <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"მცირე მეხსიერების გამო წინა ოპეარციის დასრულება ვერ მოხერხდა."</string>
+    <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"მცირე მეხსიერების გამო წინა ოპერაციის დასრულება ვერ მოხერხდა."</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"არჩეული ფაილის გახსნა ვერ მოხერხდა"</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"Android-ის ამ ვერსიაში ეს ფუნქცია მხარდაჭერილი არ არის."</string>
 </resources>

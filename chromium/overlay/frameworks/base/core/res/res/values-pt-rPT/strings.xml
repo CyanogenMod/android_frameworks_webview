@@ -22,8 +22,8 @@
     <string name="webviewchromium_accessibility_date_picker_week" msgid="3705851794085779778">"Semana"</string>
     <string name="webviewchromium_accessibility_date_picker_year" msgid="1016706432863812811">"Ano"</string>
     <string name="webviewchromium_media_player_error_title" msgid="1520808434237404056">"Impossível reproduzir vídeo"</string>
-    <string name="webviewchromium_media_player_error_text_invalid_progressive_playback" msgid="7520069921018550187">"Lamentamos, este vídeo não é válido para transmissão em sequência neste dispositivo."</string>
-    <string name="webviewchromium_media_player_error_text_unknown" msgid="7167964728541888883">"Lamentamos, não é possível reproduzir este vídeo."</string>
+    <string name="webviewchromium_media_player_error_text_invalid_progressive_playback" msgid="7520069921018550187">"Lamentamos, mas este vídeo não é válido para transmissão em sequência neste dispositivo."</string>
+    <string name="webviewchromium_media_player_error_text_unknown" msgid="7167964728541888883">"Lamentamos, mas não é possível reproduzir este vídeo."</string>
     <string name="webviewchromium_media_player_error_button" msgid="3693971589377075815">"OK"</string>
     <string name="webviewchromium_media_player_loading_video" msgid="2617709614462333117">"A carregar vídeo"</string>
     <string name="webviewchromium_color_picker_button_more" msgid="4501948174158855274">"Mais"</string>
