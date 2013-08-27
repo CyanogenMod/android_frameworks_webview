@@ -229,7 +229,9 @@ class WebViewChromium implements WebViewProvider,
     @Override
     public void setNetworkAvailable(boolean networkUp) {
         checkThread();
-        NetworkChangeNotifier.forceConnectivityState(networkUp);
+        // Note that this purely toggles the JS navigator.online property.
+        // It does not in affect chromium or network stack state in any way.
+        mAwContents.setNetworkAvailable(networkUp);
     }
 
     @Override
