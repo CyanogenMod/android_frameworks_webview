@@ -147,12 +147,21 @@ class WebViewChromium implements WebViewProvider,
 
     }
 
+    private RuntimeException createThreadException() {
+        return new IllegalStateException("Calling View methods on another thread than the UI " +
+                "thread. PLEASE FILE A BUG! go/klp-webview-bug");
+    }
+
     //  Intentionally not static, as no need to check thread on static methods
     private void checkThread() {
         if (!ThreadUtils.runningOnUiThread()) {
-            throw new IllegalStateException(
-                    "Calling View methods on another thread than the UI thread. " +
-                    "PLEASE FILE A BUG! go/klp-webview-bug");
+            final RuntimeException threadViolation = createThreadException();
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    throw threadViolation;
+                }
+            });
         }
     }
 
@@ -794,8 +803,8 @@ class WebViewChromium implements WebViewProvider,
     // WebViewProvider glue methods ---------------------------------------------------------------
 
     @Override
+    // This needs to be kept thread safe!
     public WebViewProvider.ViewDelegate getViewDelegate() {
-        checkThread();
         return this;
     }
 
@@ -1046,9 +1055,19 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public void setBackgroundColor(int color) {
-        checkThread();
-        mAwContents.setBackgroundColor(color);
+    public void setBackgroundColor(final int color) {
+        if (ThreadUtils.runningOnUiThread()) {
+            mAwContents.setBackgroundColor(color);
+        } else {
+            // Disallowed in WebView API for apps targetting a new SDK
+            assert mAppTargetSdkVersion < Build.VERSION_CODES.JELLY_BEAN_MR2;
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mAwContents.setBackgroundColor(color);
+                }
+            });
+        }
     }
 
     @Override
