@@ -102,6 +102,7 @@ class WebViewChromium implements WebViewProvider,
 
     public WebViewChromium(WebView webView, WebView.PrivateAccess webViewPrivate,
             AwBrowserContext browserContext) {
+        checkThread();
         mWebView = webView;
         mWebViewPrivate = webViewPrivate;
         mHitTestResult = new WebView.HitTestResult();
@@ -162,6 +163,7 @@ class WebViewChromium implements WebViewProvider,
                     throw threadViolation;
                 }
             });
+            throw createThreadException();
         }
     }
 
