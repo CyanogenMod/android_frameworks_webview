@@ -24,7 +24,7 @@
     <string name="webviewchromium_media_player_error_title" msgid="1520808434237404056">"वीडियो चलाया नहीं जा सकता"</string>
     <string name="webviewchromium_media_player_error_text_invalid_progressive_playback" msgid="7520069921018550187">"क्षमा करें, यह वीडियो इस उपकरण पर स्ट्रीमिंग के लिए मान्‍य नहीं है."</string>
     <string name="webviewchromium_media_player_error_text_unknown" msgid="7167964728541888883">"क्षमा करें, यह वीडियो चलाया नहीं जा सकता."</string>
-    <string name="webviewchromium_media_player_error_button" msgid="3693971589377075815">"ठीक"</string>
+    <string name="webviewchromium_media_player_error_button" msgid="3693971589377075815">"ठीक है"</string>
     <string name="webviewchromium_media_player_loading_video" msgid="2617709614462333117">"वीडियो लोड हो रहा है"</string>
     <string name="webviewchromium_color_picker_button_more" msgid="4501948174158855274">"अधिक"</string>
     <string name="webviewchromium_color_picker_hue" msgid="3167662698702871296">"रंग"</string>
