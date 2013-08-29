@@ -28,6 +28,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CancellationSignal;
 import android.os.Message;
+import android.os.ParcelFileDescriptor;
+import android.print.PrintAttributes;
 import android.util.Base64;
 import android.util.Log;
 import android.view.HardwareCanvas;
@@ -55,13 +57,13 @@ import android.widget.TextView;
 
 import org.chromium.android_webview.AwBrowserContext;
 import org.chromium.android_webview.AwContents;
+import org.chromium.android_webview.AwPdfExportAttributes;
 import org.chromium.base.ThreadUtils;
 import org.chromium.content.browser.LoadUrlParams;
 import org.chromium.net.NetworkChangeNotifier;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
@@ -458,11 +460,48 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public void exportToPdf(OutputStream stream, int width, int height,
-            ValueCallback<Boolean> resultCallback, CancellationSignal cancellationSignal) {
+    public void exportToPdf(ParcelFileDescriptor fd, PrintAttributes attributes,
+            ValueCallback<Boolean> resultCallback, CancellationSignal cancellationSignal)
+            throws java.io.IOException {
         checkThread();
-        mAwContents.getPdfExporter().exportToPdf(stream, width, height, resultCallback,
+        // We convert frameworks attributes to an android_webview specific print attributes
+        // so we do not tie upstreaming android_webview changes to installation of correct
+        // SDK to try bots.
+        if (attributes == null) {
+            throw new IllegalArgumentException("attributes cannot be null");
+        }
+        if (attributes.getMediaSize() == null) {
+            throw new  IllegalArgumentException("attributes must specify a media size");
+        }
+        if (attributes.getResolution() == null) {
+            throw new IllegalArgumentException("attributes must specify print resolution");
+        }
+        if (attributes.getMargins() == null) {
+            throw new IllegalArgumentException("attributes must specify margins");
+        }
+        AwPdfExportAttributes pdfAttributes = new AwPdfExportAttributes();
+        pdfAttributes.pageWidth = attributes.getMediaSize().getWidthMils();
+        pdfAttributes.pageHeight = attributes.getMediaSize().getHeightMils();
+        pdfAttributes.dpi = getPrintDpi(attributes);
+        pdfAttributes.leftMargin = attributes.getMargins().getLeftMils();
+        pdfAttributes.rightMargin = attributes.getMargins().getRightMils();
+        pdfAttributes.topMargin = attributes.getMargins().getTopMils();
+        pdfAttributes.bottomMargin = attributes.getMargins().getBottomMils();
+
+        mAwContents.getPdfExporter().exportToPdf(fd, pdfAttributes, resultCallback,
                 cancellationSignal);
+    }
+
+    private static int getPrintDpi(PrintAttributes attributes) {
+        // TODO(sgurun) android print attributes support horizontal and
+        // vertical DPI. Chrome has only one DPI. Revisit this.
+        int horizontalDpi = attributes.getResolution().getHorizontalDpi();
+        int verticalDpi = attributes.getResolution().getVerticalDpi();
+        if (horizontalDpi != verticalDpi) {
+            Log.w(TAG, "Horizontal and vertical DPIs differ. Using horizontal DPI " +
+                    " hDpi=" + horizontalDpi + " vDPI=" + verticalDpi);
+        }
+        return horizontalDpi;
     }
 
     @Override
