@@ -33,14 +33,14 @@
     <string name="webviewchromium_accessibility_time_picker_milli" msgid="2292614892317672079">"Millisecond"</string>
     <string name="webviewchromium_accessibility_time_picker_ampm" msgid="962162358043185447">"AM/PM"</string>
     <string name="webviewchromium_media_player_error_title" msgid="1520808434237404056">"Hindi mape-play ang video"</string>
-    <string name="webviewchromium_media_player_error_text_invalid_progressive_playback" msgid="7520069921018550187">"Paumanhin, hindi wasto para sa streaming sa device na ito ang video na ito."</string>
+    <string name="webviewchromium_media_player_error_text_invalid_progressive_playback" msgid="7520069921018550187">"Paumanhin, ang video na ito ay hindi wasto para sa streaming sa device na ito."</string>
     <string name="webviewchromium_media_player_error_text_unknown" msgid="7167964728541888883">"Paumanhin, hindi mape-play ang video na ito."</string>
     <string name="webviewchromium_media_player_error_button" msgid="3693971589377075815">"OK"</string>
     <string name="webviewchromium_media_player_loading_video" msgid="2617709614462333117">"Nilo-load ang video"</string>
     <string name="webviewchromium_color_picker_button_more" msgid="4501948174158855274">"Higit pa"</string>
-    <string name="webviewchromium_color_picker_hue" msgid="3167662698702871296">"Kulay"</string>
+    <string name="webviewchromium_color_picker_hue" msgid="3167662698702871296">"Hue"</string>
     <string name="webviewchromium_color_picker_saturation" msgid="4190681539297946213">"Saturation"</string>
-    <string name="webviewchromium_color_picker_value" msgid="2922652345694917211">"Halaga"</string>
+    <string name="webviewchromium_color_picker_value" msgid="2922652345694917211">"Value"</string>
     <string name="webviewchromium_color_picker_button_set" msgid="6981883782092158499">"Itakda"</string>
     <string name="webviewchromium_color_picker_button_cancel" msgid="11751988208172211">"Kanselahin"</string>
     <string name="webviewchromium_color_picker_dialog_title" msgid="709749370892752246">"Pumili ng kulay"</string>

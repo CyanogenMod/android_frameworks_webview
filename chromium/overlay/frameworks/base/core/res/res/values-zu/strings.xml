@@ -45,6 +45,6 @@
     <string name="webviewchromium_color_picker_button_cancel" msgid="11751988208172211">"Khansela"</string>
     <string name="webviewchromium_color_picker_dialog_title" msgid="709749370892752246">"Khetha umbala"</string>
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"Ayikwazanga ukuqedela ukusebenza kwangaphambilini ngenxa yememori ephansi"</string>
-    <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"Ihluleke ukuvula ifayela elikhethiwe"</string>
+    <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"Ihlulekile ukuvula ifayela elikhethiwe"</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"Lokhu kusebenza akusekelwe kule nguqulo ye-Android."</string>
 </resources>

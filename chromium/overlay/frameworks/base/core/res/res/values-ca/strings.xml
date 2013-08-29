@@ -33,7 +33,7 @@
     <string name="webviewchromium_accessibility_time_picker_milli" msgid="2292614892317672079">"Mil·lisegon"</string>
     <string name="webviewchromium_accessibility_time_picker_ampm" msgid="962162358043185447">"a. m./p. m."</string>
     <string name="webviewchromium_media_player_error_title" msgid="1520808434237404056">"No es pot reproduir el vídeo"</string>
-    <string name="webviewchromium_media_player_error_text_invalid_progressive_playback" msgid="7520069921018550187">"Aquest vídeo no és vàlid per emetre\'s en aquest dispositiu."</string>
+    <string name="webviewchromium_media_player_error_text_invalid_progressive_playback" msgid="7520069921018550187">"Aquest vídeo no es pot reproduir al dispositiu."</string>
     <string name="webviewchromium_media_player_error_text_unknown" msgid="7167964728541888883">"No es pot reproduir aquest vídeo."</string>
     <string name="webviewchromium_media_player_error_button" msgid="3693971589377075815">"D\'acord"</string>
     <string name="webviewchromium_media_player_loading_video" msgid="2617709614462333117">"Carregant vídeo"</string>
@@ -44,7 +44,7 @@
     <string name="webviewchromium_color_picker_button_set" msgid="6981883782092158499">"Configura"</string>
     <string name="webviewchromium_color_picker_button_cancel" msgid="11751988208172211">"Cancel·la"</string>
     <string name="webviewchromium_color_picker_dialog_title" msgid="709749370892752246">"Selecció del color"</string>
-    <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"No es pot completar l\'operació anterior a causa de la poca memòria"</string>
+    <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"No hi ha prou memòria per completar l\'operació"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"No es pot obrir fitxer selecc."</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"No s\'admet aquesta funcionalitat en aquesta versió d\'Android."</string>
 </resources>
