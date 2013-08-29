@@ -43,8 +43,8 @@
     <string name="webviewchromium_color_picker_value" msgid="2922652345694917211">"Вредност"</string>
     <string name="webviewchromium_color_picker_button_set" msgid="6981883782092158499">"Подеси"</string>
     <string name="webviewchromium_color_picker_button_cancel" msgid="11751988208172211">"Откажи"</string>
-    <string name="webviewchromium_color_picker_dialog_title" msgid="709749370892752246">"Избор боје"</string>
+    <string name="webviewchromium_color_picker_dialog_title" msgid="709749370892752246">"Изаберите боју"</string>
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"Није могуће довршити претходну радњу због недовољне количине слободне меморије"</string>
-    <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"Отв. изаб. датотеке није могуће"</string>
+    <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"Отварање те датотеке није могуће"</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"Ова функција није подржана у овој верзији Android-а."</string>
 </resources>

@@ -15,8 +15,8 @@
     <string name="webviewchromium_date_picker_dialog_title" msgid="2526916586861043590">"Установити дату"</string>
     <string name="webviewchromium_date_time_picker_dialog_title" msgid="1993749766330125085">"Установити дату та час"</string>
     <string name="webviewchromium_time_picker_dialog_title" msgid="8828361788181511983">"Установити час"</string>
-    <string name="webviewchromium_time_picker_dialog_am" msgid="7424804671722276100">"д.п."</string>
-    <string name="webviewchromium_time_picker_dialog_pm" msgid="287892195028148832">"п.п."</string>
+    <string name="webviewchromium_time_picker_dialog_am" msgid="7424804671722276100">"дп"</string>
+    <string name="webviewchromium_time_picker_dialog_pm" msgid="287892195028148832">"пп"</string>
     <string name="webviewchromium_time_picker_dialog_hour_minute_separator" msgid="1529838642172387774">":"</string>
     <string name="webviewchromium_time_picker_dialog_minute_second_separator" msgid="4209757337006414682">":"</string>
     <string name="webviewchromium_time_picker_dialog_second_subsecond_separator" msgid="2431647265638022425">"."</string>
@@ -31,7 +31,7 @@
     <string name="webviewchromium_accessibility_time_picker_minute" msgid="6248299523645733594">"Хвилина"</string>
     <string name="webviewchromium_accessibility_time_picker_second" msgid="4035159448510540572">"Секунда"</string>
     <string name="webviewchromium_accessibility_time_picker_milli" msgid="2292614892317672079">"Мілісекунда"</string>
-    <string name="webviewchromium_accessibility_time_picker_ampm" msgid="962162358043185447">"д.п./п.п."</string>
+    <string name="webviewchromium_accessibility_time_picker_ampm" msgid="962162358043185447">"дп/пп"</string>
     <string name="webviewchromium_media_player_error_title" msgid="1520808434237404056">"Неможливо відтворити відео"</string>
     <string name="webviewchromium_media_player_error_text_invalid_progressive_playback" msgid="7520069921018550187">"На жаль, відео непридатне для потокового передавання на цей пристрій."</string>
     <string name="webviewchromium_media_player_error_text_unknown" msgid="7167964728541888883">"На жаль, неможливо відтворити це відео."</string>

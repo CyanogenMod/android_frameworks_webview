@@ -15,8 +15,8 @@
     <string name="webviewchromium_date_picker_dialog_title" msgid="2526916586861043590">"날짜 설정"</string>
     <string name="webviewchromium_date_time_picker_dialog_title" msgid="1993749766330125085">"날짜 및 시간 설정"</string>
     <string name="webviewchromium_time_picker_dialog_title" msgid="8828361788181511983">"시간 설정"</string>
-    <string name="webviewchromium_time_picker_dialog_am" msgid="7424804671722276100">"AM"</string>
-    <string name="webviewchromium_time_picker_dialog_pm" msgid="287892195028148832">"PM"</string>
+    <string name="webviewchromium_time_picker_dialog_am" msgid="7424804671722276100">"오전"</string>
+    <string name="webviewchromium_time_picker_dialog_pm" msgid="287892195028148832">"오후"</string>
     <string name="webviewchromium_time_picker_dialog_hour_minute_separator" msgid="1529838642172387774">":"</string>
     <string name="webviewchromium_time_picker_dialog_minute_second_separator" msgid="4209757337006414682">":"</string>
     <string name="webviewchromium_time_picker_dialog_second_subsecond_separator" msgid="2431647265638022425">"."</string>
