@@ -51,7 +51,7 @@
       Sorry, this video cannot be played.</string>
     <!-- NO DESCRIPTION [CHAR-LIMIT=16] -->
     <string name="webviewchromium_media_player_error_button">OK</string>
-    <!-- NO DESCRIPTION [CHAR-LIMIT=16] -->
+    <!-- NO DESCRIPTION [CHAR-LIMIT=20] -->
     <string name="webviewchromium_media_player_loading_video">Loading video</string>
 
     <!-- Text for Color Picker button to go to advanced view. [CHAR-LIMIT=20] -->
