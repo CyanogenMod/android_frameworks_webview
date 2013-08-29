@@ -536,7 +536,7 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public int getProgress() {
-        checkThread();
+        // No checkThread() because the value is cached java side (workaround for b/10533304).
         return mAwContents.getMostRecentProgress();
     }
 
