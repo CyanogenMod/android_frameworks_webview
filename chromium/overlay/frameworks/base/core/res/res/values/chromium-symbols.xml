@@ -107,4 +107,5 @@
   <java-symbol type="id" name="webviewchromium_year" />
 
   <java-symbol type="style" name="webviewchromium_AutofillPopupWindow" />
+  <java-symbol type="style" name="webviewchromium_ContentActionBar" />
 </resources>

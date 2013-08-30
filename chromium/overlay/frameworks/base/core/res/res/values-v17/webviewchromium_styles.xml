@@ -10,4 +10,9 @@
     <style name="webviewchromium_AutofillPopupWindow" parent="@android:style/Widget.ListPopupWindow">
         <item name="android:popupBackground">@drawable/webviewchromium_autofill_popup_background</item>
     </style>
+    <style name="webviewchromium_ContentActionBar">
+        <!-- Intentionally does not define any style items. The items that the
+             content/ layer defines upstream are resolved via internal private
+             framework attributes. -->
+    </style>
 </resources>
