@@ -628,7 +628,7 @@ class WebViewChromium implements WebViewProvider,
     @Override
     public void freeMemory() {
         checkThread();
-        UnimplementedWebViewApi.invoke();
+        // Intentional no-op. Memory is managed automatically by Chromium.
     }
 
     @Override
