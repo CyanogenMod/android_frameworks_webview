@@ -19,7 +19,7 @@ package com.android.webview.chromium;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Build;
-import android.util.TypedValue;
+import android.content.res.TypedArray;
 
 import org.chromium.android_webview.AwResource;
 
@@ -35,8 +35,6 @@ public class ResourceProvider {
 
         AwResource.setResources(context.getResources());
 
-        Resources.Theme theme = context.getTheme();
-
         // color
         org.chromium.ui.R.color.color_picker_border_color =
                 com.android.internal.R.color.webviewchromium_color_picker_border_color;
@@ -49,9 +47,9 @@ public class ResourceProvider {
         // drawable
 
         org.chromium.content.R.drawable.ic_menu_share_holo_light =
-                resolveThemeAttr(theme, com.android.internal.R.attr.actionModeShareDrawable);
-        org.chromium.content.R.drawable.ic_menu_search_holo_light =
-                resolveThemeAttr(theme, com.android.internal.R.attr.actionModeWebSearchDrawable);
+                resolveStyledAttr(context, com.android.internal.R.attr.actionModeShareDrawable);
+        org.chromium.content.R.drawable.ic_menu_search_holo_light = resolveStyledAttr(context,
+                com.android.internal.R.attr.actionModeWebSearchDrawable);
         org.chromium.content.R.drawable.ondemand_overlay =
                 com.android.internal.R.drawable.webviewchromium_ondemand_overlay;
 
@@ -209,10 +207,11 @@ public class ResourceProvider {
         sInitialized = true;
     }
 
-    private static int resolveThemeAttr(Resources.Theme theme, int attr) {
-        TypedValue valueHolder = new TypedValue();
-        theme.resolveAttribute(attr, valueHolder, true);
-        return valueHolder.resourceId;
+    private static int resolveStyledAttr(Context context, int attr) {
+        TypedArray styledAttribute = context.obtainStyledAttributes(new int[] { attr });
+        int styledResource = styledAttribute.getResourceId(0, 0);
+        styledAttribute.recycle();
+        return styledResource;
     }
 
     // Verify that all the fields of the inner classes of |R| have a valid mapping.
