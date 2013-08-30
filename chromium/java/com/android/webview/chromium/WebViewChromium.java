@@ -1159,6 +1159,11 @@ class WebViewChromium implements WebViewProvider,
             UnimplementedWebViewApi.invoke();
         }
 
+        // TODO: Add @Override
+        public boolean super_performHapticFeedback(int feedbackConstant) {
+            return super.performHapticFeedback(feedbackConstant);
+        }
+
         @Override
         public int super_getScrollBarStyle() {
             return mWebViewPrivate.super_getScrollBarStyle();
