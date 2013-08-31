@@ -788,13 +788,11 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void dumpViewHierarchyWithProperties(BufferedWriter out, int level) {
-        checkThread();
         UnimplementedWebViewApi.invoke();
     }
 
     @Override
     public View findHierarchyView(String className, int hashCode) {
-        checkThread();
         UnimplementedWebViewApi.invoke();
         return null;
     }
