@@ -16,6 +16,7 @@
 
 package com.android.webview.chromium;
 
+import android.content.ComponentCallbacks2;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -54,6 +55,7 @@ import android.widget.TextView;
 
 import org.chromium.android_webview.AwBrowserContext;
 import org.chromium.android_webview.AwContents;
+import org.chromium.base.MemoryPressureListener;
 import org.chromium.base.ThreadUtils;
 import org.chromium.content.browser.LoadUrlParams;
 import org.chromium.net.NetworkChangeNotifier;
@@ -588,7 +590,14 @@ class WebViewChromium implements WebViewProvider,
     @Override
     public void freeMemory() {
         checkThread();
-        // Intentional no-op. Memory is managed automatically by Chromium.
+        // This method is not intended to have any effect on release builds,
+        // since memory is managed automatically by Chromium.
+        // However, in debug builds, this method is exploited by our WebView
+        // memory benchmarks to synthesize the memory pressure signal.
+        if (Build.IS_DEBUGGABLE) {
+            MemoryPressureListener.simulateMemoryPressureSignal(
+                    ComponentCallbacks2.TRIM_MEMORY_COMPLETE);
+        }
     }
 
     @Override
