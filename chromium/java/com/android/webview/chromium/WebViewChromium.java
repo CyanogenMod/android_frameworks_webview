@@ -130,7 +130,7 @@ class WebViewChromium implements WebViewProvider,
 
         if (privateBrowsing) {
             final String msg = "Private browsing is not supported in WebView.";
-            if (mAppTargetSdkVersion >= Build.VERSION_CODES.KEY_LIME_PIE) {
+            if (mAppTargetSdkVersion >= Build.VERSION_CODES.KITKAT) {
                 throw new IllegalArgumentException(msg);
             } else {
                 Log.w(TAG, msg);
@@ -281,7 +281,7 @@ class WebViewChromium implements WebViewProvider,
         // Matching Chrome behavior more closely; apps targetting >= K that load a JS URL will
         // have the result of that URL replace the content of the current page.
         final String JAVASCRIPT_SCHEME = "javascript:";
-        if (mAppTargetSdkVersion < Build.VERSION_CODES.KEY_LIME_PIE &&
+        if (mAppTargetSdkVersion < Build.VERSION_CODES.KITKAT &&
                 url.startsWith(JAVASCRIPT_SCHEME)) {
             mAwContents.evaluateJavaScriptEvenIfNotYetNavigated(
                     url.substring(JAVASCRIPT_SCHEME.length()));
