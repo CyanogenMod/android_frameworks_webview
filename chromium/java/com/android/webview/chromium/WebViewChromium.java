@@ -129,6 +129,8 @@ class WebViewChromium implements WebViewProvider,
         mContentsClientAdapter = new WebViewContentsClientAdapter(mWebView);
         mAwContents = new AwContents(mBrowserContext, mWebView, new InternalAccessAdapter(),
                 mContentsClientAdapter, isAccessFromFileURLsGrantedByDefault);
+        mWebSettings = new ContentSettingsAdapter(mAwContents.getSettings());
+
 
         if (privateBrowsing) {
             final String msg = "Private browsing is not supported in WebView.";
@@ -747,10 +749,6 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public WebSettings getSettings() {
-        checkThread();
-        if (mWebSettings == null) {
-            mWebSettings = new ContentSettingsAdapter(mAwContents.getSettings());
-        }
         return mWebSettings;
     }
 
