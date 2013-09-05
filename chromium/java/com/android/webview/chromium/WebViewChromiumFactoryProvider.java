@@ -16,7 +16,9 @@
 
 package com.android.webview.chromium;
 
+import android.app.ActivityManager;
 import android.app.ActivityThread;
+import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -38,6 +40,7 @@ import org.chromium.android_webview.AwFormDatabase;
 import org.chromium.android_webview.AwGeolocationPermissions;
 import org.chromium.android_webview.AwQuotaManagerBridge;
 import org.chromium.android_webview.AwSettings;
+import org.chromium.base.MemoryPressureListener;
 import org.chromium.base.PathService;
 import org.chromium.base.ThreadUtils;
 import org.chromium.content.app.LibraryLoader;
@@ -187,6 +190,14 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
                     @Override
                     public String getDefaultUserAgent(Context context) {
                         return AwSettings.getDefaultUserAgent();
+                    }
+
+                    @Override
+                    public void freeMemoryForTests() {
+                        if (ActivityManager.isRunningInTestHarness()) {
+                            MemoryPressureListener.simulateMemoryPressureSignal(
+                                    ComponentCallbacks2.TRIM_MEMORY_COMPLETE);
+                        }
                     }
                 };
             }
