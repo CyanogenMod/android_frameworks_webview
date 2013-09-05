@@ -584,7 +584,7 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public int getContentHeight() {
-        checkThread();
+        // No checkThread() as it is mostly thread safe (workaround for b/10594869).
         return mAwContents.getContentHeightCss();
     }
 
