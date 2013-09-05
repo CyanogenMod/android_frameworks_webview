@@ -54,6 +54,7 @@ import android.widget.TextView;
 
 import org.chromium.android_webview.AwBrowserContext;
 import org.chromium.android_webview.AwContents;
+import org.chromium.android_webview.AwLayoutSizer;
 import org.chromium.base.ThreadUtils;
 import org.chromium.content.browser.LoadUrlParams;
 import org.chromium.net.NetworkChangeNotifier;
@@ -123,12 +124,14 @@ class WebViewChromium implements WebViewProvider,
         // BUG=6790250 |javaScriptInterfaces| was only ever used by the obsolete DumpRenderTree
         // so is ignored. TODO: remove it from WebViewProvider.
         final boolean isAccessFromFileURLsGrantedByDefault =
-                 mAppTargetSdkVersion < Build.VERSION_CODES.JELLY_BEAN;
+                mAppTargetSdkVersion < Build.VERSION_CODES.JELLY_BEAN;
+        final boolean areLegacyQuirksEnabled =
+                mAppTargetSdkVersion < Build.VERSION_CODES.KITKAT;
         mContentsClientAdapter = new WebViewContentsClientAdapter(mWebView);
         mAwContents = new AwContents(mBrowserContext, mWebView, new InternalAccessAdapter(),
-                mContentsClientAdapter, isAccessFromFileURLsGrantedByDefault);
+                mContentsClientAdapter, isAccessFromFileURLsGrantedByDefault,
+                new AwLayoutSizer(), areLegacyQuirksEnabled);
         mWebSettings = new ContentSettingsAdapter(mAwContents.getSettings());
-
 
         if (privateBrowsing) {
             final String msg = "Private browsing is not supported in WebView.";
