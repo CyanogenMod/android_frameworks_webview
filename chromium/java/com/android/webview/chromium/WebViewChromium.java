@@ -30,6 +30,7 @@ import android.os.CancellationSignal;
 import android.os.Message;
 import android.os.ParcelFileDescriptor;
 import android.print.PrintAttributes;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.view.HardwareCanvas;
@@ -314,6 +315,22 @@ class WebViewChromium implements WebViewProvider,
         loadUrlOnUiThread(params);
     }
 
+    private static String fixupMimeType(String mimeType) {
+        return TextUtils.isEmpty(mimeType) ? "text/html" : mimeType;
+    }
+
+    private static String fixupData(String data) {
+        return TextUtils.isEmpty(data) ? "" : data;
+    }
+
+    private static String fixupBase(String url) {
+        return TextUtils.isEmpty(url) ? "about:blank" : url;
+    }
+
+    private static String fixupHistory(String url) {
+        return TextUtils.isEmpty(url) ? "about:blank" : url;
+    }
+
     private static boolean isBase64Encoded(String encoding) {
         return "base64".equals(encoding);
     }
@@ -321,22 +338,25 @@ class WebViewChromium implements WebViewProvider,
     @Override
     public void loadData(String data, String mimeType, String encoding) {
         loadUrlOnUiThread(LoadUrlParams.createLoadDataParams(
-                data, mimeType, isBase64Encoded(encoding)));
+                fixupData(data), fixupMimeType(mimeType), isBase64Encoded(encoding)));
     }
 
     @Override
     public void loadDataWithBaseURL(String baseUrl, String data, String mimeType, String encoding,
             String historyUrl) {
+        data = fixupData(data);
+        mimeType = fixupMimeType(mimeType);
         LoadUrlParams loadUrlParams;
+        baseUrl = fixupBase(baseUrl);
+        historyUrl = fixupHistory(historyUrl);
 
-        if (baseUrl != null && baseUrl.startsWith("data:")) {
+        if (baseUrl.startsWith("data:")) {
             // For backwards compatibility with WebViewClassic, we use the value of |encoding|
             // as the charset, as long as it's not "base64".
             boolean isBase64 = isBase64Encoded(encoding);
             loadUrlParams = LoadUrlParams.createLoadDataParamsWithBaseUrl(
                     data, mimeType, isBase64, baseUrl, historyUrl, isBase64 ? null : encoding);
         } else {
-            if (baseUrl == null || baseUrl.length() == 0) baseUrl = "about:blank";
             // When loading data with a non-data: base URL, the classic WebView would effectively
             // "dump" that string of data into the WebView without going through regular URL
             // loading steps such as decoding URL-encoded entities. We achieve this same behavior by
