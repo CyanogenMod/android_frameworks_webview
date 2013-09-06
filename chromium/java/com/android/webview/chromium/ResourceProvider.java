@@ -19,7 +19,6 @@ package com.android.webview.chromium;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Build;
-import android.content.res.TypedArray;
 
 import org.chromium.android_webview.AwResource;
 
@@ -35,6 +34,12 @@ public class ResourceProvider {
 
         AwResource.setResources(context.getResources());
 
+        // attr
+        org.chromium.content.R.attr.action_mode_share_drawable =
+                com.android.internal.R.attr.actionModeShareDrawable;
+        org.chromium.content.R.attr.action_mode_web_search_drawable =
+                com.android.internal.R.attr.actionModeWebSearchDrawable;
+
         // color
         org.chromium.ui.R.color.color_picker_border_color =
                 com.android.internal.R.color.webviewchromium_color_picker_border_color;
@@ -45,11 +50,6 @@ public class ResourceProvider {
                 com.android.internal.R.dimen.webviewchromium_link_preview_overlay_radius;
 
         // drawable
-
-        org.chromium.content.R.drawable.ic_menu_share_holo_light =
-                resolveStyledAttr(context, com.android.internal.R.attr.actionModeShareDrawable);
-        org.chromium.content.R.drawable.ic_menu_search_holo_light = resolveStyledAttr(context,
-                com.android.internal.R.attr.actionModeWebSearchDrawable);
         org.chromium.content.R.drawable.ondemand_overlay =
                 com.android.internal.R.drawable.webviewchromium_ondemand_overlay;
 
@@ -172,6 +172,8 @@ public class ResourceProvider {
 
         // style
 
+        org.chromium.content.R.style.ContentActionBar =
+                com.android.internal.R.style.webviewchromium_ContentActionBar;
         org.chromium.ui.R.style.AutofillPopupWindow =
                 com.android.internal.R.style.webviewchromium_AutofillPopupWindow;
 
@@ -190,13 +192,6 @@ public class ResourceProvider {
                 com.android.internal.R.string.default_text_encoding;
 
         sInitialized = true;
-    }
-
-    private static int resolveStyledAttr(Context context, int attr) {
-        TypedArray styledAttribute = context.obtainStyledAttributes(new int[] { attr });
-        int styledResource = styledAttribute.getResourceId(0, 0);
-        styledAttribute.recycle();
-        return styledResource;
     }
 
     // Verify that all the fields of the inner classes of |R| have a valid mapping.
