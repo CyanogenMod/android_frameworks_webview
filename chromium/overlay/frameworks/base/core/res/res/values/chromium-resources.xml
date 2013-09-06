@@ -67,4 +67,5 @@
   <add-resource type="string" name="webviewchromium_week_picker_dialog_title" />
 
   <add-resource type="style" name="webviewchromium_AutofillPopupWindow" />
+  <add-resource type="style" name="webviewchromium_ContentActionBar" />
 </resources>
