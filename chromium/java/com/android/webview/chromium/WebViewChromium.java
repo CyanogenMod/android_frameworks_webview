@@ -233,7 +233,16 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void destroy() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    destroy();
+                }
+            });
+            return;
+        }
+
         mAwContents.destroy();
         if (mGLfunctor != null) {
             mGLfunctor.destroy();
