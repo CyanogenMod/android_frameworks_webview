@@ -21,8 +21,12 @@
 
 #include "android_webview/public/browser/draw_gl.h"
 
+#include <errno.h>
 #include <jni.h>
 #include <private/hwui/DrawGlInfo.h>
+#include <string.h>
+#include <sys/resource.h>
+#include <sys/time.h>
 #include <utils/Functor.h>
 #include <utils/Log.h>
 
@@ -97,7 +101,29 @@ class DrawGLFunctor : public Functor {
   int view_context_;
 };
 
+// Raise the file handle soft limit to the hard limit since gralloc buffers
+// uses file handles.
+void RaiseFileNumberLimit() {
+  static bool have_raised_limit = false;
+  if (have_raised_limit)
+    return;
+
+  have_raised_limit = true;
+  struct rlimit limit_struct;
+  limit_struct.rlim_cur = 0;
+  limit_struct.rlim_max = 0;
+  if (getrlimit(RLIMIT_NOFILE, &limit_struct) == 0) {
+    limit_struct.rlim_cur = limit_struct.rlim_max;
+    if (setrlimit(RLIMIT_NOFILE, &limit_struct) != 0) {
+      ALOGE("setrlimit failed: %s", strerror(errno));
+    }
+  } else {
+    ALOGE("getrlimit failed: %s", strerror(errno));
+  }
+}
+
 jint CreateGLFunctor(JNIEnv*, jclass, jint view_context) {
+  RaiseFileNumberLimit();
   return reinterpret_cast<jint>(new DrawGLFunctor(view_context));
 }
 
