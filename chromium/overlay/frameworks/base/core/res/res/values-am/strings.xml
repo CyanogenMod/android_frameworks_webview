@@ -29,7 +29,7 @@
     <string name="webviewchromium_accessibility_date_picker_year" msgid="1016706432863812811">"አመት"</string>
     <string name="webviewchromium_accessibility_time_picker_hour" msgid="1821975181397712995">"ሰዓት"</string>
     <string name="webviewchromium_accessibility_time_picker_minute" msgid="6248299523645733594">"ደቂቃ"</string>
-    <string name="webviewchromium_accessibility_time_picker_second" msgid="4035159448510540572">"ሰከንድ"</string>
+    <string name="webviewchromium_accessibility_time_picker_second" msgid="4035159448510540572">"ሴኮንድ"</string>
     <string name="webviewchromium_accessibility_time_picker_milli" msgid="2292614892317672079">"ሚሊሰከንድ"</string>
     <string name="webviewchromium_accessibility_time_picker_ampm" msgid="962162358043185447">"ጠዋት/ከሰዓት"</string>
     <string name="webviewchromium_media_player_error_title" msgid="1520808434237404056">"ቪዲዮን ማጫወት አልተቻለም"</string>
