@@ -539,7 +539,7 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public float getScale() {
-        checkThread();
+        // No checkThread() as it is mostly thread safe (workaround for b/10652991).
         return mAwContents.getScale();
     }
 
