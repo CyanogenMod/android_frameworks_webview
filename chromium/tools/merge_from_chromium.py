@@ -181,7 +181,13 @@ def _MergeProjects(version, root_sha1, target, unattended, buildspec_url):
                                   cwd=dest_dir)
     if not local_mirrored or not root_sha1:
       logging.debug('Fetching project %s at %s ...', path, sha1)
-      merge_common.GetCommandStdout(['git', 'fetch', url, sha1], cwd=dest_dir)
+      fetch_args = ['git', 'fetch', url]
+      if not root_sha1:
+        # Only try to fetch the specific SHA1 when merging a branch.
+        # Older versions of git cannot fetch SHA1s directly, and trunk merges
+        # should be using versions that are available on the default branch.
+        fetch_args.append(sha1)
+      merge_common.GetCommandStdout(fetch_args, cwd=dest_dir)
     if merge_common.GetCommandStdout(['git', 'rev-list', '-1', 'HEAD..' + sha1],
                                      cwd=dest_dir):
       logging.debug('Merging project %s at %s ...', path, sha1)
