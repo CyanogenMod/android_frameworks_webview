@@ -933,8 +933,16 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public void onDraw(Canvas canvas) {
-        checkThread();
+    public void onDraw(final Canvas canvas) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.runOnUiThreadBlocking(new Runnable() {
+                @Override
+                public void run() {
+                    onDraw(canvas);
+                }
+            });
+            return;
+        }
         mAwContents.onDraw(canvas);
     }
 
