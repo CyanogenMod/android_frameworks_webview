@@ -15,8 +15,4 @@
              content/ layer defines upstream are resolved via internal private
              framework attributes. -->
     </style>
-    <style name="webviewchromium_SelectPopupDialog">
-        <item name="webviewchromium_select_dialog_singlechoice">@android:layout/webview_select_singlechoice</item>
-        <item name="webviewchromium_select_dialog_multichoice">@android:layout/select_dialog_multichoice</item>
-    </style>
 </resources>
