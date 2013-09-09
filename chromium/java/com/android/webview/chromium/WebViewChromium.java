@@ -416,7 +416,16 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void stopLoading() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    stopLoading();
+                }
+            });
+            return;
+        }
+
         mAwContents.stopLoading();
     }
 
