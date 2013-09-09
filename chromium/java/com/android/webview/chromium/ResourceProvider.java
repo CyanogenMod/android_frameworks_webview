@@ -39,6 +39,10 @@ public class ResourceProvider {
                 com.android.internal.R.attr.actionModeShareDrawable;
         org.chromium.content.R.attr.action_mode_web_search_drawable =
                 com.android.internal.R.attr.actionModeWebSearchDrawable;
+        org.chromium.content.R.attr.select_dialog_multichoice =
+                com.android.internal.R.attr.webviewchromium_select_dialog_multichoice;
+        org.chromium.content.R.attr.select_dialog_singlechoice =
+                com.android.internal.R.attr.webviewchromium_select_dialog_singlechoice;
 
         // color
         org.chromium.ui.R.color.color_picker_border_color =
@@ -189,6 +193,8 @@ public class ResourceProvider {
 
         org.chromium.content.R.style.ContentActionBar =
                 com.android.internal.R.style.webviewchromium_ContentActionBar;
+        org.chromium.content.R.style.SelectPopupDialog =
+                com.android.internal.R.style.webviewchromium_SelectPopupDialog;
         org.chromium.ui.R.style.AutofillPopupWindow =
                 com.android.internal.R.style.webviewchromium_AutofillPopupWindow;
 

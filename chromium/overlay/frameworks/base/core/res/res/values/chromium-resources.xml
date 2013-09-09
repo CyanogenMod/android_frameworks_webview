@@ -18,6 +18,9 @@
 -->
 
 <resources>
+  <add-resource type="attr" name="webviewchromium_select_dialog_multichoice" />
+  <add-resource type="attr" name="webviewchromium_select_dialog_singlechoice" />
+
   <add-resource type="color" name="webviewchromium_color_picker_border_color" />
 
   <add-resource type="dimen" name="webviewchromium_color_picker_gradient_margin" />
@@ -80,4 +83,5 @@
 
   <add-resource type="style" name="webviewchromium_AutofillPopupWindow" />
   <add-resource type="style" name="webviewchromium_ContentActionBar" />
+  <add-resource type="style" name="webviewchromium_SelectPopupDialog" />
 </resources>
