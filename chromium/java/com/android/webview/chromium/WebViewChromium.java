@@ -202,14 +202,30 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public void setHorizontalScrollbarOverlay(boolean overlay) {
-        checkThread();
+    public void setHorizontalScrollbarOverlay(final boolean overlay) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setHorizontalScrollbarOverlay(overlay);
+                }
+            });
+            return;
+        }
         mAwContents.setHorizontalScrollbarOverlay(overlay);
     }
 
     @Override
-    public void setVerticalScrollbarOverlay(boolean overlay) {
-        checkThread();
+    public void setVerticalScrollbarOverlay(final boolean overlay) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setVerticalScrollbarOverlay(overlay);
+                }
+            });
+            return;
+        }
         mAwContents.setVerticalScrollbarOverlay(overlay);
     }
 
@@ -239,8 +255,7 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void setCertificate(SslCertificate certificate) {
-        checkThread();
-        UnimplementedWebViewApi.invoke();
+        // intentional no-op
     }
 
     @Override
@@ -249,9 +264,17 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public void setHttpAuthUsernamePassword(String host, String realm, String username,
-                                            String password) {
-        checkThread();
+    public void setHttpAuthUsernamePassword(final String host, final String realm,
+            final String username, final String password) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setHttpAuthUsernamePassword(host, realm, username, password);
+                }
+            });
+            return;
+        }
         mAwContents.setHttpAuthUsernamePassword(host, realm, username, password);
     }
 
@@ -281,10 +304,18 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public void setNetworkAvailable(boolean networkUp) {
-        checkThread();
+    public void setNetworkAvailable(final boolean networkUp) {
         // Note that this purely toggles the JS navigator.online property.
         // It does not in affect chromium or network stack state in any way.
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setNetworkAvailable(networkUp);
+                }
+            });
+            return;
+        }
         mAwContents.setNetworkAvailable(networkUp);
     }
 
@@ -431,13 +462,21 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void saveWebArchive(String filename) {
-        checkThread();
         saveWebArchive(filename, false, null);
     }
 
     @Override
-    public void saveWebArchive(String basename, boolean autoname, ValueCallback<String> callback) {
-        checkThread();
+    public void saveWebArchive(final String basename, final boolean autoname,
+            final ValueCallback<String> callback) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    saveWebArchive(basename, autoname, callback);
+                }
+            });
+            return;
+        }
         mAwContents.saveWebArchive(basename, autoname, callback);
     }
 
@@ -458,7 +497,15 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void reload() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    reload();
+                }
+            });
+            return;
+        }
         mAwContents.reload();
     }
 
@@ -470,7 +517,15 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void goBack() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    goBack();
+                }
+            });
+            return;
+        }
         mAwContents.goBack();
     }
 
@@ -482,7 +537,15 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void goForward() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    goForward();
+                }
+            });
+            return;
+        }
         mAwContents.goForward();
     }
 
@@ -493,8 +556,16 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public void goBackOrForward(int steps) {
-        checkThread();
+    public void goBackOrForward(final int steps) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    goBackOrForward(steps);
+                }
+            });
+            return;
+        }
         mAwContents.goBackOrForward(steps);
     }
 
@@ -518,7 +589,15 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void clearView() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    clearView();
+                }
+            });
+            return;
+        }
         UnimplementedWebViewApi.invoke();
     }
 
@@ -543,14 +622,30 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public void setInitialScale(int scaleInPercent) {
-        checkThread();
+    public void setInitialScale(final int scaleInPercent) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setInitialScale(scaleInPercent);
+                }
+            });
+            return;
+        }
         mAwContents.getSettings().setInitialPageScale(scaleInPercent);
     }
 
     @Override
     public void invokeZoomPicker() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    invokeZoomPicker();
+                }
+            });
+            return;
+        }
         mAwContents.invokeZoomPicker();
     }
 
@@ -564,14 +659,30 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public void requestFocusNodeHref(Message hrefMsg) {
-        checkThread();
+    public void requestFocusNodeHref(final Message hrefMsg) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    requestFocusNodeHref(hrefMsg);
+                }
+            });
+            return;
+        }
         mAwContents.requestFocusNodeHref(hrefMsg);
     }
 
     @Override
-    public void requestImageRef(Message msg) {
-        checkThread();
+    public void requestImageRef(final Message msg) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    requestImageRef(msg);
+                }
+            });
+            return;
+        }
         mAwContents.requestImageRef(msg);
     }
 
@@ -629,25 +740,57 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void pauseTimers() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    pauseTimers();
+                }
+            });
+            return;
+        }
         mAwContents.pauseTimers();
     }
 
     @Override
     public void resumeTimers() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    resumeTimers();
+                }
+            });
+            return;
+        }
         mAwContents.resumeTimers();
     }
 
     @Override
     public void onPause() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    onPause();
+                }
+            });
+            return;
+        }
         mAwContents.onPause();
     }
 
     @Override
     public void onResume() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    onResume();
+                }
+            });
+            return;
+        }
         mAwContents.onResume();
     }
 
@@ -659,13 +802,20 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void freeMemory() {
-        checkThread();
         // Intentional no-op. Memory is managed automatically by Chromium.
     }
 
     @Override
-    public void clearCache(boolean includeDiskFiles) {
-        checkThread();
+    public void clearCache(final boolean includeDiskFiles) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    clearCache(includeDiskFiles);
+                }
+            });
+            return;
+        }
         mAwContents.clearCache(includeDiskFiles);
     }
 
@@ -674,19 +824,43 @@ class WebViewChromium implements WebViewProvider,
      */
     @Override
     public void clearFormData() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    clearFormData();
+                }
+            });
+            return;
+        }
         mAwContents.hideAutofillPopup();
     }
 
     @Override
     public void clearHistory() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    clearHistory();
+                }
+            });
+            return;
+        }
         mAwContents.clearHistory();
     }
 
     @Override
     public void clearSslPreferences() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    clearSslPreferences();
+                }
+            });
+            return;
+        }
         mAwContents.clearSslPreferences();
     }
 
@@ -699,13 +873,20 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void setFindListener(WebView.FindListener listener) {
-        checkThread();
         mContentsClientAdapter.setFindListener(listener);
     }
 
     @Override
-    public void findNext(boolean forwards) {
-        checkThread();
+    public void findNext(final boolean forwards) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    findNext(forwards);
+                }
+            });
+            return;
+        }
         mAwContents.findNext(forwards);
     }
 
@@ -717,8 +898,16 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public void findAllAsync(String searchString) {
-        checkThread();
+    public void findAllAsync(final String searchString) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    findAllAsync(searchString);
+                }
+            });
+            return;
+        }
         mAwContents.findAllAsync(searchString);
     }
 
@@ -750,51 +939,88 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void notifyFindDialogDismissed() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    notifyFindDialogDismissed();
+                }
+            });
+            return;
+        }
         clearMatches();
     }
 
     @Override
     public void clearMatches() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    clearMatches();
+                }
+            });
+            return;
+        }
         mAwContents.clearMatches();
     }
 
     @Override
-    public void documentHasImages(Message response) {
-        checkThread();
+    public void documentHasImages(final Message response) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    documentHasImages(response);
+                }
+            });
+            return;
+        }
         mAwContents.documentHasImages(response);
     }
 
     @Override
     public void setWebViewClient(WebViewClient client) {
-        checkThread();
         mContentsClientAdapter.setWebViewClient(client);
     }
 
     @Override
     public void setDownloadListener(DownloadListener listener) {
-        checkThread();
         mContentsClientAdapter.setDownloadListener(listener);
     }
 
     @Override
     public void setWebChromeClient(WebChromeClient client) {
-        checkThread();
         mContentsClientAdapter.setWebChromeClient(client);
     }
 
     @Override
-    public void setPictureListener(WebView.PictureListener listener) {
-        checkThread();
+    public void setPictureListener(final WebView.PictureListener listener) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setPictureListener(listener);
+                }
+            });
+            return;
+        }
         mContentsClientAdapter.setPictureListener(listener);
         mAwContents.enableOnNewPicture(listener != null,
                 mAppTargetSdkVersion >= Build.VERSION_CODES.JELLY_BEAN_MR2);
     }
 
     @Override
-    public void addJavascriptInterface(Object obj, String interfaceName) {
-        checkThread();
+    public void addJavascriptInterface(final Object obj, final String interfaceName) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    addJavascriptInterface(obj, interfaceName);
+                }
+            });
+            return;
+        }
         Class<? extends Annotation> requiredAnnotation = null;
         if (mAppTargetSdkVersion >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
            requiredAnnotation = JavascriptInterface.class;
@@ -803,8 +1029,16 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public void removeJavascriptInterface(String interfaceName) {
-        checkThread();
+    public void removeJavascriptInterface(final String interfaceName) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    removeJavascriptInterface(interfaceName);
+                }
+            });
+            return;
+        }
         mAwContents.removeJavascriptInterface(interfaceName);
     }
 
@@ -815,13 +1049,20 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void setMapTrackballToArrowKeys(boolean setMap) {
-        checkThread();
         // This is a deprecated API: intentional no-op.
     }
 
     @Override
-    public void flingScroll(int vx, int vy) {
-        checkThread();
+    public void flingScroll(final int vx, final int vy) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    flingScroll(vx, vy);
+                }
+            });
+            return;
+        }
         mAwContents.flingScroll(vx, vy);
     }
 
@@ -901,14 +1142,30 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo info) {
-        checkThread();
+        public void onInitializeAccessibilityNodeInfo(final AccessibilityNodeInfo info) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            runVoidTaskOnUiThreadBlocking(new Runnable() {
+                @Override
+                public void run() {
+                    onInitializeAccessibilityNodeInfo(info);
+                }
+            });
+            return;
+        }
         mAwContents.onInitializeAccessibilityNodeInfo(info);
     }
 
     @Override
-    public void onInitializeAccessibilityEvent(AccessibilityEvent event) {
-        checkThread();
+    public void onInitializeAccessibilityEvent(final AccessibilityEvent event) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            runVoidTaskOnUiThreadBlocking(new Runnable() {
+                @Override
+                public void run() {
+                    onInitializeAccessibilityEvent(event);
+                }
+            });
+            return;
+        }
         mAwContents.onInitializeAccessibilityEvent(event);
     }
 
@@ -922,8 +1179,16 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public void setOverScrollMode(int mode) {
-        checkThread();
+    public void setOverScrollMode(final int mode) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setOverScrollMode(mode);
+                }
+            });
+            return;
+        }
         // This gets called from the android.view.View c'tor that WebView inherits from. This
         // causes the method to be called when mAwContents == null.
         // It's safe to ignore these calls however since AwContents will read the current value of
@@ -934,15 +1199,31 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public void setScrollBarStyle(int style) {
-        checkThread();
+    public void setScrollBarStyle(final int style) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setScrollBarStyle(style);
+                }
+            });
+            return;
+        }
         mAwContents.setScrollBarStyle(style);
     }
 
     @Override
-    public void onDrawVerticalScrollBar(Canvas canvas, Drawable scrollBar,
-                                        int l, int t, int r, int b) {
-        checkThread();
+    public void onDrawVerticalScrollBar(final Canvas canvas, final Drawable scrollBar, final int l,
+            final int t, final int r, final int b) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            runVoidTaskOnUiThreadBlocking(new Runnable() {
+                @Override
+                public void run() {
+                    onDrawVerticalScrollBar(canvas, scrollBar, l, t, r, b);
+                }
+            });
+            return;
+        }
         // WebViewClassic was overriding this method to handle rubberband over-scroll. Since
         // WebViewChromium doesn't support that the vanilla implementation of this method can be
         // used.
@@ -950,14 +1231,31 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public void onOverScrolled(int scrollX, int scrollY, boolean clampedX, boolean clampedY) {
-        checkThread();
+    public void onOverScrolled(final int scrollX, final int scrollY, final boolean clampedX,
+            final boolean clampedY) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    onOverScrolled(scrollX, scrollY, clampedX, clampedY);
+                }
+            });
+            return;
+        }
         mAwContents.onContainerViewOverScrolled(scrollX, scrollY, clampedX, clampedY);
     }
 
     @Override
-    public void onWindowVisibilityChanged(int visibility) {
-        checkThread();
+    public void onWindowVisibilityChanged(final int visibility) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    onWindowVisibilityChanged(visibility);
+                }
+            });
+            return;
+        }
         mAwContents.onWindowVisibilityChanged(visibility);
     }
 
@@ -976,11 +1274,16 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public void setLayoutParams(ViewGroup.LayoutParams layoutParams) {
-        checkThread();
-        // TODO: This is the minimum implementation for HTMLViewer
-        // bringup. Likely will need to go up to ContentViewCore for
-        // a complete implementation.
+    public void setLayoutParams(final ViewGroup.LayoutParams layoutParams) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setLayoutParams(layoutParams);
+                }
+            });
+            return;
+        }
         mWebViewPrivate.super_setLayoutParams(layoutParams);
     }
 
@@ -991,8 +1294,16 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        checkThread();
+    public void onConfigurationChanged(final Configuration newConfig) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    onConfigurationChanged(newConfig);
+                }
+            });
+            return;
+        }
         mAwContents.onConfigurationChanged(newConfig);
     }
 
@@ -1024,13 +1335,29 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void onAttachedToWindow() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    onAttachedToWindow();
+                }
+            });
+            return;
+        }
         mAwContents.onAttachedToWindow();
     }
 
     @Override
     public void onDetachedFromWindow() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    onDetachedFromWindow();
+                }
+            });
+            return;
+        }
         mAwContents.onDetachedFromWindow();
         if (mGLfunctor != null) {
             mGLfunctor.detach();
@@ -1038,8 +1365,16 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public void onVisibilityChanged(View changedView, int visibility) {
-        checkThread();
+    public void onVisibilityChanged(final View changedView, final int visibility) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    onVisibilityChanged(changedView, visibility);
+                }
+            });
+            return;
+        }
         // The AwContents will find out the container view visibility before the first draw so we
         // can safely ignore onVisibilityChanged callbacks that happen before init().
         if (mAwContents != null) {
@@ -1048,36 +1383,56 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public void onWindowFocusChanged(boolean hasWindowFocus) {
-        checkThread();
+    public void onWindowFocusChanged(final boolean hasWindowFocus) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    onWindowFocusChanged(hasWindowFocus);
+                }
+            });
+            return;
+        }
         mAwContents.onWindowFocusChanged(hasWindowFocus);
     }
 
     @Override
-    public void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
-        checkThread();
+    public void onFocusChanged(final boolean focused, final int direction,
+            final Rect previouslyFocusedRect) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    onFocusChanged(focused, direction, previouslyFocusedRect);
+                }
+            });
+            return;
+        }
         mAwContents.onFocusChanged(focused, direction, previouslyFocusedRect);
     }
 
     @Override
     public boolean setFrame(int left, int top, int right, int bottom) {
-        // TODO(joth): This is the minimum implementation for initial
-        // bringup. Likely will need to go up to AwContents for a complete
-        // implementation, e.g. setting the compositor visible region (to
-        // avoid painting tiles that are offscreen due to the view's position).
         checkThread();
         return mWebViewPrivate.super_setFrame(left, top, right, bottom);
     }
 
     @Override
-    public void onSizeChanged(int w, int h, int ow, int oh) {
-        checkThread();
+    public void onSizeChanged(final int w, final int h, final int ow, final int oh) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    onSizeChanged(w, h, ow, oh);
+                }
+            });
+            return;
+        }
         mAwContents.onSizeChanged(w, h, ow, oh);
     }
 
     @Override
     public void onScrollChanged(int l, int t, int oldl, int oldt) {
-        checkThread();
     }
 
     @Override
@@ -1119,8 +1474,16 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        checkThread();
+    public void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    onMeasure(widthMeasureSpec, heightMeasureSpec);
+                }
+            });
+            return;
+        }
         mAwContents.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
@@ -1132,29 +1495,25 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void setBackgroundColor(final int color) {
-        if (ThreadUtils.runningOnUiThread()) {
-            mAwContents.setBackgroundColor(color);
-        } else {
-            // Disallowed in WebView API for apps targetting a new SDK
-            assert mAppTargetSdkVersion < Build.VERSION_CODES.JELLY_BEAN_MR2;
+        if (!ThreadUtils.runningOnUiThread()) {
             ThreadUtils.postOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    mAwContents.setBackgroundColor(color);
+                    setBackgroundColor(color);
                 }
             });
+            return;
         }
+        mAwContents.setBackgroundColor(color);
     }
 
     @Override
     public void setLayerType(int layerType, Paint paint) {
-        checkThread();
         UnimplementedWebViewApi.invoke();
     }
 
-    @Override
+    // Remove from superclass
     public void preDispatchDraw(Canvas canvas) {
-        checkThread();
         // TODO(leandrogracia): remove this method from WebViewProvider if we think
         // we won't need it again.
     }
@@ -1193,7 +1552,15 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void computeScroll() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    computeScroll();
+                }
+            });
+            return;
+        }
         mAwContents.computeScroll();
     }
 
