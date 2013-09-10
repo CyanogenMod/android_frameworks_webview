@@ -497,7 +497,7 @@ def Push(version, target):
   refspecs = ['%s:%s' % (src, target),
               '+%s:refs/archive/chromium-%s' % (src, version)]
   if target == 'master-chromium':
-    refspecs.insert(0, '%s:master-chromium-merge' % src)
+    refspecs.insert(0, '+%s:master-chromium-merge' % src)
   for refspec in refspecs:
     logging.debug('Pushing to server (%s) ...' % refspec)
     for path in merge_common.ALL_PROJECTS:
