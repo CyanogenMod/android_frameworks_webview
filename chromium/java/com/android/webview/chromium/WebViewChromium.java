@@ -326,7 +326,7 @@ class WebViewChromium implements WebViewProvider,
         // have the result of that URL replace the content of the current page.
         final String JAVASCRIPT_SCHEME = "javascript:";
         if (mAppTargetSdkVersion < Build.VERSION_CODES.KITKAT &&
-                url.startsWith(JAVASCRIPT_SCHEME)) {
+                url != null && url.startsWith(JAVASCRIPT_SCHEME)) {
             mAwContents.evaluateJavaScriptEvenIfNotYetNavigated(
                     url.substring(JAVASCRIPT_SCHEME.length()));
             return;
@@ -339,6 +339,10 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void loadUrl(String url) {
+        // Early out to match old WebView implementation
+        if (url == null) {
+            return;
+        }
         loadUrl(url, null);
     }
 
