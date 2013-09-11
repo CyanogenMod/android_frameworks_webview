@@ -64,6 +64,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -101,9 +103,10 @@ class WebViewChromium implements WebViewProvider,
 
     private final int mAppTargetSdkVersion;
 
+    // This does not touch any global / non-threadsafe state, but note that
+    // init is ofter called right after and is NOT threadsafe.
     public WebViewChromium(WebView webView, WebView.PrivateAccess webViewPrivate,
             AwBrowserContext browserContext) {
-        checkThread();
         mWebView = webView;
         mWebViewPrivate = webViewPrivate;
         mHitTestResult = new WebView.HitTestResult();
@@ -118,10 +121,36 @@ class WebViewChromium implements WebViewProvider,
         parentContents.supplyContentsForPopup(childContents);
     }
 
+    // We have a 4 second timeout to try to detect deadlocks to detect and aid in debuggin
+    // deadlocks.
+    // Do not call this method while on the UI thread!
+    private void runVoidTaskOnUiThreadBlocking(Runnable r) {
+        if (ThreadUtils.runningOnUiThread()) {
+            throw new IllegalStateException("This method should only be called off the UI thread");
+        }
+        FutureTask<Void> task = new FutureTask<Void>(r, null);
+        ThreadUtils.postOnUiThread(task);
+        try {
+            task.get(4, TimeUnit.SECONDS);
+        } catch (Exception e) { // Timeout is one of the possible exceptions here
+            throw new RuntimeException("Exeption occured while waiting for runnable", e);
+        }
+    }
+
     // WebViewProvider methods --------------------------------------------------------------------
 
     @Override
-    public void init(Map<String, Object> javaScriptInterfaces, boolean privateBrowsing) {
+    public void init(final Map<String, Object> javaScriptInterfaces,
+            final boolean privateBrowsing) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            runVoidTaskOnUiThreadBlocking(new Runnable() {
+                @Override
+                public void run() {
+                    init(javaScriptInterfaces, privateBrowsing);
+                }
+            });
+            return;
+        }
         // BUG=6790250 |javaScriptInterfaces| was only ever used by the obsolete DumpRenderTree
         // so is ignored. TODO: remove it from WebViewProvider.
         final boolean isAccessFromFileURLsGrantedByDefault =
@@ -935,7 +964,7 @@ class WebViewChromium implements WebViewProvider,
     @Override
     public void onDraw(final Canvas canvas) {
         if (!ThreadUtils.runningOnUiThread()) {
-            ThreadUtils.runOnUiThreadBlocking(new Runnable() {
+            runVoidTaskOnUiThreadBlocking(new Runnable() {
                 @Override
                 public void run() {
                     onDraw(canvas);
