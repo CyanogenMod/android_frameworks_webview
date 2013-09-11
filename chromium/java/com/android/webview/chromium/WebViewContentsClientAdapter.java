@@ -307,7 +307,7 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
         TraceEvent.begin();
         boolean result;
         if (mWebChromeClient != null) {
-            if (TRACE) Log.d(TAG, "onConsoleMessage");
+            if (TRACE) Log.d(TAG, "onConsoleMessage: " + consoleMessage.message());
             result = mWebChromeClient.onConsoleMessage(consoleMessage);
         } else {
             result = false;
