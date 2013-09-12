@@ -21,6 +21,9 @@
 <resources>
   <private-symbols package="com.android.internal" />
 
+  <java-symbol type="attr" name="webviewchromium_select_dialog_multichoice" />
+  <java-symbol type="attr" name="webviewchromium_select_dialog_singlechoice" />
+
   <java-symbol type="color" name="webviewchromium_color_picker_border_color" />
 
   <java-symbol type="dimen" name="webviewchromium_color_picker_gradient_margin" />
@@ -107,4 +110,6 @@
   <java-symbol type="id" name="webviewchromium_year" />
 
   <java-symbol type="style" name="webviewchromium_AutofillPopupWindow" />
+  <java-symbol type="style" name="webviewchromium_ContentActionBar" />
+  <java-symbol type="style" name="webviewchromium_SelectPopupDialog" />
 </resources>

@@ -69,7 +69,7 @@ def _MergeProjects(svn_revision, target):
         merge_common.GetCommandStdout(['git', 'rm', '--ignore-unmatch', '-rf'] +
                                       dirs_to_prune, cwd=dest_dir)
       merge_common.CheckNoConflictsAndCommitMerge(
-          'Merge from Chromium at DEPS revision r%s\n\n%s' %
+          'Merge from Chromium at DEPS revision %s\n\n%s' %
           (svn_revision, AUTOGEN_MESSAGE), cwd=dest_dir)
       new_sha1 = merge_common.GetCommandStdout(['git', 'rev-parse', 'HEAD'],
                                                cwd=dest_dir).strip()
@@ -79,7 +79,7 @@ def _MergeProjects(svn_revision, target):
                                     cwd=dest_dir)
       merge_common.GetCommandStdout(
           ['git', 'commit', '-m',
-           'Record Chromium merge at DEPS revision r%s\n\n%s' %
+           'Record Chromium merge at DEPS revision %s\n\n%s' %
            (svn_revision, AUTOGEN_MESSAGE)], cwd=dest_dir)
     else:
       logging.debug('No new commits to merge in project %s', path)
@@ -103,7 +103,7 @@ def _MergeProjects(svn_revision, target):
                                      'FETCH_HEAD'],
                                     cwd=dest_dir, ignore_errors=True)
       merge_common.CheckNoConflictsAndCommitMerge(
-          'Merge from Chromium at DEPS revision r%s\n\n%s' %
+          'Merge from Chromium at DEPS revision %s\n\n%s' %
           (svn_revision, AUTOGEN_MESSAGE), cwd=dest_dir)
     else:
       logging.debug('No new commits to merge in project %s', path)
@@ -184,7 +184,7 @@ def main():
                    'projects in Android and merges them into master to publish '
                    'them.')
   parser.add_option(
-      '', '--svn_revision',
+      '', '--svn_revision', '--release',
       default=None,
       help=('Merge to the specified archived master-chromium SVN revision,'
             'rather than using HEAD.'))
