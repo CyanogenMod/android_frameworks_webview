@@ -26,9 +26,9 @@
 #include <jni.h>
 #include <utils/Log.h>
 #include <utils/UniquePtr.h>
-#include <utils/Vector.h>
 #include "graphic_buffer_impl.h"
 #include "GraphicsJNI.h"
+#include "SkCanvasStateUtils.h"
 #include "SkGraphics.h"
 #include "SkPicture.h"
 
@@ -39,112 +39,20 @@ namespace {
 
 class PixelInfo : public AwPixelInfo {
  public:
-  PixelInfo(SkCanvas* canvas, const SkBitmap* bitmap);
+  PixelInfo(SkCanvas* canvas);
   ~PixelInfo();
-
-  void AddRectToClip(const SkIRect& rect);
-
- private:
-  const SkBitmap* bitmap_;
-  SkAutoLockPixels bitmap_locker_;
-  Vector<int> clip_rect_storage_;
 };
 
-class ClipValidator : public SkCanvas::ClipVisitor {
- public:
-  ClipValidator() : failed_(false) {}
-  bool failed() { return failed_; }
 
-  // ClipVisitor
-  virtual void clipRect(const SkRect& rect, SkRegion::Op op, bool antialias) {
-    failed_ |= antialias;
-  }
-
-  virtual void clipPath(const SkPath&, SkRegion::Op, bool antialias) {
-    failed_ |= antialias;
-  }
-
- private:
-  bool failed_;
-};
-
-PixelInfo::PixelInfo(SkCanvas* canvas, const SkBitmap* bitmap)
-    : bitmap_(bitmap),
-      bitmap_locker_(*bitmap) {
+PixelInfo::PixelInfo(SkCanvas* canvas) {
   memset(this, 0, sizeof(AwPixelInfo));
   version = kAwPixelInfoVersion;
+  state = SkCanvasStateUtils::CaptureCanvasState(canvas);
 }
 
-PixelInfo::~PixelInfo() {}
-
-void PixelInfo::AddRectToClip(const SkIRect& rect) {
-  ALOG_ASSERT(rect.width() >= 0 && rect.height() >= 0);
-  clip_rect_storage_.push_back(rect.x());
-  clip_rect_storage_.push_back(rect.y());
-  clip_rect_storage_.push_back(rect.width());
-  clip_rect_storage_.push_back(rect.height());
-  clip_rects = const_cast<int*>(clip_rect_storage_.array());
-  clip_rect_count = clip_rect_storage_.size() / 4;
-}
-
-PixelInfo* TryToCreatePixelInfo(SkCanvas* canvas) {
-  // Check the clip can decompose into simple rectangles. This validator is
-  // not a perfect guarantee, but it's the closest I can do with the current
-  // API. TODO: compile this out in release builds as currently Java canvases
-  // do not allow for antialiased clip.
-  ClipValidator validator;
-  canvas->replayClips(&validator);
-  if (validator.failed())
-    return NULL;
-
-  SkCanvas::LayerIter layer(SkCanvas::LayerIter(canvas, false));
-  if (layer.done())
-    return NULL;
-  SkDevice* device = layer.device();
-  if (!device)
-    return NULL;
-  const SkBitmap* bitmap = &device->accessBitmap(true);
-  if (!bitmap->lockPixelsAreWritable())
-    return NULL;
-  const SkRegion& region = layer.clip();
-  layer.next();
-  // Currently don't handle multiple layers well, so early out
-  // TODO: Return all layers in PixelInfo
-  if (!layer.done())
-    return NULL;
-
-  UniquePtr<PixelInfo> pixels(new PixelInfo(canvas, bitmap));
-  pixels->config =
-      bitmap->config() == SkBitmap::kARGB_8888_Config ? AwConfig_ARGB_8888 :
-      bitmap->config() == SkBitmap::kARGB_4444_Config ? AwConfig_ARGB_4444 :
-      bitmap->config() == SkBitmap::kRGB_565_Config ? AwConfig_RGB_565 : -1;
-  if (pixels->config < 0)
-    return NULL;
-
-  pixels->width = bitmap->width();
-  pixels->height = bitmap->height();
-  pixels->row_bytes = bitmap->rowBytes();
-  pixels->pixels = bitmap->getPixels();
-  const SkMatrix& matrix = layer.matrix();
-  for (int i = 0; i < 9; i++) {
-    pixels->matrix[i] = matrix.get(i);
-  }
-
-  if (region.isEmpty()) {
-    pixels->AddRectToClip(region.getBounds());
-  } else {
-    SkRegion::Iterator clip_iterator(region);
-    for (; !clip_iterator.done(); clip_iterator.next()) {
-      pixels->AddRectToClip(clip_iterator.rect());
-    }
-  }
-
-  // WebViewClassic used the DrawFilter for its own purposes (e.g. disabling
-  // dithering when zooming/scrolling) so for now at least, just ignore any
-  // client supplied DrawFilter.
-  ALOGW_IF(canvas->getDrawFilter(),
-           "DrawFilter not supported in webviewchromium, will be ignored");
-  return pixels.release();
+PixelInfo::~PixelInfo() {
+  if (state)
+    SkCanvasStateUtils::ReleaseCanvasState(state);
 }
 
 AwPixelInfo* GetPixels(JNIEnv* env, jobject java_canvas) {
@@ -152,7 +60,18 @@ AwPixelInfo* GetPixels(JNIEnv* env, jobject java_canvas) {
   if (!canvas)
     return NULL;
 
-  return TryToCreatePixelInfo(canvas);
+  // Workarounds for http://crbug.com/271096: SW draw only supports
+  // translate & scale transforms, and a simple rectangular clip.
+  // (This also avoids significant wasted time in calling
+  // SkCanvasStateUtils::CaptureCanvasState when the clip is complex).
+  if (!canvas->getTotalClip().isRect() ||
+      (canvas->getTotalMatrix().getType() &
+                ~(SkMatrix::kTranslate_Mask | SkMatrix::kScale_Mask))) {
+    return NULL;
+  }
+
+  UniquePtr<PixelInfo> pixels(new PixelInfo(canvas));
+  return pixels->state ? pixels.release() : NULL;
 }
 
 void ReleasePixels(AwPixelInfo* pixels) {
