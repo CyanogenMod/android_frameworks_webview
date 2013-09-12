@@ -66,6 +66,7 @@ import org.chromium.net.NetworkChangeNotifier;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.lang.annotation.Annotation;
+import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 import java.util.HashMap;
@@ -123,20 +124,29 @@ class WebViewChromium implements WebViewProvider,
         parentContents.supplyContentsForPopup(childContents);
     }
 
+    private static <T> T runBlockingFuture(FutureTask<T> task) {
+        if (ThreadUtils.runningOnUiThread()) {
+            throw new IllegalStateException("This method should only be called off the UI thread");
+        }
+        ThreadUtils.postOnUiThread(task);
+        try {
+            return task.get(4, TimeUnit.SECONDS);
+        } catch (Exception e) { // Timeout is one of the possible exceptions here
+            throw new RuntimeException("Probable deadlock detected due to WebView API being called "
+                    + "on incorrect thread while the UI thread is blocked.", e);
+        }
+    }
+
     // We have a 4 second timeout to try to detect deadlocks to detect and aid in debuggin
     // deadlocks.
     // Do not call this method while on the UI thread!
     private void runVoidTaskOnUiThreadBlocking(Runnable r) {
-        if (ThreadUtils.runningOnUiThread()) {
-            throw new IllegalStateException("This method should only be called off the UI thread");
-        }
         FutureTask<Void> task = new FutureTask<Void>(r, null);
-        ThreadUtils.postOnUiThread(task);
-        try {
-            task.get(4, TimeUnit.SECONDS);
-        } catch (Exception e) { // Timeout is one of the possible exceptions here
-            throw new RuntimeException("Exeption occured while waiting for runnable", e);
-        }
+        runBlockingFuture(task);
+    }
+
+    private static <T> T runOnUiThreadBlocking(Callable<T> c) {
+        return runBlockingFuture(new FutureTask<T>(c));
     }
 
     // WebViewProvider methods --------------------------------------------------------------------
@@ -233,13 +243,29 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public boolean overlayHorizontalScrollbar() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            boolean ret = runOnUiThreadBlocking(new Callable<Boolean>() {
+                @Override
+                public Boolean call() {
+                    return overlayHorizontalScrollbar();
+                }
+            });
+            return ret;
+        }
         return mAwContents.overlayHorizontalScrollbar();
     }
 
     @Override
     public boolean overlayVerticalScrollbar() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            boolean ret = runOnUiThreadBlocking(new Callable<Boolean>() {
+                @Override
+                public Boolean call() {
+                    return overlayVerticalScrollbar();
+                }
+            });
+            return ret;
+        }
         return mAwContents.overlayVerticalScrollbar();
     }
 
@@ -251,7 +277,15 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public SslCertificate getCertificate() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            SslCertificate ret = runOnUiThreadBlocking(new Callable<SslCertificate>() {
+                @Override
+                public SslCertificate call() {
+                    return getCertificate();
+                }
+            });
+            return ret;
+        }
         return mAwContents.getCertificate();
     }
 
@@ -281,8 +315,16 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public String[] getHttpAuthUsernamePassword(String host, String realm) {
-        checkThread();
+    public String[] getHttpAuthUsernamePassword(final String host, final String realm) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            String[] ret = runOnUiThreadBlocking(new Callable<String[]>() {
+                @Override
+                public String[] call() {
+                    return getHttpAuthUsernamePassword(host, realm);
+                }
+            });
+            return ret;
+        }
         return mAwContents.getHttpAuthUsernamePassword(host, realm);
     }
 
@@ -322,8 +364,16 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public WebBackForwardList saveState(Bundle outState) {
-        checkThread();
+    public WebBackForwardList saveState(final Bundle outState) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            WebBackForwardList ret = runOnUiThreadBlocking(new Callable<WebBackForwardList>() {
+                @Override
+                public WebBackForwardList call() {
+                    return saveState(outState);
+                }
+            });
+            return ret;
+        }
         if (outState == null) return null;
         if (!mAwContents.saveState(outState)) return null;
         return copyBackForwardList();
@@ -342,8 +392,16 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public WebBackForwardList restoreState(Bundle inState) {
-        checkThread();
+    public WebBackForwardList restoreState(final Bundle inState) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            WebBackForwardList ret = runOnUiThreadBlocking(new Callable<WebBackForwardList>() {
+                @Override
+                public WebBackForwardList call() {
+                    return restoreState(inState);
+                }
+            });
+            return ret;
+        }
         if (inState == null) return null;
         if (!mAwContents.restoreState(inState)) return null;
         return copyBackForwardList();
@@ -517,7 +575,15 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public boolean canGoBack() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            Boolean ret = runOnUiThreadBlocking(new Callable<Boolean>() {
+                @Override
+                public Boolean call() {
+                    return canGoBack();
+                }
+            });
+            return ret;
+        }
         return mAwContents.canGoBack();
     }
 
@@ -537,7 +603,15 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public boolean canGoForward() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            Boolean ret = runOnUiThreadBlocking(new Callable<Boolean>() {
+                @Override
+                public Boolean call() {
+                    return canGoForward();
+                }
+            });
+            return ret;
+        }
         return mAwContents.canGoForward();
     }
 
@@ -556,8 +630,16 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public boolean canGoBackOrForward(int steps) {
-        checkThread();
+    public boolean canGoBackOrForward(final int steps) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            Boolean ret = runOnUiThreadBlocking(new Callable<Boolean>() {
+                @Override
+                public Boolean call() {
+                    return canGoBackOrForward(steps);
+                }
+            });
+            return ret;
+        }
         return mAwContents.canGoBackOrForward(steps);
     }
 
@@ -582,14 +664,30 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public boolean pageUp(boolean top) {
-        checkThread();
+    public boolean pageUp(final boolean top) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            Boolean ret = runOnUiThreadBlocking(new Callable<Boolean>() {
+                @Override
+                public Boolean call() {
+                    return pageUp(top);
+                }
+            });
+            return ret;
+        }
         return mAwContents.pageUp(top);
     }
 
     @Override
-    public boolean pageDown(boolean bottom) {
-        checkThread();
+    public boolean pageDown(final boolean bottom) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            Boolean ret = runOnUiThreadBlocking(new Callable<Boolean>() {
+                @Override
+                public Boolean call() {
+                    return pageDown(bottom);
+                }
+            });
+            return ret;
+        }
         return mAwContents.pageDown(bottom);
     }
 
@@ -609,7 +707,15 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public Picture capturePicture() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            Picture ret = runOnUiThreadBlocking(new Callable<Picture>() {
+                @Override
+                public Picture call() {
+                    return capturePicture();
+                }
+            });
+            return ret;
+        }
         return mAwContents.capturePicture();
     }
 
@@ -694,7 +800,16 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public WebView.HitTestResult getHitTestResult() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            WebView.HitTestResult ret = runOnUiThreadBlocking(
+                    new Callable<WebView.HitTestResult>() {
+                @Override
+                public WebView.HitTestResult call() {
+                    return getHitTestResult();
+                }
+            });
+            return ret;
+        }
         AwContents.HitTestData data = mAwContents.getLastHitTestResult();
         mHitTestResult.setType(data.hitTestResultType);
         mHitTestResult.setExtra(data.hitTestResultExtraData);
@@ -731,7 +846,15 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public String getUrl() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            String ret = runOnUiThreadBlocking(new Callable<String>() {
+                @Override
+                public String call() {
+                    return getUrl();
+                }
+            });
+            return ret;
+        }
         String url =  mAwContents.getUrl();
         if (url == null || url.trim().isEmpty()) return null;
         return url;
@@ -739,7 +862,15 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public String getOriginalUrl() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            String ret = runOnUiThreadBlocking(new Callable<String>() {
+                @Override
+                public String call() {
+                    return getOriginalUrl();
+                }
+            });
+            return ret;
+        }
         String url =  mAwContents.getOriginalUrl();
         if (url == null || url.trim().isEmpty()) return null;
         return url;
@@ -747,13 +878,29 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public String getTitle() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            String ret = runOnUiThreadBlocking(new Callable<String>() {
+                @Override
+                public String call() {
+                    return getTitle();
+                }
+            });
+            return ret;
+        }
         return mAwContents.getTitle();
     }
 
     @Override
     public Bitmap getFavicon() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            Bitmap ret = runOnUiThreadBlocking(new Callable<Bitmap>() {
+                @Override
+                public Bitmap call() {
+                    return getFavicon();
+                }
+            });
+            return ret;
+        }
         return mAwContents.getFavicon();
     }
 
@@ -777,7 +924,7 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public int getContentWidth() {
-        checkThread();
+        // No checkThread() as it is mostly thread safe (workaround for b/10594869).
         return mAwContents.getContentWidthCss();
     }
 
@@ -839,7 +986,15 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public boolean isPaused() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            Boolean ret = runOnUiThreadBlocking(new Callable<Boolean>() {
+                @Override
+                public Boolean call() {
+                    return isPaused();
+                }
+            });
+            return ret;
+        }
         return mAwContents.isPaused();
     }
 
@@ -909,7 +1064,15 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public WebBackForwardList copyBackForwardList() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            WebBackForwardList ret = runOnUiThreadBlocking(new Callable<WebBackForwardList>() {
+                @Override
+                public WebBackForwardList call() {
+                    return copyBackForwardList();
+                }
+            });
+            return ret;
+        }
         return new WebBackForwardListChromium(
                 mAwContents.getNavigationHistory());
     }
@@ -934,9 +1097,8 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public int findAll(String searchString) {
-        checkThread();
-        mAwContents.findAllAsync(searchString);
+    public int findAll(final String searchString) {
+        findAllAsync(searchString);
         return 0;
     }
 
@@ -955,8 +1117,10 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public boolean showFindDialog(String text, boolean showIme) {
-        checkThread();
+    public boolean showFindDialog(final String text, final boolean showIme) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            return false;
+        }
         if (mWebView.getParent() == null) {
             return false;
         }
@@ -1111,7 +1275,10 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public View getZoomControls() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            return null;
+        }
+
         // This was deprecated in 2009 and hidden in JB MR1, so just provide the minimum needed
         // to stop very out-dated applications from crashing.
         Log.w(TAG, "WebView doesn't support getZoomControls");
@@ -1120,25 +1287,45 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public boolean canZoomIn() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            return false;
+        }
         return mAwContents.canZoomIn();
     }
 
     @Override
     public boolean canZoomOut() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            return false;
+        }
         return mAwContents.canZoomOut();
     }
 
     @Override
     public boolean zoomIn() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            boolean ret = runOnUiThreadBlocking(new Callable<Boolean>() {
+                @Override
+                public Boolean call() {
+                    return zoomIn();
+                }
+            });
+            return ret;
+        }
         return mAwContents.zoomIn();
     }
 
     @Override
     public boolean zoomOut() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            boolean ret = runOnUiThreadBlocking(new Callable<Boolean>() {
+                @Override
+                public Boolean call() {
+                    return zoomOut();
+                }
+            });
+            return ret;
+        }
         return mAwContents.zoomOut();
     }
 
@@ -1162,8 +1349,8 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
+    // This needs to be kept thread safe!
     public WebViewProvider.ScrollDelegate getScrollDelegate() {
-        checkThread();
         return this;
     }
 
@@ -1174,13 +1361,30 @@ class WebViewChromium implements WebViewProvider,
     // ViewGroup.
     // @Override
     public boolean shouldDelayChildPressedState() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            boolean ret = runOnUiThreadBlocking(new Callable<Boolean>() {
+                @Override
+                public Boolean call() {
+                    return shouldDelayChildPressedState();
+                }
+            });
+            return ret;
+        }
         return true;
     }
 
 //    @Override
     public AccessibilityNodeProvider getAccessibilityNodeProvider() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            AccessibilityNodeProvider ret = runOnUiThreadBlocking(
+                    new Callable<AccessibilityNodeProvider>() {
+                @Override
+                public AccessibilityNodeProvider call() {
+                    return getAccessibilityNodeProvider();
+                }
+            });
+            return ret;
+        }
         return mAwContents.getAccessibilityNodeProvider();
     }
 
@@ -1213,8 +1417,16 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public boolean performAccessibilityAction(int action, Bundle arguments) {
-        checkThread();
+    public boolean performAccessibilityAction(final int action, final Bundle arguments) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            boolean ret = runOnUiThreadBlocking(new Callable<Boolean>() {
+                @Override
+                public Boolean call() {
+                    return performAccessibilityAction(action, arguments);
+                }
+            });
+            return ret;
+        }
         if (mAwContents.supportsAccessibilityAction(action)) {
             return mAwContents.performAccessibilityAction(action, arguments);
         }
@@ -1332,7 +1544,15 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public boolean performLongClick() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            boolean ret = runOnUiThreadBlocking(new Callable<Boolean>() {
+                @Override
+                public Boolean call() {
+                    return performLongClick();
+                }
+            });
+            return ret;
+        }
         return mWebViewPrivate.super_performLongClick();
     }
 
@@ -1351,28 +1571,60 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
-        checkThread();
+    public InputConnection onCreateInputConnection(final EditorInfo outAttrs) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            InputConnection ret = runOnUiThreadBlocking(new Callable<InputConnection>() {
+                @Override
+                public InputConnection call() {
+                    return onCreateInputConnection(outAttrs);
+                }
+            });
+            return ret;
+        }
         return mAwContents.onCreateInputConnection(outAttrs);
     }
 
     @Override
-    public boolean onKeyMultiple(int keyCode, int repeatCount, KeyEvent event) {
-        checkThread();
+    public boolean onKeyMultiple(final int keyCode, final int repeatCount, final KeyEvent event) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            boolean ret = runOnUiThreadBlocking(new Callable<Boolean>() {
+                @Override
+                public Boolean call() {
+                    return onKeyMultiple(keyCode, repeatCount, event);
+                }
+            });
+            return ret;
+        }
         UnimplementedWebViewApi.invoke();
         return false;
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        checkThread();
+    public boolean onKeyDown(final int keyCode, final KeyEvent event) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            boolean ret = runOnUiThreadBlocking(new Callable<Boolean>() {
+                @Override
+                public Boolean call() {
+                    return onKeyDown(keyCode, event);
+                }
+            });
+            return ret;
+        }
         UnimplementedWebViewApi.invoke();
         return false;
     }
 
     @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        checkThread();
+    public boolean onKeyUp(final int keyCode, final KeyEvent event) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            boolean ret = runOnUiThreadBlocking(new Callable<Boolean>() {
+                @Override
+                public Boolean call() {
+                    return onKeyUp(keyCode, event);
+                }
+            });
+            return ret;
+        }
         return mAwContents.onKeyUp(keyCode, event);
     }
 
@@ -1455,8 +1707,16 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public boolean setFrame(int left, int top, int right, int bottom) {
-        checkThread();
+    public boolean setFrame(final int left, final int top, final int right, final int bottom) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            boolean ret = runOnUiThreadBlocking(new Callable<Boolean>() {
+                @Override
+                public Boolean call() {
+                    return setFrame(left, top, right, bottom);
+                }
+            });
+            return ret;
+        }
         return mWebViewPrivate.super_setFrame(left, top, right, bottom);
     }
 
@@ -1479,39 +1739,78 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        checkThread();
+    public boolean dispatchKeyEvent(final KeyEvent event) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            boolean ret = runOnUiThreadBlocking(new Callable<Boolean>() {
+                @Override
+                public Boolean call() {
+                    return dispatchKeyEvent(event);
+                }
+            });
+            return ret;
+        }
         return mAwContents.dispatchKeyEvent(event);
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent ev) {
-        checkThread();
+    public boolean onTouchEvent(final MotionEvent ev) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            boolean ret = runOnUiThreadBlocking(new Callable<Boolean>() {
+                @Override
+                public Boolean call() {
+                    return onTouchEvent(ev);
+                }
+            });
+            return ret;
+        }
         return mAwContents.onTouchEvent(ev);
     }
 
     @Override
-    public boolean onHoverEvent(MotionEvent event) {
-        checkThread();
+    public boolean onHoverEvent(final MotionEvent event) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            boolean ret = runOnUiThreadBlocking(new Callable<Boolean>() {
+                @Override
+                public Boolean call() {
+                    return onHoverEvent(event);
+                }
+            });
+            return ret;
+        }
         return mAwContents.onHoverEvent(event);
     }
 
     @Override
-    public boolean onGenericMotionEvent(MotionEvent event) {
-        checkThread();
+    public boolean onGenericMotionEvent(final MotionEvent event) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            boolean ret = runOnUiThreadBlocking(new Callable<Boolean>() {
+                @Override
+                public Boolean call() {
+                    return onGenericMotionEvent(event);
+                }
+            });
+            return ret;
+        }
         return mAwContents.onGenericMotionEvent(event);
     }
 
     @Override
     public boolean onTrackballEvent(MotionEvent ev) {
-        checkThread();
         // Trackball event not handled, which eventually gets converted to DPAD keyevents
         return false;
     }
 
     @Override
-    public boolean requestFocus(int direction, Rect previouslyFocusedRect) {
-        checkThread();
+    public boolean requestFocus(final int direction, final Rect previouslyFocusedRect) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            boolean ret = runOnUiThreadBlocking(new Callable<Boolean>() {
+                @Override
+                public Boolean call() {
+                    return requestFocus(direction, previouslyFocusedRect);
+                }
+            });
+            return ret;
+        }
         mAwContents.requestFocus();
         return mWebViewPrivate.super_requestFocus(direction, previouslyFocusedRect);
     }
@@ -1531,8 +1830,17 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public boolean requestChildRectangleOnScreen(View child, Rect rect, boolean immediate) {
-        checkThread();
+    public boolean requestChildRectangleOnScreen(final View child, final Rect rect,
+            final boolean immediate) {
+        if (!ThreadUtils.runningOnUiThread()) {
+            boolean ret = runOnUiThreadBlocking(new Callable<Boolean>() {
+                @Override
+                public Boolean call() {
+                    return requestChildRectangleOnScreen(child, rect, immediate);
+                }
+            });
+            return ret;
+        }
         return mAwContents.requestChildRectangleOnScreen(child, rect, immediate);
     }
 
@@ -1565,31 +1873,71 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public int computeHorizontalScrollRange() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            int ret = runOnUiThreadBlocking(new Callable<Integer>() {
+                @Override
+                public Integer call() {
+                    return computeHorizontalScrollRange();
+                }
+            });
+            return ret;
+        }
         return mAwContents.computeHorizontalScrollRange();
     }
 
     @Override
     public int computeHorizontalScrollOffset() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            int ret = runOnUiThreadBlocking(new Callable<Integer>() {
+                @Override
+                public Integer call() {
+                    return computeHorizontalScrollOffset();
+                }
+            });
+            return ret;
+        }
         return mAwContents.computeHorizontalScrollOffset();
     }
 
     @Override
     public int computeVerticalScrollRange() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            int ret = runOnUiThreadBlocking(new Callable<Integer>() {
+                @Override
+                public Integer call() {
+                    return computeVerticalScrollRange();
+                }
+            });
+            return ret;
+        }
         return mAwContents.computeVerticalScrollRange();
     }
 
     @Override
     public int computeVerticalScrollOffset() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            int ret = runOnUiThreadBlocking(new Callable<Integer>() {
+                @Override
+                public Integer call() {
+                    return computeVerticalScrollOffset();
+                }
+            });
+            return ret;
+        }
         return mAwContents.computeVerticalScrollOffset();
     }
 
     @Override
     public int computeVerticalScrollExtent() {
-        checkThread();
+        if (!ThreadUtils.runningOnUiThread()) {
+            int ret = runOnUiThreadBlocking(new Callable<Integer>() {
+                @Override
+                public Integer call() {
+                    return computeVerticalScrollExtent();
+                }
+            });
+            return ret;
+        }
         return mAwContents.computeVerticalScrollExtent();
     }
 
