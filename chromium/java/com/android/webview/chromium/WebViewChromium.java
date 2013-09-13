@@ -27,6 +27,7 @@ import android.net.http.SslCertificate;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
+import android.print.PrintDocumentAdapter;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -62,7 +63,6 @@ import org.chromium.net.NetworkChangeNotifier;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
@@ -718,11 +718,10 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public void exportToPdf(OutputStream stream, int width, int height,
-            ValueCallback<Boolean> resultCallback) {
+    public PrintDocumentAdapter createPrintDocumentAdapter() {
         checkThread();
-        // TODO(sgurun) enable this only after upstream part lands
-        //mAwContents.exportToPdf(stream, width, height, resultCallback);
+        // TODO(sgurun) fix this after upstream part lands
+        return null;
     }
 
     @Override
