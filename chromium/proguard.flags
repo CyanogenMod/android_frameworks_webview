@@ -40,6 +40,14 @@
   native <methods>;
 }
 
+# Keep methods which get bound to JS interfaces via reflection.
+-keepclasseswithmembers class org.chromium.** {
+  @**.JavascriptInterface <methods>;
+}
+-keepclasseswithmembers class com.android.org.chromium.** {
+  @**.JavascriptInterface <methods>;
+}
+
 # Silence notes caused by use of @VisibleForTesting inside guava. This doesn't
 # happen when using jarjar because @VisibleForTesting gets renamed as well.
 -dontnote com.google.common.cache.LocalCache$ReferenceEntry
