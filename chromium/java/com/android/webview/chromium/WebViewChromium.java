@@ -194,8 +194,8 @@ class WebViewChromium implements WebViewProvider,
     }
 
     private RuntimeException createThreadException() {
-        return new IllegalStateException("Calling View methods on another thread than the UI " +
-                "thread. PLEASE FILE A BUG! go/klp-webview-bug");
+        return new IllegalStateException(
+                "Calling View methods on another thread than the UI thread.");
     }
 
     //  Intentionally not static, as no need to check thread on static methods
