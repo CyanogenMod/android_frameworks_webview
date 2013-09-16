@@ -1291,12 +1291,12 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void dumpViewHierarchyWithProperties(BufferedWriter out, int level) {
-        UnimplementedWebViewApi.invoke();
+        // Intentional no-op
     }
 
     @Override
     public View findHierarchyView(String className, int hashCode) {
-        UnimplementedWebViewApi.invoke();
+        // Intentional no-op
         return null;
     }
 
@@ -1820,7 +1820,7 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void setLayerType(int layerType, Paint paint) {
-        UnimplementedWebViewApi.invoke();
+        // Intentional no-op
     }
 
     // Remove from superclass
@@ -1925,7 +1925,7 @@ class WebViewChromium implements WebViewProvider,
 
         @Override
         public boolean super_onKeyUp(int arg0, KeyEvent arg1) {
-            UnimplementedWebViewApi.invoke();
+            // Intentional no-op
             return false;
         }
 
@@ -1948,7 +1948,7 @@ class WebViewChromium implements WebViewProvider,
 
         @Override
         public void super_onConfigurationChanged(Configuration arg0) {
-            UnimplementedWebViewApi.invoke();
+            // Intentional no-op
         }
 
         @Override
