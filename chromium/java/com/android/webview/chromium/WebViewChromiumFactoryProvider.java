@@ -199,6 +199,10 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
                                     ComponentCallbacks2.TRIM_MEMORY_COMPLETE);
                         }
                     }
+
+                    // TODO: replace with real implementation on next master-chromium merge.
+                    public void setWebContentsDebuggingEnabled(boolean enable) {
+                    }
                 };
             }
         }
