@@ -711,7 +711,7 @@ class WebViewChromium implements WebViewProvider,
             });
             return;
         }
-        UnimplementedWebViewApi.invoke();
+        mAwContents.clearView();
     }
 
     @Override
