@@ -41,6 +41,8 @@
   <java-symbol type="layout" name="webviewchromium_two_field_date_picker" />
   <java-symbol type="layout" name="webviewchromium_multi_field_time_picker_dialog" />
 
+  <java-symbol type="menu" name="webviewchromium_select_action_menu" />
+
   <java-symbol type="string" name="webviewchromium_accessibility_content_view" />
   <java-symbol type="string" name="webviewchromium_accessibility_date_picker_month" />
   <java-symbol type="string" name="webviewchromium_accessibility_date_picker_week" />
@@ -106,10 +108,15 @@
   <java-symbol type="id" name="webviewchromium_second" />
   <java-symbol type="id" name="webviewchromium_second_colon" />
   <java-symbol type="id" name="webviewchromium_second_dot" />
+  <java-symbol type="id" name="webviewchromium_select_action_menu_cut" />
+  <java-symbol type="id" name="webviewchromium_select_action_menu_copy" />
+  <java-symbol type="id" name="webviewchromium_select_action_menu_paste" />
+  <java-symbol type="id" name="webviewchromium_select_action_menu_select_all" />
+  <java-symbol type="id" name="webviewchromium_select_action_menu_share" />
+  <java-symbol type="id" name="webviewchromium_select_action_menu_web_search" />
   <java-symbol type="id" name="webviewchromium_time_picker" />
   <java-symbol type="id" name="webviewchromium_year" />
 
   <java-symbol type="style" name="webviewchromium_AutofillPopupWindow" />
-  <java-symbol type="style" name="webviewchromium_ContentActionBar" />
   <java-symbol type="style" name="webviewchromium_SelectPopupDialog" />
 </resources>

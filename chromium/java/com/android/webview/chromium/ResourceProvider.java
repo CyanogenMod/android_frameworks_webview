@@ -35,10 +35,6 @@ public class ResourceProvider {
         AwResource.setResources(context.getResources());
 
         // attr
-        org.chromium.content.R.attr.action_mode_share_drawable =
-                com.android.internal.R.attr.actionModeShareDrawable;
-        org.chromium.content.R.attr.action_mode_web_search_drawable =
-                com.android.internal.R.attr.actionModeWebSearchDrawable;
         org.chromium.content.R.attr.select_dialog_multichoice =
                 com.android.internal.R.attr.webviewchromium_select_dialog_multichoice;
         org.chromium.content.R.attr.select_dialog_singlechoice =
@@ -76,6 +72,18 @@ public class ResourceProvider {
                 com.android.internal.R.id.webviewchromium_second_colon;
         org.chromium.content.R.id.second_dot =
                 com.android.internal.R.id.webviewchromium_second_dot;
+        org.chromium.content.R.id.select_action_menu_select_all =
+                com.android.internal.R.id.webviewchromium_select_action_menu_select_all;
+        org.chromium.content.R.id.select_action_menu_cut =
+                com.android.internal.R.id.webviewchromium_select_action_menu_cut;
+        org.chromium.content.R.id.select_action_menu_copy =
+                com.android.internal.R.id.webviewchromium_select_action_menu_copy;
+        org.chromium.content.R.id.select_action_menu_paste =
+                com.android.internal.R.id.webviewchromium_select_action_menu_paste;
+        org.chromium.content.R.id.select_action_menu_share =
+                com.android.internal.R.id.webviewchromium_select_action_menu_share;
+        org.chromium.content.R.id.select_action_menu_web_search =
+                com.android.internal.R.id.webviewchromium_select_action_menu_web_search;
         org.chromium.content.R.id.time_picker =
                 com.android.internal.R.id.webviewchromium_time_picker;
         org.chromium.content.R.id.year = com.android.internal.R.id.webviewchromium_year;
@@ -124,6 +132,10 @@ public class ResourceProvider {
                 com.android.internal.R.layout.webviewchromium_color_picker_advanced_component;
         org.chromium.ui.R.layout.autofill_text =
                 com.android.internal.R.layout.webviewchromium_autofill_text;
+
+        // menu
+        org.chromium.content.R.menu.select_action_menu =
+                com.android.internal.R.menu.webviewchromium_select_action_menu;
 
         // string
 
@@ -190,9 +202,6 @@ public class ResourceProvider {
                 com.android.internal.R.string.webviewchromium_color_picker_dialog_title;
 
         // style
-
-        org.chromium.content.R.style.ContentActionBar =
-                com.android.internal.R.style.webviewchromium_ContentActionBar;
         org.chromium.content.R.style.SelectPopupDialog =
                 com.android.internal.R.style.webviewchromium_SelectPopupDialog;
         org.chromium.ui.R.style.AutofillPopupWindow =
