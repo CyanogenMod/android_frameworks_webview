@@ -514,6 +514,17 @@ class WebViewChromium implements WebViewProvider,
 
     private void loadUrlOnUiThread(final LoadUrlParams loadUrlParams) {
         if (ThreadUtils.runningOnUiThread()) {
+            final int MAX_ALLOWED_URL_LENGTH = 2 * 1024 * 1024;
+            if (loadUrlParams.getUrl().length() > MAX_ALLOWED_URL_LENGTH) {
+                final String msg = "Load data/url length (" + loadUrlParams.getUrl().length() +
+                        ") too long. Use WebViewClient#shouldInterceptRequest instead.";
+                if (mAppTargetSdkVersion >= Build.VERSION_CODES.KITKAT) {
+                    throw new IllegalArgumentException(msg);
+                } else {
+                    Log.w(TAG, msg);
+                }
+            }
+
             mAwContents.loadUrl(loadUrlParams);
         } else {
             // Disallowed in WebView API for apps targetting a new SDK
