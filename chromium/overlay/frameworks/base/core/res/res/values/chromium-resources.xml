@@ -37,6 +37,8 @@
   <add-resource type="layout" name="webviewchromium_date_time_picker_dialog" />
   <add-resource type="layout" name="webviewchromium_two_field_date_picker" />
 
+  <add-resource type="menu" name="webviewchromium_iselect_action_menu" />
+
   <add-resource type="id" name="webviewchromium_autofill_popup_window" />
 
   <add-resource type="string" name="webviewchromium_accessibility_content_view" />
@@ -70,6 +72,5 @@
   <add-resource type="string" name="webviewchromium_week_picker_dialog_title" />
 
   <add-resource type="style" name="webviewchromium_AutofillPopupWindow" />
-  <add-resource type="style" name="webviewchromium_ContentActionBar" />
   <add-resource type="style" name="webviewchromium_SelectPopupDialog" />
 </resources>
