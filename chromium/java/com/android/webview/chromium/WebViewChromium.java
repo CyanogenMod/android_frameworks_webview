@@ -1623,7 +1623,18 @@ class WebViewChromium implements WebViewProvider,
             });
             return;
         }
-        mAwContents.onDetachedFromWindow();
+
+        Runnable detachAwContents = new Runnable() {
+            @Override
+            public void run() {
+                mAwContents.onDetachedFromWindow();
+            }
+        };
+
+        if (mGLfunctor == null || !mWebView.executeHardwareAction(detachAwContents)) {
+            detachAwContents.run();
+        }
+
         if (mGLfunctor != null) {
             mGLfunctor.detach();
         }
