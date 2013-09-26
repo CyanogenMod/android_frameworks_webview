@@ -710,7 +710,7 @@ class WebViewChromium implements WebViewProvider,
             });
             return;
         }
-        UnimplementedWebViewApi.invoke();
+        mAwContents.clearView();
     }
 
     @Override
@@ -1952,8 +1952,7 @@ class WebViewChromium implements WebViewProvider,
 
         @Override
         public boolean super_onGenericMotionEvent(MotionEvent arg0) {
-            UnimplementedWebViewApi.invoke();
-            return false;
+            return mWebViewPrivate.super_onGenericMotionEvent(arg0);
         }
 
         @Override

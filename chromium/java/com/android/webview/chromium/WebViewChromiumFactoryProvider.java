@@ -36,6 +36,7 @@ import org.chromium.android_webview.AwBrowserContext;
 import org.chromium.android_webview.AwBrowserProcess;
 import org.chromium.android_webview.AwContents;
 import org.chromium.android_webview.AwCookieManager;
+import org.chromium.android_webview.AwDevToolsServer;
 import org.chromium.android_webview.AwFormDatabase;
 import org.chromium.android_webview.AwGeolocationPermissions;
 import org.chromium.android_webview.AwQuotaManagerBridge;
@@ -66,6 +67,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     private WebIconDatabaseAdapter mWebIconDatabase;
     private WebStorageAdapter mWebStorage;
     private WebViewDatabaseAdapter mWebViewDatabase;
+    private AwDevToolsServer mDevToolsServer;
 
     // Read/write protected by mLock.
     private boolean mStarted;
@@ -165,6 +167,11 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
 
         AwBrowserProcess.start(ActivityThread.currentApplication());
         initPlatSupportLibrary();
+
+        if (Build.IS_DEBUGGABLE) {
+            setWebContentsDebuggingEnabled(true);
+        }
+
         mStarted = true;
     }
 
@@ -193,15 +200,20 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
                     }
 
                     @Override
+                    public void setWebContentsDebuggingEnabled(boolean enable) {
+                        // Web Contents debugging is always enabled on debug builds.
+                        if (!Build.IS_DEBUGGABLE) {
+                            WebViewChromiumFactoryProvider.this.
+                                    setWebContentsDebuggingEnabled(enable);
+                        }
+                    }
+
+                    @Override
                     public void freeMemoryForTests() {
                         if (ActivityManager.isRunningInTestHarness()) {
                             MemoryPressureListener.simulateMemoryPressureSignal(
                                     ComponentCallbacks2.TRIM_MEMORY_COMPLETE);
                         }
-                    }
-
-                    // TODO: replace with real implementation on next master-chromium merge.
-                    public void setWebContentsDebuggingEnabled(boolean enable) {
                     }
                 };
             }
@@ -291,5 +303,17 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
             }
         }
         return mWebViewDatabase;
+    }
+
+    private void setWebContentsDebuggingEnabled(boolean enable) {
+        if (Looper.myLooper() != Looper.getMainLooper()) {
+            throw new RuntimeException(
+                    "Toggling of Web Contents Debugging must be done on the main thread");
+        }
+        if (mDevToolsServer == null) {
+            if (!enable) return;
+            mDevToolsServer = new AwDevToolsServer();
+        }
+        mDevToolsServer.setRemoteDebuggingEnabled(enable);
     }
 }
