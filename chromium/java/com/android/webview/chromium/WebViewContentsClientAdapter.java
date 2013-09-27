@@ -49,6 +49,7 @@ import org.chromium.android_webview.AwHttpAuthHandler;
 import org.chromium.android_webview.InterceptedRequestData;
 import org.chromium.android_webview.JsPromptResultReceiver;
 import org.chromium.android_webview.JsResultReceiver;
+import org.chromium.base.ThreadUtils;
 import org.chromium.content.browser.ContentView;
 import org.chromium.content.browser.ContentViewClient;
 import org.chromium.content.common.TraceEvent;
@@ -456,7 +457,7 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
         // until onPageFinished has been invoked. This work is being done
         // upstream, and we can revert this hack when it lands.
         if (mPictureListener != null) {
-            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            ThreadUtils.postOnUiThreadDelayed(new Runnable() {
                 @Override
                 public void run() {
                     UnimplementedWebViewApi.invoke();
