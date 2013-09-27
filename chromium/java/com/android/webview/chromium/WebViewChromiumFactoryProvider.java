@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Looper;
+import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.GeolocationPermissions;
 import android.webkit.WebIconDatabase;
@@ -50,6 +51,9 @@ import org.chromium.content.browser.ResourceExtractor;
 import org.chromium.content.common.CommandLine;
 import org.chromium.content.common.ProcessInitException;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+
 public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
 
     private static final String CHROMIUM_PREFS_NAME = "WebViewChromiumPrefs";
@@ -69,6 +73,9 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     private WebViewDatabaseAdapter mWebViewDatabase;
     private AwDevToolsServer mDevToolsServer;
 
+    private ArrayList<WeakReference<WebViewChromium>> mWebViewsToStart =
+              new ArrayList<WeakReference<WebViewChromium>>();
+
     // Read/write protected by mLock.
     private boolean mStarted;
 
@@ -77,6 +84,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         AwBrowserProcess.loadLibrary();
         // Load glue-layer support library.
         System.loadLibrary("webviewchromium_plat_support");
+        ThreadUtils.setWillOverrideUiThread();
     }
 
     private void initPlatSupportLibrary() {
@@ -85,12 +93,17 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         AwContents.setAwDrawGLFunctionTable(GraphicsUtils.getDrawGLFunctionTable());
     }
 
-    private void ensureChromiumStartedLocked() {
+    private void ensureChromiumStartedLocked(boolean onMainThread) {
         assert Thread.holdsLock(mLock);
 
         if (mStarted) {  // Early-out for the common case.
             return;
         }
+
+        Looper looper = !onMainThread ? Looper.myLooper() : Looper.getMainLooper();
+        Log.v("WebViewChromium", "Binding Chromium to the " +
+                (onMainThread ? "main":"background") + " looper " + looper);
+        ThreadUtils.setUiThread(looper);
 
         if (ThreadUtils.runningOnUiThread()) {
             startChromiumLocked();
@@ -171,8 +184,16 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         if (Build.IS_DEBUGGABLE) {
             setWebContentsDebuggingEnabled(true);
         }
-
         mStarted = true;
+
+        for (WeakReference<WebViewChromium> wvc : mWebViewsToStart) {
+            WebViewChromium w = wvc.get();
+            if (w != null) {
+                w.startYourEngine();
+            }
+        }
+        mWebViewsToStart.clear();
+        mWebViewsToStart = null;
     }
 
     @Override
@@ -182,7 +203,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
                 // TODO: Optimization potential: most these methods only need the native library
                 // loaded and initialized, not the entire browser process started.
                 // See also http://b/7009882
-                ensureChromiumStartedLocked();
+                ensureChromiumStartedLocked(true);
                 mStaticMethods = new WebViewFactoryProvider.Statics() {
                     @Override
                     public String findAddress(String addr) {
@@ -223,28 +244,44 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
 
     @Override
     public WebViewProvider createWebView(WebView webView, WebView.PrivateAccess privateAccess) {
-        assert Looper.myLooper() == Looper.getMainLooper();
-        AwBrowserContext browserContext;
+        WebViewChromium wvc = new WebViewChromium(this, webView, privateAccess);
+
         synchronized (mLock) {
-            ensureChromiumStartedLocked();
-            ResourceProvider.registerResources(webView.getContext());
-            browserContext = getBrowserContextLocked();
+            if (mWebViewsToStart != null) {
+                mWebViewsToStart.add(new WeakReference<WebViewChromium>(wvc));
+            }
         }
-        // Make sure GeolocationPermissions is created before creating a webview
-        getGeolocationPermissions();
-        return new WebViewChromium(webView, privateAccess, browserContext);
+        ResourceProvider.registerResources(webView.getContext());
+        return wvc;
+    }
+
+    boolean hasStarted() {
+        return mStarted;
+    }
+
+    void startYourEngines(boolean onMainThread) {
+        synchronized (mLock) {
+            ensureChromiumStartedLocked(onMainThread);
+
+        }
     }
 
     @Override
     public GeolocationPermissions getGeolocationPermissions() {
         synchronized (mLock) {
             if (mGeolocationPermissions == null) {
-                ensureChromiumStartedLocked();
+                ensureChromiumStartedLocked(true);
                 mGeolocationPermissions = new GeolocationPermissionsAdapter(
                         getBrowserContextLocked().getGeolocationPermissions());
             }
         }
         return mGeolocationPermissions;
+    }
+
+    AwBrowserContext getBrowserContext() {
+        synchronized (mLock) {
+            return getBrowserContextLocked();
+        }
     }
 
     private AwBrowserContext getBrowserContextLocked() {
@@ -262,7 +299,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     public CookieManager getCookieManager() {
         synchronized (mLock) {
             if (mCookieManager == null) {
-                ensureChromiumStartedLocked();
+                ensureChromiumStartedLocked(true);
                 mCookieManager = new CookieManagerAdapter(new AwCookieManager());
             }
         }
@@ -273,7 +310,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     public WebIconDatabase getWebIconDatabase() {
         synchronized (mLock) {
             if (mWebIconDatabase == null) {
-                ensureChromiumStartedLocked();
+                ensureChromiumStartedLocked(true);
                 mWebIconDatabase = new WebIconDatabaseAdapter();
             }
         }
@@ -284,7 +321,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     public WebStorage getWebStorage() {
         synchronized (mLock) {
             if (mWebStorage == null) {
-                ensureChromiumStartedLocked();
+                ensureChromiumStartedLocked(true);
                 mWebStorage = new WebStorageAdapter(AwQuotaManagerBridge.getInstance());
             }
         }
@@ -295,7 +332,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     public WebViewDatabase getWebViewDatabase(Context context) {
         synchronized (mLock) {
             if (mWebViewDatabase == null) {
-                ensureChromiumStartedLocked();
+                ensureChromiumStartedLocked(true);
                 AwBrowserContext browserContext = getBrowserContextLocked();
                 mWebViewDatabase = new WebViewDatabaseAdapter(
                         browserContext.getFormDatabase(),
@@ -306,9 +343,9 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     }
 
     private void setWebContentsDebuggingEnabled(boolean enable) {
-        if (Looper.myLooper() != Looper.getMainLooper()) {
+        if (Looper.myLooper() != ThreadUtils.getUiThreadLooper()) {
             throw new RuntimeException(
-                    "Toggling of Web Contents Debugging must be done on the main thread");
+                    "Toggling of Web Contents Debugging must be done on the UI thread");
         }
         if (mDevToolsServer == null) {
             if (!enable) return;
