@@ -36,7 +36,7 @@
     <string name="webviewchromium_media_player_error_text_invalid_progressive_playback" msgid="7520069921018550187">"Je nám ľúto, ale toto video sa nedá vysielať do tohto zariadenia."</string>
     <string name="webviewchromium_media_player_error_text_unknown" msgid="7167964728541888883">"Je nám ľúto, ale toto video sa nedá prehrať."</string>
     <string name="webviewchromium_media_player_error_button" msgid="3693971589377075815">"OK"</string>
-    <string name="webviewchromium_media_player_loading_video" msgid="2617709614462333117">"Načít. videa"</string>
+    <string name="webviewchromium_media_player_loading_video" msgid="2617709614462333117">"Načítanie videa"</string>
     <string name="webviewchromium_color_picker_button_more" msgid="4501948174158855274">"Viac"</string>
     <string name="webviewchromium_color_picker_hue" msgid="3167662698702871296">"Odtieň"</string>
     <string name="webviewchromium_color_picker_saturation" msgid="4190681539297946213">"Sýtosť"</string>
