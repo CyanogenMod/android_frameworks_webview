@@ -20,14 +20,15 @@ import android.content.ContentResolver;
 import android.webkit.WebIconDatabase;
 import android.webkit.WebIconDatabase.IconListener;
 
+import org.chromium.android_webview.AwContents;
+
 /**
  * Chromium implementation of WebIconDatabase -- big old no-op (base class is deprecated).
  */
 final class WebIconDatabaseAdapter extends WebIconDatabase {
     @Override
     public void open(String path) {
-        // Intentional no-op: historically main effect of calling this method was to enable
-        // favicon download, but chromium webview always downloads favicons.
+        AwContents.setShouldDownloadFavicons();
     }
 
     @Override
