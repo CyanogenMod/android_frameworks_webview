@@ -35,6 +35,10 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
         mAwSettings = awSettings;
     }
 
+    AwSettings getAwSettings() {
+        return mAwSettings;
+    }
+
     @Override
     @Deprecated
     public void setNavDump(boolean enabled) {
