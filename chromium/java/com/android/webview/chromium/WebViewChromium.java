@@ -221,6 +221,7 @@ class WebViewChromium implements WebViewProvider,
                 mAppTargetSdkVersion < Build.VERSION_CODES.JELLY_BEAN;
         final boolean areLegacyQuirksEnabled =
                 mAppTargetSdkVersion < Build.VERSION_CODES.KITKAT;
+
         mContentsClientAdapter = new WebViewContentsClientAdapter(mWebView);
         mWebSettings = new ContentSettingsAdapter(new AwSettings(
                 mWebView.getContext(), isAccessFromFileURLsGrantedByDefault,
@@ -245,6 +246,12 @@ class WebViewChromium implements WebViewProvider,
         mAwContents = new AwContents(mFactory.getBrowserContext(), mWebView,
                 new InternalAccessAdapter(), mContentsClientAdapter, new AwLayoutSizer(),
                 mWebSettings.getAwSettings());
+
+        if (mAppTargetSdkVersion >= Build.VERSION_CODES.KITKAT) {
+            // On KK and above, favicons are automatically downloaded as the method
+            // old apps use to enable that behavior is deprecated.
+            AwContents.setShouldDownloadFavicons();
+        }
     }
 
     void startYourEngine() {
