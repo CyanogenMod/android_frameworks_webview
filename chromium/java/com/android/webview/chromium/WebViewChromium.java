@@ -1616,7 +1616,8 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public boolean performLongClick() {
-       return mWebViewPrivate.super_performLongClick();
+        // Return false unless the WebView is attached to a View with a parent
+        return mWebView.getParent() != null ? mWebViewPrivate.super_performLongClick() : false;
     }
 
     @Override
