@@ -210,9 +210,14 @@ class WebViewChromium implements WebViewProvider,
             }
         }
 
-        if (!mFactory.hasStarted()) {
-            // We will defer real initialization until we know which thread to do it on, unless we
-            // are on the main thread already.
+        // We will defer real initialization until we know which thread to do it on, unless:
+        // - we are on the main thread already (common case),
+        // - the app is targeting >= JB MR2, in which case checkThread enforces that all usage
+        //   comes from a single thread. (Note in JB MR2 this exception was in WebView.java).
+        if (mAppTargetSdkVersion >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            mFactory.startYourEngines(false);
+            checkThread();
+        } else if (!mFactory.hasStarted()) {
             if (Looper.myLooper() == Looper.getMainLooper()) {
                 mFactory.startYourEngines(true);
             }
