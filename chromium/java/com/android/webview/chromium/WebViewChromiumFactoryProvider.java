@@ -157,6 +157,11 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
             cl.appendSwitch("testing-webview-gl-mode");
         }
 
+        Context context = ActivityThread.currentApplication();
+        if (context.getApplicationInfo().targetSdkVersion < Build.VERSION_CODES.KITKAT) {
+            cl.appendSwitch("enable-webview-classic-workarounds");
+        }
+
         // We don't need to extract any paks because for WebView, they are
         // in the system image.
         ResourceExtractor.setMandatoryPaksToExtract("");
