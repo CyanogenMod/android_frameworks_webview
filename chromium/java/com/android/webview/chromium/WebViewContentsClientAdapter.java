@@ -20,6 +20,9 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Picture;
 import android.net.http.ErrorStrings;
 import android.net.http.SslError;
@@ -772,12 +775,21 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     @Override
     public Bitmap getDefaultVideoPoster() {
         TraceEvent.begin();
-        Bitmap result;
+        Bitmap result = null;
         if (mWebChromeClient != null) {
             if (TRACE) Log.d(TAG, "getDefaultVideoPoster");
             result = mWebChromeClient.getDefaultVideoPoster();
-        } else {
-            result = null;
+        }
+        if (result == null) {
+            // The ic_media_video_poster icon is transparent so we need to draw it on a gray
+            // background.
+            Bitmap poster = BitmapFactory.decodeResource(
+                    mWebView.getContext().getResources(),
+                    com.android.internal.R.drawable.ic_media_video_poster);
+            result = Bitmap.createBitmap(poster.getWidth(), poster.getHeight(), poster.getConfig());
+            result.eraseColor(Color.GRAY);
+            Canvas canvas = new Canvas(result);
+            canvas.drawBitmap(poster, 0f, 0f, null);
         }
         TraceEvent.end();
         return result;
