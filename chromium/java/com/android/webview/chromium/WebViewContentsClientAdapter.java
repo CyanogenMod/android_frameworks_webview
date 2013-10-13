@@ -20,6 +20,9 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Picture;
 import android.net.http.ErrorStrings;
 import android.net.http.SslError;
@@ -54,6 +57,7 @@ import org.chromium.content.browser.ContentView;
 import org.chromium.content.browser.ContentViewClient;
 import org.chromium.content.common.TraceEvent;
 
+import java.lang.ref.SoftReference;
 import java.net.URISyntaxException;
 
 /**
@@ -92,6 +96,8 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     private DownloadListener mDownloadListener;
 
     private Handler mUiThreadHandler;
+
+    private SoftReference<Bitmap> mCachedDefaultVideoPoster;
 
     private static final int NEW_WEBVIEW_CREATED = 100;
 
@@ -773,12 +779,27 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     @Override
     public Bitmap getDefaultVideoPoster() {
         TraceEvent.begin();
-        Bitmap result;
+        Bitmap result = null;
         if (mWebChromeClient != null) {
             if (TRACE) Log.d(TAG, "getDefaultVideoPoster");
             result = mWebChromeClient.getDefaultVideoPoster();
-        } else {
-            result = null;
+        }
+        if (result == null) {
+            if (mCachedDefaultVideoPoster != null) {
+                result = mCachedDefaultVideoPoster.get();
+            }
+            if (result == null) {
+                Bitmap poster = BitmapFactory.decodeResource(
+                        mWebView.getContext().getResources(),
+                        com.android.internal.R.drawable.ic_media_video_poster);
+                result = Bitmap.createBitmap(poster.getWidth(),
+                                             poster.getHeight(),
+                                             poster.getConfig());
+                result.eraseColor(Color.GRAY);
+                Canvas canvas = new Canvas(result);
+                canvas.drawBitmap(poster, 0f, 0f, null);
+                mCachedDefaultVideoPoster = new SoftReference<Bitmap>(result);
+            }
         }
         TraceEvent.end();
         return result;
