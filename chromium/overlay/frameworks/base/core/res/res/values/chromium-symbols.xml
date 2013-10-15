@@ -77,6 +77,10 @@
   <java-symbol type="string" name="webviewchromium_month_picker_dialog_title" />
   <java-symbol type="string" name="webviewchromium_opening_file_error" />
   <java-symbol type="string" name="webviewchromium_private_browsing_warning" />
+  <java-symbol type="string" name="webviewchromium_profiler_started_toast" />
+  <java-symbol type="string" name="webviewchromium_profiler_stopped_toast" />
+  <java-symbol type="string" name="webviewchromium_profiler_no_storage_toast" />
+  <java-symbol type="string" name="webviewchromium_profiler_error_toast" />
   <java-symbol type="string" name="webviewchromium_time_picker_dialog_am" />
   <java-symbol type="string" name="webviewchromium_time_picker_dialog_hour_minute_separator" />
   <java-symbol type="string" name="webviewchromium_time_picker_dialog_minute_second_separator" />

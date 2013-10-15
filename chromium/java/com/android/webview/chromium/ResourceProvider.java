@@ -175,6 +175,14 @@ public class ResourceProvider {
                 com.android.internal.R.string.webviewchromium_media_player_loading_video;
         org.chromium.content.R.string.month_picker_dialog_title =
                 com.android.internal.R.string.webviewchromium_month_picker_dialog_title;
+        org.chromium.content.R.string.profiler_error_toast =
+                com.android.internal.R.string.webviewchromium_profiler_error_toast;
+        org.chromium.content.R.string.profiler_no_storage_toast =
+                com.android.internal.R.string.webviewchromium_profiler_no_storage_toast;
+        org.chromium.content.R.string.profiler_started_toast =
+                com.android.internal.R.string.webviewchromium_profiler_started_toast;
+        org.chromium.content.R.string.profiler_stopped_toast =
+                com.android.internal.R.string.webviewchromium_profiler_stopped_toast;
         org.chromium.content.R.string.time_picker_dialog_am =
                 com.android.internal.R.string.webviewchromium_time_picker_dialog_am;
         org.chromium.content.R.string.time_picker_dialog_pm =
