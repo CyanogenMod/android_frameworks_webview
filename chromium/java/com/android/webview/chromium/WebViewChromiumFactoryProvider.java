@@ -210,11 +210,10 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
 
                     @Override
                     public void freeMemoryForTests() {
-                        // TODO(primiano): temporarily commented out to unlock the automerger.
-                        // if (ActivityManager.isRunningInTestHarness()) {
-                        //     MemoryPressureListener.simulateMemoryPressureSignal(
-                        //             ComponentCallbacks2.TRIM_MEMORY_COMPLETE);
-                        // }
+                        if (ActivityManager.isRunningInTestHarness()) {
+                            MemoryPressureListener.maybeNotifyMemoryPresure(
+                                    ComponentCallbacks2.TRIM_MEMORY_COMPLETE);
+                        }
                     }
                 };
             }
