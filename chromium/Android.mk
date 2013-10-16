@@ -19,6 +19,9 @@
 LOCAL_PATH := $(call my-dir)
 CHROMIUM_PATH := external/chromium_org
 
+# Don't include most modules if the product is using a prebuilt webviewchromium.
+ifneq ($(PRODUCT_PREBUILT_WEBVIEWCHROMIUM),yes)
+
 # Java glue layer JAR, calls directly into the chromium AwContents Java API.
 include $(CLEAR_VARS)
 
@@ -114,10 +117,11 @@ $(jar_check_ok): $(full_classes_jarjar_jar) $(LOCAL_PATH)/tools/jar_check.py $(L
 $(LOCAL_BUILT_MODULE): $(jar_check_ok)
 endif
 
-
+endif # PRODUCT_PREBUILT_WEBVIEWCHROMIUM
 
 # Native support library (libwebviewchromium_plat_support.so) - does NOT link
-# any native chromium code.
+# any native chromium code. This is built from source even if the product has
+# a prebuilt webviewchromium to ensure ABI compatibility.
 include $(CLEAR_VARS)
 
 LOCAL_MODULE:= libwebviewchromium_plat_support
