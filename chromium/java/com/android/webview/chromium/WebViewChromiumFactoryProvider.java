@@ -211,7 +211,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
                     @Override
                     public void freeMemoryForTests() {
                         if (ActivityManager.isRunningInTestHarness()) {
-                            MemoryPressureListener.simulateMemoryPressureSignal(
+                            MemoryPressureListener.maybeNotifyMemoryPresure(
                                     ComponentCallbacks2.TRIM_MEMORY_COMPLETE);
                         }
                     }
