@@ -47,4 +47,8 @@
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"Unable to complete previous operation due to low memory"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"Failed to open selected file"</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"This functionality is not supported in this version of Android."</string>
+    <string name="webviewchromium_profiler_started_toast" msgid="5173879436794997552">"Profiler started"</string>
+    <string name="webviewchromium_profiler_stopped_toast" msgid="7610282533871917576">"Profiler finished. Results are in %1$s."</string>
+    <string name="webviewchromium_profiler_no_storage_toast" msgid="6415118515448171108">"Can\'t start profiler because external storage is not ready"</string>
+    <string name="webviewchromium_profiler_error_toast" msgid="3020154324443664032">"Failed to start profiler"</string>
 </resources>

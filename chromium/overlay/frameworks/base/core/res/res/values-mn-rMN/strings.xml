@@ -47,4 +47,8 @@
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"Санах ой бага байгаагаас шалтгаалан өмнөх үйлдлийг гүйцээх боломжгүй байна"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"Сонгосон файлыг нээж чадсангүй"</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"Андройдын энэ хувилбар дээр энэ функц дэмжигдээгүй."</string>
+    <string name="webviewchromium_profiler_started_toast" msgid="5173879436794997552">"Профайл үүсгэгч эхэлсэн"</string>
+    <string name="webviewchromium_profiler_stopped_toast" msgid="7610282533871917576">"Профайл үүсгэгч ажиллаж дууслаа. Үр дүнг %1$s дотор хадгалсан."</string>
+    <string name="webviewchromium_profiler_no_storage_toast" msgid="6415118515448171108">"Гадаад сан бэлэн болоогүй тул профайл үүсгэгчийг эхлүүлэх боломжгүй"</string>
+    <string name="webviewchromium_profiler_error_toast" msgid="3020154324443664032">"Профайл үүсгэгчийг эхлүүлж чадсангүй"</string>
 </resources>

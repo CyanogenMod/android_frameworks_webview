@@ -47,4 +47,8 @@
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"ບໍ່​ສາ​ມາດ​ດຳເນີນປະຕິບັດການກ່ອນໜ້ານີ້ໄດ້ ເນື່ອງຈາກໜ່ວຍຄວາມຈຳເຫຼືອໜ້ອຍເກີນໄປ"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"ລົ້ມເຫລວໃນການເປີດໄຟລ໌ທີ່ທ່ານເລືອກ"</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"ຄວາມສາມາດນີ້ຍັງບໍ່ຖືກຮອງຮັບໃນ Android ເວີຊັນນີ້ເທື່ອ."</string>
+    <string name="webviewchromium_profiler_started_toast" msgid="5173879436794997552">"Profiler ໄດ້ເລີ່ມແລ້ວ"</string>
+    <string name="webviewchromium_profiler_stopped_toast" msgid="7610282533871917576">"Profiler ສຳເລັດແລ້ວ. ຜົນຂອງມັນແມ່ນຢູ່ໃນ %1$s."</string>
+    <string name="webviewchromium_profiler_no_storage_toast" msgid="6415118515448171108">"ບໍ່ສາມາດເລີ່ມຕົ້ນ profiler ໄດ້ ເນື່ອງຈາກບ່ອນເກັບຂໍ້ມູນພາຍນອກຍັງບໍ່ພ້ອມ"</string>
+    <string name="webviewchromium_profiler_error_toast" msgid="3020154324443664032">"ລົ້ມເຫລວໃນການເລີ່ມ profiler."</string>
 </resources>

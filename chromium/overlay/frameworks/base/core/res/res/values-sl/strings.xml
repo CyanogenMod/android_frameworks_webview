@@ -47,4 +47,8 @@
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"Prejšnjega postopka ni mogoče dokončati, ker primanjkuje pomnilnika"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"Datoteke ni bilo mogoče odpreti"</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"Ta funkcija ni podprta v tej različici Androida."</string>
+    <string name="webviewchromium_profiler_started_toast" msgid="5173879436794997552">"Or. za sprem. delov. je zagnano"</string>
+    <string name="webviewchromium_profiler_stopped_toast" msgid="7610282533871917576">"Orodje za spremljanje delovanja je končalo. Rezultati so v datoteki %1$s."</string>
+    <string name="webviewchromium_profiler_no_storage_toast" msgid="6415118515448171108">"Orodja za spremlj. delov. ni mogoče zagnati, ker zunanja shramba ni pripravljena"</string>
+    <string name="webviewchromium_profiler_error_toast" msgid="3020154324443664032">"Orodja za spremljanje delovanja ni bilo mogoče zagnati"</string>
 </resources>
