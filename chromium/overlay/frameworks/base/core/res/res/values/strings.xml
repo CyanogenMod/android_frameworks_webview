@@ -103,12 +103,12 @@
          which is not supported. [CHAR-LIMIT=NONE] -->
     <string name="webviewchromium_private_browsing_warning">This functionality is not supported in this version of Android.</string>
 
-    <!-- Toast notifying the user that profiler started [CHAR-LIMIT=32] -->
+    <!-- Toast notifying the user that the webview performance profiler started collecting data [CHAR-LIMIT=32] -->
     <string name="webviewchromium_profiler_started_toast">Profiler started</string>
-    <!-- Toast notifying the user that profiler results were written to a file [CHAR-LIMIT=80] -->
+    <!-- Toast notifying the user that the webview performance profiler results were written to a file [CHAR-LIMIT=80] -->
     <string name="webviewchromium_profiler_stopped_toast">Profiler finished. Results are in %1$s.</string>
-    <!-- Toast notifying the user that we can't start profiler because there's no external storage [CHAR-LIMIT=80] -->
+    <!-- Toast notifying the user that we can't start the webview performance profiler because there's no external storage [CHAR-LIMIT=80] -->
     <string name="webviewchromium_profiler_no_storage_toast">Can\'t start profiler because external storage is not ready</string>
-    <!-- Toast notifying the user that we failed to start profiler [CHAR-LIMIT=80] -->
+    <!-- Toast notifying the user that we failed to start the webview performance profiler [CHAR-LIMIT=80] -->
     <string name="webviewchromium_profiler_error_toast">Failed to start profiler</string>
 </resources>
