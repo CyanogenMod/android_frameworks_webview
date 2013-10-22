@@ -47,4 +47,8 @@
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"Předchozí operaci se nepodařilo dokončit z důvodu nedostatku paměti."</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"Vybraný soubor nelze otevřít"</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"Tuto funkci daná verze systému Android nepodporuje."</string>
+    <string name="webviewchromium_profiler_started_toast" msgid="5173879436794997552">"Profiler byl spuštěn"</string>
+    <string name="webviewchromium_profiler_stopped_toast" msgid="7610282533871917576">"Profiler byl ukončen. Výsledky naleznete v souboru %1$s."</string>
+    <string name="webviewchromium_profiler_no_storage_toast" msgid="6415118515448171108">"Profiler nelze spustit, protože není připraveno externí úložiště."</string>
+    <string name="webviewchromium_profiler_error_toast" msgid="3020154324443664032">"Spuštění profileru se nezdařilo"</string>
 </resources>

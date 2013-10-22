@@ -47,4 +47,8 @@
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"មិន​អាច​បញ្ចប់​ប្រតិបត្តិការ​ពី​មុន​បាន​ព្រោះ​ជិត​អស់​អង្គ​ចងចាំ"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"បាន​បរាជ័យ​ក្នុង​ការ​បើក​ឯកសារ​ដែល​បាន​ជ្រើស"</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"មុខងារ​នេះ​មិន​ត្រូវ​បាន​គាំទ្រ​នៅ​ក្នុង​កំណែ​របស់ Android នេះ​ទេ។"</string>
+    <string name="webviewchromium_profiler_started_toast" msgid="5173879436794997552">"បាន​ចាប់ផ្ដើម​កម្មវិធី​គូស​ព្រាង"</string>
+    <string name="webviewchromium_profiler_stopped_toast" msgid="7610282533871917576">"បាន​បញ្ចប់​កម្មវិធី​គំនូស​ព្រាង។ លទ្ធផល​គឺ %1$s ។"</string>
+    <string name="webviewchromium_profiler_no_storage_toast" msgid="6415118515448171108">"មិន​អាច​ចាប់ផ្ដើម​កម្មវិធី​គំនូស​ព្រាង​ ព្រោះ​ឧបករណ៍​ផ្ទុក​ខាងក្រៅ​មិន​ទាន់​រួចរាល់"</string>
+    <string name="webviewchromium_profiler_error_toast" msgid="3020154324443664032">"បាន​បរាជ័យ​ក្នុង​ការ​ចាប់ផ្ដើម​កម្មវិធី​គូស​ព្រាង"</string>
 </resources>
