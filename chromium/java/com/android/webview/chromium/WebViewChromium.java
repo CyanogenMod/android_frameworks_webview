@@ -1523,7 +1523,8 @@ class WebViewChromium implements WebViewProvider,
             });
             return ret;
         }
-        return mWebViewPrivate.super_performLongClick();
+        // Return false unless the WebView is attached to a View with a parent
+        return mWebView.getParent() != null ? mWebViewPrivate.super_performLongClick() : false;
     }
 
     @Override
