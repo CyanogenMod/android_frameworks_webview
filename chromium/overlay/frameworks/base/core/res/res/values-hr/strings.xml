@@ -47,12 +47,8 @@
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"Prethodna operacija nije izvršena jer nema dovoljno memorije"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"Odabrana datoteka nije otvorena"</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"Ta funkcija nije podržana na ovoj verziji Androida."</string>
-    <!-- no translation found for webviewchromium_profiler_started_toast (5173879436794997552) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_stopped_toast (7610282533871917576) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_no_storage_toast (6415118515448171108) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_error_toast (3020154324443664032) -->
-    <skip />
+    <string name="webviewchromium_profiler_started_toast" msgid="5173879436794997552">"Alat za profiliranje pokrenut je"</string>
+    <string name="webviewchromium_profiler_stopped_toast" msgid="7610282533871917576">"Profiliranje je dovršeno. Rezultati su zapisani u datoteku %1$s."</string>
+    <string name="webviewchromium_profiler_no_storage_toast" msgid="6415118515448171108">"Alat za profiliranje ne može se pokrenuti jer vanjska pohrana nije spremna"</string>
+    <string name="webviewchromium_profiler_error_toast" msgid="3020154324443664032">"Pokretanje alata za profiliranje nije uspjelo"</string>
 </resources>

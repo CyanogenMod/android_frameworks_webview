@@ -47,12 +47,8 @@
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"内存不足，无法完成先前的操作"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"无法打开所选文件"</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"此版本的 Android 系统不支持该功能。"</string>
-    <!-- no translation found for webviewchromium_profiler_started_toast (5173879436794997552) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_stopped_toast (7610282533871917576) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_no_storage_toast (6415118515448171108) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_error_toast (3020154324443664032) -->
-    <skip />
+    <string name="webviewchromium_profiler_started_toast" msgid="5173879436794997552">"已启动分析器"</string>
+    <string name="webviewchromium_profiler_stopped_toast" msgid="7610282533871917576">"分析器已完成操作。请在 %1$s 中查看分析结果。"</string>
+    <string name="webviewchromium_profiler_no_storage_toast" msgid="6415118515448171108">"外部存储设备尚未准备就绪，无法启动分析器"</string>
+    <string name="webviewchromium_profiler_error_toast" msgid="3020154324443664032">"无法启动分析器"</string>
 </resources>

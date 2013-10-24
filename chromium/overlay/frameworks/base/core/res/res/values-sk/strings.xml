@@ -47,12 +47,8 @@
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"Predchádzajúca operácia sa nedá dokončiť z dôvodu nedostatku pamäte"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"Otvorenie vybrat. súboru zlyhalo"</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"Daná funkcia nie je v tejto verzii systému Android podporovaná."</string>
-    <!-- no translation found for webviewchromium_profiler_started_toast (5173879436794997552) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_stopped_toast (7610282533871917576) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_no_storage_toast (6415118515448171108) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_error_toast (3020154324443664032) -->
-    <skip />
+    <string name="webviewchromium_profiler_started_toast" msgid="5173879436794997552">"Profilovač sa spustil"</string>
+    <string name="webviewchromium_profiler_stopped_toast" msgid="7610282533871917576">"Profilovač bol dokončený. Výsledky nájdete v súbore %1$s."</string>
+    <string name="webviewchromium_profiler_no_storage_toast" msgid="6415118515448171108">"Profilovač nie je možné spustiť, pretože nie je pripravené externé úložisko"</string>
+    <string name="webviewchromium_profiler_error_toast" msgid="3020154324443664032">"Spustenie profilovača sa nepodarilo"</string>
 </resources>

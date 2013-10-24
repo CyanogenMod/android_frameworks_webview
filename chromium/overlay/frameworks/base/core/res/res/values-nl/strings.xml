@@ -47,12 +47,8 @@
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"Kan eerdere bewerking niet voltooien wegens onvoldoende geheugen"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"Kan bestand niet openen"</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"Deze functionaliteit wordt niet ondersteund in deze versie van Android."</string>
-    <!-- no translation found for webviewchromium_profiler_started_toast (5173879436794997552) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_stopped_toast (7610282533871917576) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_no_storage_toast (6415118515448171108) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_error_toast (3020154324443664032) -->
-    <skip />
+    <string name="webviewchromium_profiler_started_toast" msgid="5173879436794997552">"Profiler gestart"</string>
+    <string name="webviewchromium_profiler_stopped_toast" msgid="7610282533871917576">"Profiler voltooid. De resultaten bevinden zich in %1$s."</string>
+    <string name="webviewchromium_profiler_no_storage_toast" msgid="6415118515448171108">"Kan profiler niet starten omdat externe opslag niet gereed is"</string>
+    <string name="webviewchromium_profiler_error_toast" msgid="3020154324443664032">"Kan profiler niet starten"</string>
 </resources>

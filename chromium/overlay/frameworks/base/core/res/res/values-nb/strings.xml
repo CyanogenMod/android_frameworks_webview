@@ -47,12 +47,8 @@
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"Kunne ikke fullføre forrige handling på grunn av for lite minne"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"Kunne ikke åpne den valgte filen"</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"Denne funksjonaliteten støttes ikke i denne Android-versjonen."</string>
-    <!-- no translation found for webviewchromium_profiler_started_toast (5173879436794997552) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_stopped_toast (7610282533871917576) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_no_storage_toast (6415118515448171108) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_error_toast (3020154324443664032) -->
-    <skip />
+    <string name="webviewchromium_profiler_started_toast" msgid="5173879436794997552">"Profileringsverktøy startet"</string>
+    <string name="webviewchromium_profiler_stopped_toast" msgid="7610282533871917576">"Profileringsverktøyet er ferdig. Resultatene er i %1$s."</string>
+    <string name="webviewchromium_profiler_no_storage_toast" msgid="6415118515448171108">"Kan ikke starte profileringsverktøyet fordi den eksterne lagringen ikke er klar"</string>
+    <string name="webviewchromium_profiler_error_toast" msgid="3020154324443664032">"Kunne ikke starte profileringsverktøyet"</string>
 </resources>

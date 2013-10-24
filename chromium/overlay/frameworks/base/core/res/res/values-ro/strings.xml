@@ -47,12 +47,8 @@
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"Nu s-a putut finaliza operațiunea anterioară din cauza memoriei reduse"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"Fișierul selectat nu s-a deschis"</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"Această funcție nu este acceptată în această versiune de Android."</string>
-    <!-- no translation found for webviewchromium_profiler_started_toast (5173879436794997552) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_stopped_toast (7610282533871917576) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_no_storage_toast (6415118515448171108) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_error_toast (3020154324443664032) -->
-    <skip />
+    <string name="webviewchromium_profiler_started_toast" msgid="5173879436794997552">"Instr. de diagnosticare a pornit"</string>
+    <string name="webviewchromium_profiler_stopped_toast" msgid="7610282533871917576">"Instrumentul de diagnosticare a finalizat operația. Rezultatele apar în %1$s."</string>
+    <string name="webviewchromium_profiler_no_storage_toast" msgid="6415118515448171108">"Instrumentul de diagnosticare nu poate porni. Stocarea externă nu este pregătită"</string>
+    <string name="webviewchromium_profiler_error_toast" msgid="3020154324443664032">"Instrumentul de diagnosticare nu a putut porni."</string>
 </resources>

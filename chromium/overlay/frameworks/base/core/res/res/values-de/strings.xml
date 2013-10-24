@@ -47,12 +47,8 @@
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"Der Vorgang konnte aufgrund der geringen Speicherkapazität nicht abgeschlossen werden."</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"Fehler beim Öffnen der Datei"</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"Die Funktion wird von dieser Android-Version nicht unterstützt."</string>
-    <!-- no translation found for webviewchromium_profiler_started_toast (5173879436794997552) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_stopped_toast (7610282533871917576) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_no_storage_toast (6415118515448171108) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_error_toast (3020154324443664032) -->
-    <skip />
+    <string name="webviewchromium_profiler_started_toast" msgid="5173879436794997552">"Profiler gestartet"</string>
+    <string name="webviewchromium_profiler_stopped_toast" msgid="7610282533871917576">"Profiler beendet. Die Ergebnisse sind in %1$s gespeichert."</string>
+    <string name="webviewchromium_profiler_no_storage_toast" msgid="6415118515448171108">"Profiler kann nicht gestartet werden, weil kein externer Speicher vorhanden ist."</string>
+    <string name="webviewchromium_profiler_error_toast" msgid="3020154324443664032">"Fehler beim Starten des Profilers"</string>
 </resources>

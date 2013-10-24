@@ -47,12 +47,8 @@
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"記憶體不足，因此無法完成前一項作業"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"無法開啟選取的檔案"</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"這個 Android 版本不支援這項功能。"</string>
-    <!-- no translation found for webviewchromium_profiler_started_toast (5173879436794997552) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_stopped_toast (7610282533871917576) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_no_storage_toast (6415118515448171108) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_error_toast (3020154324443664032) -->
-    <skip />
+    <string name="webviewchromium_profiler_started_toast" msgid="5173879436794997552">"分析器已啟動"</string>
+    <string name="webviewchromium_profiler_stopped_toast" msgid="7610282533871917576">"分析完成，系統已將分析結果儲存在「%1$s」。"</string>
+    <string name="webviewchromium_profiler_no_storage_toast" msgid="6415118515448171108">"外部儲存裝置尚未就緒，因此無法啟動分析器"</string>
+    <string name="webviewchromium_profiler_error_toast" msgid="3020154324443664032">"無法啟動分析器"</string>
 </resources>

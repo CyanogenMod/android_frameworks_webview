@@ -47,12 +47,8 @@
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"Nie można dokończyć poprzedniej operacji z powodu zbyt małej ilości pamięci"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"Nie udało się otworzyć pliku"</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"W tej wersji Androida ta funkcja jest niedostępna."</string>
-    <!-- no translation found for webviewchromium_profiler_started_toast (5173879436794997552) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_stopped_toast (7610282533871917576) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_no_storage_toast (6415118515448171108) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_error_toast (3020154324443664032) -->
-    <skip />
+    <string name="webviewchromium_profiler_started_toast" msgid="5173879436794997552">"Profiler został uruchomiony"</string>
+    <string name="webviewchromium_profiler_stopped_toast" msgid="7610282533871917576">"Profiler zakończył działanie. Wyniki są w pliku %1$s."</string>
+    <string name="webviewchromium_profiler_no_storage_toast" msgid="6415118515448171108">"Nie można uruchomić profilera, bo pamięć zewnętrzna nie jest gotowa"</string>
+    <string name="webviewchromium_profiler_error_toast" msgid="3020154324443664032">"Nie udało się uruchomić profilera"</string>
 </resources>

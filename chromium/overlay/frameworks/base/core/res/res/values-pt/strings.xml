@@ -47,12 +47,8 @@
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"Não foi possível concluir a operação anterior devido a memória insuficiente"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"Falha ao abrir o arquivo"</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"Funcionalidade não suportada nesta versão do Android."</string>
-    <!-- no translation found for webviewchromium_profiler_started_toast (5173879436794997552) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_stopped_toast (7610282533871917576) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_no_storage_toast (6415118515448171108) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_error_toast (3020154324443664032) -->
-    <skip />
+    <string name="webviewchromium_profiler_started_toast" msgid="5173879436794997552">"Criador de perfil iniciado"</string>
+    <string name="webviewchromium_profiler_stopped_toast" msgid="7610282533871917576">"Criador de perfil concluído. Os resultados estão em %1$s."</string>
+    <string name="webviewchromium_profiler_no_storage_toast" msgid="6415118515448171108">"Impossível iniciar o criador de perfil: o armazenamento externo não está pronto"</string>
+    <string name="webviewchromium_profiler_error_toast" msgid="3020154324443664032">"Falha ao iniciar o criador de perfil"</string>
 </resources>

@@ -47,12 +47,8 @@
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"Không thể hoàn tất thao tác trước do sắp hết bộ nhớ"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"Không mở được tệp đã chọn"</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"Chức năng này không được hỗ trợ trong phiên bản này của Android."</string>
-    <!-- no translation found for webviewchromium_profiler_started_toast (5173879436794997552) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_stopped_toast (7610282533871917576) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_no_storage_toast (6415118515448171108) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_error_toast (3020154324443664032) -->
-    <skip />
+    <string name="webviewchromium_profiler_started_toast" msgid="5173879436794997552">"Đã chạy profiler"</string>
+    <string name="webviewchromium_profiler_stopped_toast" msgid="7610282533871917576">"Đã hoàn tất profiler. Kết quả có trong %1$s."</string>
+    <string name="webviewchromium_profiler_no_storage_toast" msgid="6415118515448171108">"Không thể chạy profiler do bộ nhớ ngoài chưa sẵn sàng"</string>
+    <string name="webviewchromium_profiler_error_toast" msgid="3020154324443664032">"Không chạy profiler được"</string>
 </resources>

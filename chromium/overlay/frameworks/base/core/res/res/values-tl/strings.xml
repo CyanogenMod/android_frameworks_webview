@@ -47,12 +47,8 @@
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"Hindi magawang kumpletuhin ang nakaraang operasyon dahil sa mababang memory"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"Hindi mabuksan ang napiling file"</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"Hindi sinusuportahan ang pagpapaganang ito sa bersyong ito ng Android."</string>
-    <!-- no translation found for webviewchromium_profiler_started_toast (5173879436794997552) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_stopped_toast (7610282533871917576) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_no_storage_toast (6415118515448171108) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_error_toast (3020154324443664032) -->
-    <skip />
+    <string name="webviewchromium_profiler_started_toast" msgid="5173879436794997552">"Sinimulan ang profiler"</string>
+    <string name="webviewchromium_profiler_stopped_toast" msgid="7610282533871917576">"Tapos na ang profiler. Ang mga resulta ay nasa %1$s."</string>
+    <string name="webviewchromium_profiler_no_storage_toast" msgid="6415118515448171108">"Hindi masimulan ang profiler dahil hindi nakahanda ang external storage"</string>
+    <string name="webviewchromium_profiler_error_toast" msgid="3020154324443664032">"Hindi nasimulan ang profiler"</string>
 </resources>

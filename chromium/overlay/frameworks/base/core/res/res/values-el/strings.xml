@@ -47,12 +47,8 @@
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"Δεν είναι δυνατή η ολοκλήρωση της προηγούμενης λειτουργίας λόγω της χαμηλής μνήμης"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"Αποτυχία ανοίγματος επιλ.αρχείου"</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"Αυτή η λειτουργία δεν υποστηρίζεται σε αυτήν την έκδοση Android."</string>
-    <!-- no translation found for webviewchromium_profiler_started_toast (5173879436794997552) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_stopped_toast (7610282533871917576) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_no_storage_toast (6415118515448171108) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_error_toast (3020154324443664032) -->
-    <skip />
+    <string name="webviewchromium_profiler_started_toast" msgid="5173879436794997552">"Έναρξη εφαρμογ. δημ. προφίλ"</string>
+    <string name="webviewchromium_profiler_stopped_toast" msgid="7610282533871917576">"Το πρόγραμμα δημιουργίας ολοκληρώθηκε. Τα αποτελέσματα βρίσκονται σε %1$s."</string>
+    <string name="webviewchromium_profiler_no_storage_toast" msgid="6415118515448171108">"Αδύνατη έναρξη εφαρμογής δημ. προφίλ: Ο εξωτ. αποθηκ. χώρος δεν είναι έτοιμος."</string>
+    <string name="webviewchromium_profiler_error_toast" msgid="3020154324443664032">"Αποτυχία έναρξης εφαρμογής δημιουργίας προφίλ"</string>
 </resources>

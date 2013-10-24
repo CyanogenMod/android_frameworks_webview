@@ -47,12 +47,8 @@
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"No hi ha prou memòria per completar l\'operació"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"No es pot obrir fitxer selecc."</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"No s\'admet aquesta funcionalitat en aquesta versió d\'Android."</string>
-    <!-- no translation found for webviewchromium_profiler_started_toast (5173879436794997552) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_stopped_toast (7610282533871917576) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_no_storage_toast (6415118515448171108) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_error_toast (3020154324443664032) -->
-    <skip />
+    <string name="webviewchromium_profiler_started_toast" msgid="5173879436794997552">"Creador de perfils iniciat"</string>
+    <string name="webviewchromium_profiler_stopped_toast" msgid="7610282533871917576">"El creador de perfils ha acabat. Els resultats són a %1$s."</string>
+    <string name="webviewchromium_profiler_no_storage_toast" msgid="6415118515448171108">"No es pot iniciar el creador de perfils perquè l\'emmagatz. extern no està llest."</string>
+    <string name="webviewchromium_profiler_error_toast" msgid="3020154324443664032">"Error en iniciar el creador de perfils"</string>
 </resources>

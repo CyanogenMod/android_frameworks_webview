@@ -47,12 +47,8 @@
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"عملکرد قبلی به علت کم بودن حافظه کامل نشد"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"باز کردن فایل انتخابی انجام نشد"</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"این عملکرد در این نسخه از Android پشتیبانی نمی‌شود."</string>
-    <!-- no translation found for webviewchromium_profiler_started_toast (5173879436794997552) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_stopped_toast (7610282533871917576) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_no_storage_toast (6415118515448171108) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_error_toast (3020154324443664032) -->
-    <skip />
+    <string name="webviewchromium_profiler_started_toast" msgid="5173879436794997552">"تحلیل‌گر داده شروع به کار کرد"</string>
+    <string name="webviewchromium_profiler_stopped_toast" msgid="7610282533871917576">"کار تحلیل‌گر داده به پایان رسید. نتایج در %1$s موجود هستند."</string>
+    <string name="webviewchromium_profiler_no_storage_toast" msgid="6415118515448171108">"شروع به کار تحلیل‌گر داده ممکن نیست زیرا فضای ذخیره‌سازی خارجی آماده نمی‌باشد"</string>
+    <string name="webviewchromium_profiler_error_toast" msgid="3020154324443664032">"تحلیل‌گر داده شروع به کار نکرد"</string>
 </resources>

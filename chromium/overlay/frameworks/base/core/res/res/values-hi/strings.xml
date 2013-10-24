@@ -47,12 +47,8 @@
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"कम स्मृति के कारण पिछला ऑपरेशन पूर्ण नहीं हो पाया"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"चयनित फ़ाइल खोलने में विफल"</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"यह कार्यात्मकता Android के इस संस्करण में समर्थित नहीं है."</string>
-    <!-- no translation found for webviewchromium_profiler_started_toast (5173879436794997552) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_stopped_toast (7610282533871917576) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_no_storage_toast (6415118515448171108) -->
-    <skip />
-    <!-- no translation found for webviewchromium_profiler_error_toast (3020154324443664032) -->
-    <skip />
+    <string name="webviewchromium_profiler_started_toast" msgid="5173879436794997552">"प्रोफ़ाइल प्रारंभ हो गया"</string>
+    <string name="webviewchromium_profiler_stopped_toast" msgid="7610282533871917576">"प्रोफ़ाइल समाप्त हो गया. परिणाम %1$s में हैं."</string>
+    <string name="webviewchromium_profiler_no_storage_toast" msgid="6415118515448171108">"प्रोफ़ाइल प्रारंभ नहीं किया जा सकता क्योंकि बाहरी संग्रहण तैयार नहीं है"</string>
+    <string name="webviewchromium_profiler_error_toast" msgid="3020154324443664032">"प्रोफ़ाइलर प्रारंभ करने में विफल"</string>
 </resources>
