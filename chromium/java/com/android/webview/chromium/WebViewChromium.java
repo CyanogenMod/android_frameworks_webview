@@ -1992,9 +1992,9 @@ class WebViewChromium implements WebViewProvider,
 
         @Override
         public void onScrollChanged(int l, int t, int oldl, int oldt) {
-            mWebViewPrivate.setScrollXRaw(l);
-            mWebViewPrivate.setScrollYRaw(t);
-            mWebViewPrivate.onScrollChanged(l, t, oldl, oldt);
+	    // Intentional no-op.
+            // Chromium calls this directly to trigger accessibility events. That isn't needed
+            // for WebView since super_scrollTo invokes onScrollChanged for us.
         }
 
         @Override
