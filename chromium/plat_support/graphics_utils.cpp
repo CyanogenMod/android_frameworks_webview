@@ -60,6 +60,16 @@ AwPixelInfo* GetPixels(JNIEnv* env, jobject java_canvas) {
   if (!canvas)
     return NULL;
 
+  // Workarounds for http://crbug.com/271096: SW draw only supports
+  // translate & scale transforms, and a simple rectangular clip.
+  // (This also avoids significant wasted time in calling
+  // SkCanvasStateUtils::CaptureCanvasState when the clip is complex).
+  if (!canvas->getTotalClip().isRect() ||
+      (canvas->getTotalMatrix().getType() &
+                ~(SkMatrix::kTranslate_Mask | SkMatrix::kScale_Mask))) {
+    return NULL;
+  }
+
   UniquePtr<PixelInfo> pixels(new PixelInfo(canvas));
   return pixels->state ? pixels.release() : NULL;
 }
