@@ -46,9 +46,9 @@
     <string name="webviewchromium_color_picker_dialog_title" msgid="709749370892752246">"تحديد اللون"</string>
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"يتعذر إتمام العملية السابقة نظرًا لانخفاض الذاكرة"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"أخفق فتح الملف المحدد"</string>
-    <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"هذه الوظيفة غير متوافقة مع هذا الإصدار من Android."</string>
+    <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"‏هذه الوظيفة غير متوافقة مع هذا الإصدار من Android."</string>
     <string name="webviewchromium_profiler_started_toast" msgid="5173879436794997552">"بدأ محلل الملفات الشخصية"</string>
-    <string name="webviewchromium_profiler_stopped_toast" msgid="7610282533871917576">"انتهى عمل محلل الملفات الشخصية. النتائج موجودة في %1$s."</string>
+    <string name="webviewchromium_profiler_stopped_toast" msgid="7610282533871917576">"‏انتهى عمل محلل الملفات الشخصية. النتائج موجودة في %1$s."</string>
     <string name="webviewchromium_profiler_no_storage_toast" msgid="6415118515448171108">"لا يمكن بدء محلل الملفات الشخصية لأن وحدة التخزين الخارجية ليست جاهزة"</string>
     <string name="webviewchromium_profiler_error_toast" msgid="3020154324443664032">"أخفق بدء محلل الملفات الشخصية"</string>
 </resources>
