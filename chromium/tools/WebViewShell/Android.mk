@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2012 The Android Open Source Project
+# Copyright (C) 2013 The Android Open Source Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,17 +14,13 @@
 # limitations under the License.
 #
 
-# This package provides a layer of abstraction that allows the WebView
-# implementation to be replaced in the dependency graph.
-
 LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := webview
-LOCAL_MODULE_TAGS := optional
-LOCAL_REQUIRED_MODULES := webviewchromium
+LOCAL_SRC_FILES := $(call all-subdir-java-files)
 
-include $(BUILD_PHONY_PACKAGE)
+LOCAL_PACKAGE_NAME := WebViewShell
 
-# Include all the makefiles for subdirectories.
-include $(call all-makefiles-under,$(LOCAL_PATH))
+LOCAL_SDK_VERSION := 17
+
+include $(BUILD_PACKAGE)

@@ -1,5 +1,4 @@
-#
-# Copyright (C) 2012 The Android Open Source Project
+# Copyright (C) 2013 The Android Open Source Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,19 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
 
-# This package provides a layer of abstraction that allows the WebView
-# implementation to be replaced in the dependency graph.
+# Warning: this is actually a product definition, to be inherited from
 
-LOCAL_PATH := $(call my-dir)
-include $(CLEAR_VARS)
-
-LOCAL_MODULE := webview
-LOCAL_MODULE_TAGS := optional
-LOCAL_REQUIRED_MODULES := webviewchromium
-
-include $(BUILD_PHONY_PACKAGE)
-
-# Include all the makefiles for subdirectories.
-include $(call all-makefiles-under,$(LOCAL_PATH))
+PRODUCT_PACKAGE_OVERLAYS := \
+	frameworks/webview/chromium/overlay

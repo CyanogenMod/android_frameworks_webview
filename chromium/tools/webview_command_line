@@ -1,5 +1,6 @@
+#!/bin/bash
 #
-# Copyright (C) 2012 The Android Open Source Project
+# Copyright (C) 2013 The Android Open Source Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,19 +13,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
 
-# This package provides a layer of abstraction that allows the WebView
-# implementation to be replaced in the dependency graph.
+CMD_LINE_FILE=/data/local/tmp/webview-command-line
 
-LOCAL_PATH := $(call my-dir)
-include $(CLEAR_VARS)
-
-LOCAL_MODULE := webview
-LOCAL_MODULE_TAGS := optional
-LOCAL_REQUIRED_MODULES := webviewchromium
-
-include $(BUILD_PHONY_PACKAGE)
-
-# Include all the makefiles for subdirectories.
-include $(call all-makefiles-under,$(LOCAL_PATH))
+if [ $# -eq 0 ] ; then
+  # If nothing specified, print the command line (stripping off "webview").
+  adb shell "cat $CMD_LINE_FILE 2>/dev/null" | cut -d" " -f "2-"
+elif [ $# -eq 1 ] && [ "$1" = '' ] ; then
+  # If given an empty string, delete the command line.
+  set -x
+  adb shell rm $CMD_LINE_FILE >/dev/null
+else
+  # Else set it.
+  set -x
+  adb shell "echo 'webview $*' > $CMD_LINE_FILE"
+  adb shell chmod 0664 $CMD_LINE_FILE
+fi
