@@ -21,9 +21,13 @@
   <add-resource type="attr" name="webviewchromium_select_dialog_multichoice" />
   <add-resource type="attr" name="webviewchromium_select_dialog_singlechoice" />
 
+  <add-resource type="color" name="webviewchromium_autofill_dark_divider_color" />
+  <add-resource type="color" name="webviewchromium_autofill_divider_color" />
   <add-resource type="color" name="webviewchromium_color_picker_border_color" />
 
   <add-resource type="dimen" name="webviewchromium_color_picker_gradient_margin" />
+  <add-resource type="dimen" name="webviewchromium_autofill_text_height" />
+  <add-resource type="dimen" name="webviewchromium_autofill_text_divider_height" />
   <add-resource type="dimen" name="webviewchromium_link_preview_overlay_radius" />
 
   <add-resource type="drawable" name="webviewchromium_color_advanced_select_handle" />
