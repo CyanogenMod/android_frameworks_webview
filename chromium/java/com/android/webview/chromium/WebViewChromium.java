@@ -244,8 +244,7 @@ class WebViewChromium implements WebViewProvider,
 
     private void initForReal() {
         mAwContents = new AwContents(mFactory.getBrowserContext(), mWebView,
-                new InternalAccessAdapter(), mContentsClientAdapter, new AwLayoutSizer(),
-                mWebSettings.getAwSettings());
+                new InternalAccessAdapter(), mContentsClientAdapter, mWebSettings.getAwSettings());
 
         if (mAppTargetSdkVersion >= Build.VERSION_CODES.KITKAT) {
             // On KK and above, favicons are automatically downloaded as the method
