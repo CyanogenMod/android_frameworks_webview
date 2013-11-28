@@ -41,6 +41,10 @@ public class ResourceProvider {
                 com.android.internal.R.attr.webviewchromium_select_dialog_singlechoice;
 
         // color
+        org.chromium.ui.R.color.autofill_dark_divider_color =
+                com.android.internal.R.color.webviewchromium_autofill_dark_divider_color;
+        org.chromium.ui.R.color.autofill_divider_color =
+                com.android.internal.R.color.webviewchromium_autofill_divider_color;
         org.chromium.ui.R.color.color_picker_border_color =
                 com.android.internal.R.color.webviewchromium_color_picker_border_color;
 
@@ -48,6 +52,10 @@ public class ResourceProvider {
 
         org.chromium.content.R.dimen.link_preview_overlay_radius =
                 com.android.internal.R.dimen.webviewchromium_link_preview_overlay_radius;
+        org.chromium.ui.R.dimen.autofill_text_height =
+                com.android.internal.R.dimen.webviewchromium_autofill_text_height;
+        org.chromium.ui.R.dimen.autofill_text_divider_height =
+                com.android.internal.R.dimen.webviewchromium_autofill_text_divider_height;
 
         // drawable
         org.chromium.content.R.drawable.ondemand_overlay =
