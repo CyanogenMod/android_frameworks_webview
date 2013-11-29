@@ -46,6 +46,7 @@ import org.chromium.base.CommandLine;
 import org.chromium.base.MemoryPressureListener;
 import org.chromium.base.PathService;
 import org.chromium.base.ThreadUtils;
+import org.chromium.content.app.ContentMain;
 import org.chromium.content.app.LibraryLoader;
 import org.chromium.content.browser.ContentViewStatics;
 import org.chromium.content.browser.ResourceExtractor;
@@ -315,7 +316,13 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     public CookieManager getCookieManager() {
         synchronized (mLock) {
             if (mCookieManager == null) {
-                ensureChromiumStartedLocked(true);
+                if (!mStarted) {
+                    // We can use CookieManager without starting Chromium; the native code
+                    // will bring up just the parts it needs to make this work on a temporary
+                    // basis until Chromium is started for real. The temporary cookie manager
+                    // needs the application context to have been set.
+                    ContentMain.initApplicationContext(ActivityThread.currentApplication());
+                }
                 mCookieManager = new CookieManagerAdapter(new AwCookieManager());
             }
         }
