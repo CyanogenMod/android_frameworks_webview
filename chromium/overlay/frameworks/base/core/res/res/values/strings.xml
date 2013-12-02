@@ -92,6 +92,22 @@
     <string name="webviewchromium_color_picker_button_cancel">Cancel</string>
     <!-- Title of Color Picker dialog. [CHAR-LIMIT=20] -->
     <string name="webviewchromium_color_picker_dialog_title">Select color</string>
+    <!-- Label for Color Picker color button. -->
+    <string name="webviewchromium_color_picker_button_red">Red</string>
+    <!-- Label for Color Picker color button. -->
+    <string name="webviewchromium_color_picker_button_cyan">Cyan</string>
+    <!-- Label for Color Picker color button. -->
+    <string name="webviewchromium_color_picker_button_blue">Blue</string>
+    <!-- Label for Color Picker color button. -->
+    <string name="webviewchromium_color_picker_button_green">Green</string>
+    <!-- Label for Color Picker color button. -->
+    <string name="webviewchromium_color_picker_button_magenta">Magenta</string>
+    <!-- Label for Color Picker color button. -->
+    <string name="webviewchromium_color_picker_button_yellow">Yellow</string>
+    <!-- Label for Color Picker color button. -->
+    <string name="webviewchromium_color_picker_button_black">Black</string>
+    <!-- Label for Color Picker color button. -->
+    <string name="webviewchromium_color_picker_button_white">White</string>
 
     <!-- Error shown when the browser is restarted due to low memory during a file picker operation. [CHAR-LIMIT=NONE] -->
     <string name="webviewchromium_low_memory_error">Unable to complete previous operation due to low memory</string>
