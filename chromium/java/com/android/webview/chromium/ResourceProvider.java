@@ -56,11 +56,15 @@ public class ResourceProvider {
                 com.android.internal.R.dimen.webviewchromium_autofill_text_height;
         org.chromium.ui.R.dimen.autofill_text_divider_height =
                 com.android.internal.R.dimen.webviewchromium_autofill_text_divider_height;
+        org.chromium.ui.R.dimen.color_button_height =
+                com.android.internal.R.dimen.webviewchromium_color_button_height;
 
         // drawable
         org.chromium.content.R.drawable.ondemand_overlay =
                 com.android.internal.R.drawable.webviewchromium_ondemand_overlay;
 
+        org.chromium.ui.R.drawable.color_button_background =
+                com.android.internal.R.drawable.webviewchromium_color_button_background;
         org.chromium.ui.R.drawable.color_picker_advanced_select_handle =
                 com.android.internal.R.drawable.webviewchromium_color_picker_advanced_select_handle;
 
@@ -106,10 +110,10 @@ public class ResourceProvider {
                 com.android.internal.R.id.webviewchromium_color_picker_advanced;
         org.chromium.ui.R.id.color_picker_simple =
                 com.android.internal.R.id.webviewchromium_color_picker_simple;
+        org.chromium.ui.R.id.color_button_swatch =
+                com.android.internal.R.id.webviewchromium_color_button_swatch;
         org.chromium.ui.R.id.more_colors_button_border =
                 com.android.internal.R.id.webviewchromium_color_picker_more_colors_button_border;
-        org.chromium.ui.R.id.color_picker_simple_border =
-                com.android.internal.R.id.webviewchromium_color_picker_simple_border;
         org.chromium.ui.R.id.gradient =
                 com.android.internal.R.id.webviewchromium_color_picker_gradient;
         org.chromium.ui.R.id.text =
@@ -216,6 +220,23 @@ public class ResourceProvider {
                 com.android.internal.R.string.webviewchromium_color_picker_button_cancel;
         org.chromium.ui.R.string.color_picker_dialog_title =
                 com.android.internal.R.string.webviewchromium_color_picker_dialog_title;
+        org.chromium.ui.R.string.color_picker_button_red =
+                com.android.internal.R.string.webviewchromium_color_picker_button_red;
+        org.chromium.ui.R.string.color_picker_button_cyan =
+                com.android.internal.R.string.webviewchromium_color_picker_button_cyan;
+        org.chromium.ui.R.string.color_picker_button_blue =
+                com.android.internal.R.string.webviewchromium_color_picker_button_blue;
+        org.chromium.ui.R.string.color_picker_button_green =
+                com.android.internal.R.string.webviewchromium_color_picker_button_green;
+        org.chromium.ui.R.string.color_picker_button_magenta =
+                com.android.internal.R.string.webviewchromium_color_picker_button_magenta;
+        org.chromium.ui.R.string.color_picker_button_yellow =
+                com.android.internal.R.string.webviewchromium_color_picker_button_yellow;
+        org.chromium.ui.R.string.color_picker_button_black =
+                com.android.internal.R.string.webviewchromium_color_picker_button_black;
+        org.chromium.ui.R.string.color_picker_button_white =
+                com.android.internal.R.string.webviewchromium_color_picker_button_white;
+
 
         // style
         org.chromium.content.R.style.SelectPopupDialog =
