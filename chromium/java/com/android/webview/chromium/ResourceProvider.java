@@ -202,6 +202,8 @@ public class ResourceProvider {
         org.chromium.content.R.string.week_picker_dialog_title =
                 com.android.internal.R.string.webviewchromium_week_picker_dialog_title;
 
+        org.chromium.ui.R.string.copy_to_clipboard_failure_message =
+                com.android.internal.R.string.webviewchromium_copy_to_clipboard_failure_message;
         org.chromium.ui.R.string.low_memory_error =
                 com.android.internal.R.string.webviewchromium_low_memory_error;
         org.chromium.ui.R.string.opening_file_error =

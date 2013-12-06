@@ -85,6 +85,7 @@
   <java-symbol type="string" name="webviewchromium_date_picker_dialog_set" />
   <java-symbol type="string" name="webviewchromium_date_picker_dialog_title" />
   <java-symbol type="string" name="webviewchromium_date_time_picker_dialog_title" />
+  <java-symbol type="string" name="webviewchromium_copy_to_clipboard_failure_message" />
   <java-symbol type="string" name="webviewchromium_low_memory_error" />
   <java-symbol type="string" name="webviewchromium_media_player_error_button" />
   <java-symbol type="string" name="webviewchromium_media_player_error_text_invalid_progressive_playback" />

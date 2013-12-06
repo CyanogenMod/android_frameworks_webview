@@ -109,6 +109,9 @@
     <!-- Label for Color Picker color button. -->
     <string name="webviewchromium_color_picker_button_white">White</string>
 
+    <!-- Notification for when copying to the clipboard fails. [CHAR-LIMIT=64] -->
+    <string name="webviewchromium_copy_to_clipboard_failure_message">Failed to copy to the clipboard</string>
+
     <!-- Error shown when the browser is restarted due to low memory during a file picker operation. [CHAR-LIMIT=NONE] -->
     <string name="webviewchromium_low_memory_error">Unable to complete previous operation due to low memory</string>
 

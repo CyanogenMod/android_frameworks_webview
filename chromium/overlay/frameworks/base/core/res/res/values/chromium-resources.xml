@@ -79,6 +79,7 @@
   <add-resource type="string" name="webviewchromium_date_picker_dialog_set" />
   <add-resource type="string" name="webviewchromium_date_picker_dialog_title" />
   <add-resource type="string" name="webviewchromium_date_time_picker_dialog_title" />
+  <add-resource type="string" name="webviewchromium_copy_to_clipboard_failure_message" />
   <add-resource type="string" name="webviewchromium_low_memory_error" />
   <add-resource type="string" name="webviewchromium_media_player_error_button" />
   <add-resource type="string" name="webviewchromium_media_player_error_text_invalid_progressive_playback" />
