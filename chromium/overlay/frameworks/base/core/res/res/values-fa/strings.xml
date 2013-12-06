@@ -35,5 +35,5 @@
     <string name="webviewchromium_color_picker_dialog_title" msgid="709749370892752246">"انتخاب رنگ"</string>
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"عملکرد قبلی به علت کم بودن حافظه کامل نشد"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"باز کردن فایل انتخابی انجام نشد"</string>
-    <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"این عملکرد در این نسخه از Android پشتیبانی نمی‌شود."</string>
+    <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"‏این عملکرد در این نسخه از Android پشتیبانی نمی‌شود."</string>
 </resources>

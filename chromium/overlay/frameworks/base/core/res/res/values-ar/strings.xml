@@ -35,5 +35,5 @@
     <string name="webviewchromium_color_picker_dialog_title" msgid="709749370892752246">"تحديد اللون"</string>
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"يتعذر إتمام العملية السابقة نظرًا لانخفاض الذاكرة"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"أخفق فتح الملف المحدد"</string>
-    <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"هذه الوظيفة غير متوافقة مع هذا الإصدار من Android."</string>
+    <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"‏هذه الوظيفة غير متوافقة مع هذا الإصدار من Android."</string>
 </resources>
