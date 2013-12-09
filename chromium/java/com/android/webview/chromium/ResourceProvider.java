@@ -73,6 +73,10 @@ public class ResourceProvider {
         org.chromium.content.R.id.ampm = com.android.internal.R.id.webviewchromium_ampm;
         org.chromium.content.R.id.date_picker =
                 com.android.internal.R.id.webviewchromium_date_picker;
+        org.chromium.content.R.id.date_time_suggestion_value =
+                com.android.internal.R.id.webviewchromium_date_time_suggestion_value;
+        org.chromium.content.R.id.date_time_suggestion_label =
+                com.android.internal.R.id.webviewchromium_date_time_suggestion_label;
         org.chromium.content.R.id.hour = com.android.internal.R.id.webviewchromium_hour;
         org.chromium.content.R.id.milli = com.android.internal.R.id.webviewchromium_milli;
         org.chromium.content.R.id.minute = com.android.internal.R.id.webviewchromium_minute;
@@ -131,6 +135,8 @@ public class ResourceProvider {
 
         org.chromium.content.R.layout.date_time_picker_dialog =
                 com.android.internal.R.layout.webviewchromium_date_time_picker_dialog;
+        org.chromium.content.R.layout.date_time_suggestion =
+                com.android.internal.R.layout.webviewchromium_date_time_suggestion;
         org.chromium.content.R.layout.two_field_date_picker =
                 com.android.internal.R.layout.webviewchromium_two_field_date_picker;
         org.chromium.content.R.layout.multi_field_time_picker_dialog =
@@ -173,6 +179,8 @@ public class ResourceProvider {
                 com.android.internal.R.string.webviewchromium_date_picker_dialog_set;
         org.chromium.content.R.string.date_picker_dialog_title =
                 com.android.internal.R.string.webviewchromium_date_picker_dialog_title;
+        org.chromium.content.R.string.date_picker_dialog_other_button_label =
+                com.android.internal.R.string.webviewchromium_date_picker_dialog_other_button_label;
         org.chromium.content.R.string.date_time_picker_dialog_title =
                 com.android.internal.R.string.webviewchromium_date_time_picker_dialog_title;
         org.chromium.content.R.string.media_player_error_button =
@@ -199,6 +207,8 @@ public class ResourceProvider {
                 com.android.internal.R.string.webviewchromium_time_picker_dialog_am;
         org.chromium.content.R.string.time_picker_dialog_pm =
                 com.android.internal.R.string.webviewchromium_time_picker_dialog_pm;
+        org.chromium.content.R.string.time_picker_dialog_title =
+                com.android.internal.R.string.webviewchromium_time_picker_dialog_title;
         org.chromium.content.R.string.week_picker_dialog_title =
                 com.android.internal.R.string.webviewchromium_week_picker_dialog_title;
 
