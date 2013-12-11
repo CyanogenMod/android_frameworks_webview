@@ -45,6 +45,7 @@
   <java-symbol type="layout" name="webviewchromium_color_picker_dialog_content" />
   <java-symbol type="layout" name="webviewchromium_color_picker_dialog_title" />
   <java-symbol type="layout" name="webviewchromium_date_time_picker_dialog" />
+  <java-symbol type="layout" name="webviewchromium_date_time_suggestion" />
   <java-symbol type="layout" name="webviewchromium_two_field_date_picker" />
   <java-symbol type="layout" name="webviewchromium_multi_field_time_picker_dialog" />
 
@@ -84,6 +85,7 @@
   <java-symbol type="string" name="webviewchromium_date_picker_dialog_clear" />
   <java-symbol type="string" name="webviewchromium_date_picker_dialog_set" />
   <java-symbol type="string" name="webviewchromium_date_picker_dialog_title" />
+  <java-symbol type="string" name="webviewchromium_date_picker_dialog_other_button_label" />
   <java-symbol type="string" name="webviewchromium_date_time_picker_dialog_title" />
   <java-symbol type="string" name="webviewchromium_copy_to_clipboard_failure_message" />
   <java-symbol type="string" name="webviewchromium_low_memory_error" />
@@ -122,6 +124,8 @@
   <java-symbol type="id" name="webviewchromium_color_picker_title" />
   <java-symbol type="id" name="webviewchromium_ampm" />
   <java-symbol type="id" name="webviewchromium_date_picker" />
+  <java-symbol type="id" name="webviewchromium_date_time_suggestion_value" />
+  <java-symbol type="id" name="webviewchromium_date_time_suggestion_label" />
   <java-symbol type="id" name="webviewchromium_hour" />
   <java-symbol type="id" name="webviewchromium_milli" />
   <java-symbol type="id" name="webviewchromium_minute" />
