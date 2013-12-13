@@ -36,9 +36,6 @@
   <add-resource type="drawable" name="webviewchromium_color_button_background" />
   <add-resource type="drawable" name="webviewchromium_color_picker_border" />
   <add-resource type="drawable" name="webviewchromium_ondemand_overlay" />
-  <add-resource type="drawable" name="webviewchromium_bubble" />
-  <add-resource type="drawable" name="webviewchromium_bubble_arrow_up" />
-  <add-resource type="drawable" name="webviewchromium_pageinfo_warning_major" />
 
   <add-resource type="layout" name="webviewchromium_autofill_text" />
   <add-resource type="layout" name="webviewchromium_color_picker_advanced_component" />
@@ -48,12 +45,8 @@
   <add-resource type="layout" name="webviewchromium_date_time_suggestion" />
   <add-resource type="layout" name="webviewchromium_multi_field_time_picker_dialog" />
   <add-resource type="layout" name="webviewchromium_two_field_date_picker" />
-  <add-resource type="layout" name="webviewchromium_validation_message_bubble" />
 
   <add-resource type="id" name="webviewchromium_autofill_popup_window" />
-  <add-resource type="id" name="webviewchromium_validation_bubble_main_text" />
-  <add-resource type="id" name="webviewchromium_validation_bubble_sub_text" />
-  <add-resource type="id" name="webviewchromium_validation_bubble_arrow_image" />
 
   <add-resource type="string" name="webviewchromium_accessibility_content_view" />
   <add-resource type="string" name="webviewchromium_accessibility_date_picker_month" />
