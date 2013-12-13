@@ -39,6 +39,9 @@
   <java-symbol type="drawable" name="webviewchromium_color_picker_advanced_select_handle" />
   <java-symbol type="drawable" name="webviewchromium_color_picker_border" />
   <java-symbol type="drawable" name="webviewchromium_ondemand_overlay" />
+  <java-symbol type="drawable" name="webviewchromium_bubble" />
+  <java-symbol type="drawable" name="webviewchromium_bubble_arrow_up" />
+  <java-symbol type="drawable" name="webviewchromium_pageinfo_warning_major" />
 
   <java-symbol type="layout" name="webviewchromium_autofill_text" />
   <java-symbol type="layout" name="webviewchromium_color_picker_advanced_component" />
@@ -48,6 +51,7 @@
   <java-symbol type="layout" name="webviewchromium_date_time_suggestion" />
   <java-symbol type="layout" name="webviewchromium_two_field_date_picker" />
   <java-symbol type="layout" name="webviewchromium_multi_field_time_picker_dialog" />
+  <java-symbol type="layout" name="webviewchromium_validation_message_bubble" />
 
   <java-symbol type="menu" name="webviewchromium_select_action_menu" />
 
@@ -142,6 +146,9 @@
   <java-symbol type="id" name="webviewchromium_select_action_menu_web_search" />
   <java-symbol type="id" name="webviewchromium_time_picker" />
   <java-symbol type="id" name="webviewchromium_year" />
+  <java-symbol type="id" name="webviewchromium_validation_bubble_main_text" />
+  <java-symbol type="id" name="webviewchromium_validation_bubble_sub_text" />
+  <java-symbol type="id" name="webviewchromium_validation_bubble_arrow_image" />
 
   <java-symbol type="style" name="webviewchromium_AutofillPopupWindow" />
   <java-symbol type="style" name="webviewchromium_SelectPopupDialog" />
