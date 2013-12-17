@@ -37,6 +37,7 @@ THIRD_PARTY_PROJECTS_WITH_FULL_HISTORY = [
     'sdch/open-vcdiff',
     'testing/gtest',
     'third_party/angle',
+    'third_party/brotli/src',
     'third_party/eyesfree/src/android/java/src/com/googlecode/eyesfree/braille',
     'third_party/freetype',
     'third_party/icu',
