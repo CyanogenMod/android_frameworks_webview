@@ -10,9 +10,11 @@
     <string name="webviewchromium_actionbar_share" msgid="8265707764014979342">"Дели"</string>
     <string name="webviewchromium_actionbar_web_search" msgid="539283440381511128">"Веб-претрага"</string>
     <string name="webviewchromium_accessibility_content_view" msgid="4892710761369744296">"Веб-приказ"</string>
+    <string name="webviewchromium_date_picker_dialog_title" msgid="2526916586861043590">"Подешавање датума"</string>
     <string name="webviewchromium_date_picker_dialog_set" msgid="1106446820088863527">"Подеси"</string>
     <string name="webviewchromium_date_picker_dialog_clear" msgid="6439296286509386196">"Обриши"</string>
-    <string name="webviewchromium_date_picker_dialog_title" msgid="2526916586861043590">"Подешавање датума"</string>
+    <!-- no translation found for webviewchromium_date_picker_dialog_other_button_label (3985479506807823488) -->
+    <skip />
     <string name="webviewchromium_date_time_picker_dialog_title" msgid="1993749766330125085">"Подешавање датума и времена"</string>
     <string name="webviewchromium_time_picker_dialog_title" msgid="8828361788181511983">"Подешавање времена"</string>
     <string name="webviewchromium_time_picker_dialog_am" msgid="7424804671722276100">"AM"</string>
@@ -44,6 +46,24 @@
     <string name="webviewchromium_color_picker_button_set" msgid="6981883782092158499">"Подеси"</string>
     <string name="webviewchromium_color_picker_button_cancel" msgid="11751988208172211">"Откажи"</string>
     <string name="webviewchromium_color_picker_dialog_title" msgid="709749370892752246">"Изаберите боју"</string>
+    <!-- no translation found for webviewchromium_color_picker_button_red (6131020724838687141) -->
+    <skip />
+    <!-- no translation found for webviewchromium_color_picker_button_cyan (3140315356534580408) -->
+    <skip />
+    <!-- no translation found for webviewchromium_color_picker_button_blue (1572313634116404709) -->
+    <skip />
+    <!-- no translation found for webviewchromium_color_picker_button_green (1003720528095717795) -->
+    <skip />
+    <!-- no translation found for webviewchromium_color_picker_button_magenta (2912944065975017462) -->
+    <skip />
+    <!-- no translation found for webviewchromium_color_picker_button_yellow (3473794849605150015) -->
+    <skip />
+    <!-- no translation found for webviewchromium_color_picker_button_black (4355127282571397998) -->
+    <skip />
+    <!-- no translation found for webviewchromium_color_picker_button_white (1315573027769681132) -->
+    <skip />
+    <!-- no translation found for webviewchromium_copy_to_clipboard_failure_message (522732862171513811) -->
+    <skip />
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"Није могуће довршити претходну радњу због недовољне количине слободне меморије"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"Отварање те датотеке није могуће"</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"Ова функција није подржана у овој верзији Android-а."</string>
