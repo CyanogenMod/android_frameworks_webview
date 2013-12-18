@@ -59,6 +59,7 @@ import org.chromium.android_webview.AwBrowserContext;
 import org.chromium.android_webview.AwContents;
 import org.chromium.android_webview.AwLayoutSizer;
 import org.chromium.android_webview.AwSettings;
+import org.chromium.android_webview.AwPrintDocumentAdapter;
 import org.chromium.base.ThreadUtils;
 import org.chromium.content.browser.LoadUrlParams;
 import org.chromium.net.NetworkChangeNotifier;
@@ -831,13 +832,6 @@ class WebViewChromium implements WebViewProvider,
             return ret;
         }
         return mAwContents.capturePicture();
-    }
-
-    @Override
-    public PrintDocumentAdapter createPrintDocumentAdapter() {
-        checkThread();
-        // TODO(sgurun) fix this after upstream part lands
-        return null;
     }
 
     @Override
@@ -2031,6 +2025,12 @@ class WebViewChromium implements WebViewProvider,
             return;
         }
         mAwContents.computeScroll();
+    }
+
+    @Override
+    public PrintDocumentAdapter createPrintDocumentAdapter() {
+        checkThread();
+        return new AwPrintDocumentAdapter(mAwContents.getPdfExporter());
     }
 
     // AwContents.InternalAccessDelegate implementation --------------------------------------

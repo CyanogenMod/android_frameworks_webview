@@ -26,13 +26,16 @@
 
   <java-symbol type="color" name="webviewchromium_autofill_dark_divider_color" />
   <java-symbol type="color" name="webviewchromium_autofill_divider_color" />
+  <java-symbol type="color" name="webviewchromium_color_picker_background_color" />
   <java-symbol type="color" name="webviewchromium_color_picker_border_color" />
 
+  <java-symbol type="dimen" name="webviewchromium_color_button_height" />
   <java-symbol type="dimen" name="webviewchromium_color_picker_gradient_margin" />
   <java-symbol type="dimen" name="webviewchromium_autofill_text_height" />
   <java-symbol type="dimen" name="webviewchromium_autofill_text_divider_height" />
   <java-symbol type="dimen" name="webviewchromium_link_preview_overlay_radius" />
 
+  <java-symbol type="drawable" name="webviewchromium_color_button_background" />
   <java-symbol type="drawable" name="webviewchromium_color_picker_advanced_select_handle" />
   <java-symbol type="drawable" name="webviewchromium_color_picker_border" />
   <java-symbol type="drawable" name="webviewchromium_ondemand_overlay" />
@@ -42,6 +45,7 @@
   <java-symbol type="layout" name="webviewchromium_color_picker_dialog_content" />
   <java-symbol type="layout" name="webviewchromium_color_picker_dialog_title" />
   <java-symbol type="layout" name="webviewchromium_date_time_picker_dialog" />
+  <java-symbol type="layout" name="webviewchromium_date_time_suggestion" />
   <java-symbol type="layout" name="webviewchromium_two_field_date_picker" />
   <java-symbol type="layout" name="webviewchromium_multi_field_time_picker_dialog" />
 
@@ -65,13 +69,25 @@
   <java-symbol type="string" name="webviewchromium_color_picker_button_more" />
   <java-symbol type="string" name="webviewchromium_color_picker_button_set" />
   <java-symbol type="string" name="webviewchromium_color_picker_dialog_title" />
+
+  <java-symbol type="string" name="webviewchromium_color_picker_button_red" />
+  <java-symbol type="string" name="webviewchromium_color_picker_button_cyan" />
+  <java-symbol type="string" name="webviewchromium_color_picker_button_blue" />
+  <java-symbol type="string" name="webviewchromium_color_picker_button_green" />
+  <java-symbol type="string" name="webviewchromium_color_picker_button_magenta" />
+  <java-symbol type="string" name="webviewchromium_color_picker_button_yellow" />
+  <java-symbol type="string" name="webviewchromium_color_picker_button_black" />
+  <java-symbol type="string" name="webviewchromium_color_picker_button_white" />
+
   <java-symbol type="string" name="webviewchromium_color_picker_hue" />
   <java-symbol type="string" name="webviewchromium_color_picker_saturation" />
   <java-symbol type="string" name="webviewchromium_color_picker_value" />
   <java-symbol type="string" name="webviewchromium_date_picker_dialog_clear" />
   <java-symbol type="string" name="webviewchromium_date_picker_dialog_set" />
   <java-symbol type="string" name="webviewchromium_date_picker_dialog_title" />
+  <java-symbol type="string" name="webviewchromium_date_picker_dialog_other_button_label" />
   <java-symbol type="string" name="webviewchromium_date_time_picker_dialog_title" />
+  <java-symbol type="string" name="webviewchromium_copy_to_clipboard_failure_message" />
   <java-symbol type="string" name="webviewchromium_low_memory_error" />
   <java-symbol type="string" name="webviewchromium_media_player_error_button" />
   <java-symbol type="string" name="webviewchromium_media_player_error_text_invalid_progressive_playback" />
@@ -96,6 +112,7 @@
   <java-symbol type="id" name="webviewchromium_autofill_label" />
   <java-symbol type="id" name="webviewchromium_autofill_popup_window" />
   <java-symbol type="id" name="webviewchromium_autofill_sublabel" />
+  <java-symbol type="id" name="webviewchromium_color_button_swatch" />
   <java-symbol type="id" name="webviewchromium_color_picker_advanced" />
   <java-symbol type="id" name="webviewchromium_color_picker_gradient" />
   <java-symbol type="id" name="webviewchromium_color_picker_more_colors_button" />
@@ -103,11 +120,12 @@
   <java-symbol type="id" name="webviewchromium_color_picker_seek_bar" />
   <java-symbol type="id" name="webviewchromium_color_picker_selected_color_view" />
   <java-symbol type="id" name="webviewchromium_color_picker_simple" />
-  <java-symbol type="id" name="webviewchromium_color_picker_simple_border" />
   <java-symbol type="id" name="webviewchromium_color_picker_text" />
   <java-symbol type="id" name="webviewchromium_color_picker_title" />
   <java-symbol type="id" name="webviewchromium_ampm" />
   <java-symbol type="id" name="webviewchromium_date_picker" />
+  <java-symbol type="id" name="webviewchromium_date_time_suggestion_value" />
+  <java-symbol type="id" name="webviewchromium_date_time_suggestion_label" />
   <java-symbol type="id" name="webviewchromium_hour" />
   <java-symbol type="id" name="webviewchromium_milli" />
   <java-symbol type="id" name="webviewchromium_minute" />

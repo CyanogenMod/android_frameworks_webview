@@ -23,14 +23,17 @@
 
   <add-resource type="color" name="webviewchromium_autofill_dark_divider_color" />
   <add-resource type="color" name="webviewchromium_autofill_divider_color" />
+  <add-resource type="color" name="webviewchromium_color_picker_background_color" />
   <add-resource type="color" name="webviewchromium_color_picker_border_color" />
 
+  <add-resource type="dimen" name="webviewchromium_color_button_height" />
   <add-resource type="dimen" name="webviewchromium_color_picker_gradient_margin" />
   <add-resource type="dimen" name="webviewchromium_autofill_text_height" />
   <add-resource type="dimen" name="webviewchromium_autofill_text_divider_height" />
   <add-resource type="dimen" name="webviewchromium_link_preview_overlay_radius" />
 
   <add-resource type="drawable" name="webviewchromium_color_advanced_select_handle" />
+  <add-resource type="drawable" name="webviewchromium_color_button_background" />
   <add-resource type="drawable" name="webviewchromium_color_picker_border" />
   <add-resource type="drawable" name="webviewchromium_ondemand_overlay" />
 
@@ -39,6 +42,7 @@
   <add-resource type="layout" name="webviewchromium_color_picker_dialog_content" />
   <add-resource type="layout" name="webviewchromium_color_picker_dialog_title" />
   <add-resource type="layout" name="webviewchromium_date_time_picker_dialog" />
+  <add-resource type="layout" name="webviewchromium_date_time_suggestion" />
   <add-resource type="layout" name="webviewchromium_multi_field_time_picker_dialog" />
   <add-resource type="layout" name="webviewchromium_two_field_date_picker" />
 
@@ -61,13 +65,23 @@
   <add-resource type="string" name="webviewchromium_color_picker_button_more" />
   <add-resource type="string" name="webviewchromium_color_picker_button_set" />
   <add-resource type="string" name="webviewchromium_color_picker_dialog_title" />
+  <add-resource type="string" name="webviewchromium_color_picker_button_red" />
+  <add-resource type="string" name="webviewchromium_color_picker_button_cyan" />
+  <add-resource type="string" name="webviewchromium_color_picker_button_blue" />
+  <add-resource type="string" name="webviewchromium_color_picker_button_green" />
+  <add-resource type="string" name="webviewchromium_color_picker_button_magenta" />
+  <add-resource type="string" name="webviewchromium_color_picker_button_yellow" />
+  <add-resource type="string" name="webviewchromium_color_picker_button_black" />
+  <add-resource type="string" name="webviewchromium_color_picker_button_white" />
   <add-resource type="string" name="webviewchromium_color_picker_hue" />
   <add-resource type="string" name="webviewchromium_color_picker_saturation" />
   <add-resource type="string" name="webviewchromium_color_picker_value" />
   <add-resource type="string" name="webviewchromium_date_picker_dialog_clear" />
+  <add-resource type="string" name="webviewchromium_date_picker_dialog_other_button_label" />
   <add-resource type="string" name="webviewchromium_date_picker_dialog_set" />
   <add-resource type="string" name="webviewchromium_date_picker_dialog_title" />
   <add-resource type="string" name="webviewchromium_date_time_picker_dialog_title" />
+  <add-resource type="string" name="webviewchromium_copy_to_clipboard_failure_message" />
   <add-resource type="string" name="webviewchromium_low_memory_error" />
   <add-resource type="string" name="webviewchromium_media_player_error_button" />
   <add-resource type="string" name="webviewchromium_media_player_error_text_invalid_progressive_playback" />
