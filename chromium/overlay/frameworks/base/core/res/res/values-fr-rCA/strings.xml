@@ -53,7 +53,7 @@
     <string name="webviewchromium_color_picker_button_yellow" msgid="3473794849605150015">"Jaune"</string>
     <string name="webviewchromium_color_picker_button_black" msgid="4355127282571397998">"Noir"</string>
     <string name="webviewchromium_color_picker_button_white" msgid="1315573027769681132">"Blanc"</string>
-    <string name="webviewchromium_copy_to_clipboard_failure_message" msgid="522732862171513811">"Échec de la copie dans le Presse-papiers."</string>
+    <string name="webviewchromium_copy_to_clipboard_failure_message" msgid="522732862171513811">"Échec de la copie dans le presse-papiers."</string>
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"Impossible d\'effectuer l\'opération précédente. Mémoire insuffisante."</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"Échec ouverture fichier sélect."</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"Cette fonctionnalité n\'est pas compatible avec cette version d\'Android."</string>
