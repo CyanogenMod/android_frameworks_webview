@@ -46,7 +46,7 @@
     <string name="webviewchromium_color_picker_button_cancel" msgid="11751988208172211">"Kanselleer"</string>
     <string name="webviewchromium_color_picker_dialog_title" msgid="709749370892752246">"Kies kleur"</string>
     <string name="webviewchromium_color_picker_button_red" msgid="6131020724838687141">"Rooi"</string>
-    <string name="webviewchromium_color_picker_button_cyan" msgid="3140315356534580408">"Siaan"</string>
+    <string name="webviewchromium_color_picker_button_cyan" msgid="3140315356534580408">"Blougroen"</string>
     <string name="webviewchromium_color_picker_button_blue" msgid="1572313634116404709">"Blou"</string>
     <string name="webviewchromium_color_picker_button_green" msgid="1003720528095717795">"Groen"</string>
     <string name="webviewchromium_color_picker_button_magenta" msgid="2912944065975017462">"Magenta"</string>
