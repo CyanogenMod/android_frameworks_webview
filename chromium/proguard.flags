@@ -83,3 +83,17 @@
 -keepclassmembers class com.android.org.chromium.com.google.common.** {
   *** startFinalizer(java.lang.Class,java.lang.Object);
 }
+
+# We need to explicitly keep classes and constructors referenced only in
+# layout resources.
+-keep class com.android.org.chromium.ui.ColorPickerAdvanced {
+  <init>(...);
+}
+
+-keep class com.android.org.chromium.ui.ColorPickerSimple {
+  <init>(...);
+}
+
+-keep class com.android.org.chromium.ui.ColorPickerMoreButton {
+  <init>(...);
+}
