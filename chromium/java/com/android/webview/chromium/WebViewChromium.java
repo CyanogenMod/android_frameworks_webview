@@ -597,16 +597,6 @@ class WebViewChromium implements WebViewProvider,
             }
         }
         loadUrlOnUiThread(loadUrlParams);
-
-        // Data url's with a base url will be resolved in Blink, and not cause an onPageStarted
-        // event to be sent. Sending the callback directly from here.
-        final String finalBaseUrl = loadUrlParams.getBaseUrl();
-        ThreadUtils.postOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mContentsClientAdapter.onPageStarted(finalBaseUrl);
-            }
-        });
     }
 
     private void loadUrlOnUiThread(final LoadUrlParams loadUrlParams) {
