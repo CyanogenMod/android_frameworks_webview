@@ -735,6 +735,19 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     }
 
     @Override
+    public void showFileChooser(ValueCallback<String[]> uploadFilePathsCallback,
+            FileChooserParams fileChooserParams) {
+        TraceEvent.begin();
+        if (mWebChromeClient != null) {
+            if (TRACE) Log.d(TAG, "showFileChooser");
+            mWebChromeClient.showFileChooser(uploadFilePathsCallback,
+                    fileChooserParams.acceptTypes,
+                    fileChooserParams.capture);
+        }
+        TraceEvent.end();
+    }
+
+    @Override
     public void onScaleChangedScaled(float oldScale, float newScale) {
         TraceEvent.begin();
         if (TRACE) Log.d(TAG, " onScaleChangedScaled");
