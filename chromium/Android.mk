@@ -17,7 +17,12 @@
 # This package provides the 'glue' layer between Chromium and WebView.
 
 LOCAL_PATH := $(call my-dir)
+
+ifneq ($(wildcard $(CHROMIUM_PATH)/src),)
 CHROMIUM_PATH := external/chromium_org
+else
+CHROMIUM_PATH := external/chromium_org/src
+endif
 
 # Java glue layer JAR, calls directly into the chromium AwContents Java API.
 include $(CLEAR_VARS)
