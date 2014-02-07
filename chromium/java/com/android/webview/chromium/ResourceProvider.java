@@ -200,11 +200,11 @@ public class ResourceProvider {
 
         // Resources needed by android_webview/
 
-        AwResource.RAW_LOAD_ERROR = com.android.internal.R.raw.loaderror;
-        AwResource.RAW_NO_DOMAIN = com.android.internal.R.raw.nodomain;
-
-        AwResource.STRING_DEFAULT_TEXT_ENCODING =
-                com.android.internal.R.string.default_text_encoding;
+        AwResource.setErrorPageResources(
+                com.android.internal.R.raw.loaderror,
+                com.android.internal.R.raw.nodomain);
+        AwResource.setDefaultTextEncoding(
+                com.android.internal.R.string.default_text_encoding);
 
         sInitialized = true;
     }
