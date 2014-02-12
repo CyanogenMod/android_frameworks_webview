@@ -53,9 +53,9 @@ import org.chromium.android_webview.InterceptedRequestData;
 import org.chromium.android_webview.JsPromptResultReceiver;
 import org.chromium.android_webview.JsResultReceiver;
 import org.chromium.base.ThreadUtils;
+import org.chromium.base.TraceEvent;
 import org.chromium.content.browser.ContentView;
 import org.chromium.content.browser.ContentViewClient;
-import org.chromium.content.common.TraceEvent;
 
 import java.lang.ref.SoftReference;
 import java.net.URISyntaxException;
