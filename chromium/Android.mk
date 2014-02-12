@@ -18,9 +18,8 @@
 
 LOCAL_PATH := $(call my-dir)
 
-ifneq ($(wildcard $(CHROMIUM_PATH)/src),)
 CHROMIUM_PATH := external/chromium_org
-else
+ifneq ($(wildcard $(CHROMIUM_PATH)/src),)
 CHROMIUM_PATH := external/chromium_org/src
 endif
 
