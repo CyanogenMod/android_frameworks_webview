@@ -57,7 +57,6 @@ import android.widget.TextView;
 import org.chromium.android_webview.AwBrowserContext;
 import org.chromium.android_webview.AwContents;
 import org.chromium.android_webview.AwLayoutSizer;
-import org.chromium.android_webview.AwPdfExportAttributes;
 import org.chromium.android_webview.AwPrintDocumentAdapter;
 import org.chromium.android_webview.AwSettings;
 import org.chromium.base.ThreadUtils;
