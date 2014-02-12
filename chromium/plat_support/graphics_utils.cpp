@@ -70,8 +70,12 @@ AwPixelInfo* GetPixels(JNIEnv* env, jobject java_canvas) {
     return NULL;
   }
 
-  UniquePtr<PixelInfo> pixels(new PixelInfo(canvas));
-  return pixels->state ? pixels.release() : NULL;
+  PixelInfo* pixels = new PixelInfo(canvas);
+  if (!pixels->state) {
+      delete pixels;
+      pixels = NULL;
+  }
+  return pixels;
 }
 
 void ReleasePixels(AwPixelInfo* pixels) {
