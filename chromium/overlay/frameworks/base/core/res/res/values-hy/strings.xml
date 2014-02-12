@@ -35,5 +35,4 @@
     <string name="webviewchromium_color_picker_dialog_title" msgid="709749370892752246">"Ընտրել գույնը"</string>
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"Չստացվեց ավարտել նախորդ գործողությունը՝ անբավարար հիշողության պատճառով"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"Ընտրված ֆայլը չհաջողվեց բացել"</string>
-    <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"Այս գործառույթը Android-ի այս տարբերակում չի աջակցվում:"</string>
 </resources>

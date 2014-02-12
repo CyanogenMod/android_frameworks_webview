@@ -35,5 +35,4 @@
     <string name="webviewchromium_color_picker_dialog_title" msgid="709749370892752246">"වර්ණය තෝරන්න"</string>
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"පෙර මෙහෙයුම අඩු මතකය නිසා සම්පූර්ණ කළ නොහැකි විය."</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"තෝරාගත් ගොනුව විවෘත කිරීමට අපොහොසත් විය"</string>
-    <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"මෙම ක්‍රියාකාරිත්වය මෙම Android අනුවාදයේ සහය නොදක්වයි."</string>
 </resources>

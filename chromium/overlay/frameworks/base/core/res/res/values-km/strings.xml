@@ -35,5 +35,4 @@
     <string name="webviewchromium_color_picker_dialog_title" msgid="709749370892752246">"ជ្រើស​ពណ៌"</string>
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"មិន​អាច​បញ្ចប់​ប្រតិបត្តិការ​ពី​មុន​បាន​ព្រោះ​ជិត​អស់​អង្គ​ចងចាំ"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"បាន​បរាជ័យ​ក្នុង​ការ​បើក​ឯកសារ​ដែល​បាន​ជ្រើស"</string>
-    <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"មុខងារ​នេះ​មិន​ត្រូវ​បាន​គាំទ្រ​នៅ​ក្នុង​កំណែ​របស់ Android នេះ​ទេ។"</string>
 </resources>
