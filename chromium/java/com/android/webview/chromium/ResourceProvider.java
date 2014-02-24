@@ -103,6 +103,12 @@ public class ResourceProvider {
         org.chromium.content.R.id.time_picker =
                 com.android.internal.R.id.webviewchromium_time_picker;
         org.chromium.content.R.id.year = com.android.internal.R.id.webviewchromium_year;
+        org.chromium.content.R.id.main_text =
+                com.android.internal.R.id.webviewchromium_validation_bubble_main_text;
+        org.chromium.content.R.id.sub_text =
+                com.android.internal.R.id.webviewchromium_validation_bubble_sub_text;
+        org.chromium.content.R.id.arrow_image =
+                com.android.internal.R.id.webviewchromium_validation_bubble_arrow_image;
 
         org.chromium.ui.R.id.selected_color_view =
                 com.android.internal.R.id.webviewchromium_color_picker_selected_color_view;
@@ -141,6 +147,8 @@ public class ResourceProvider {
                 com.android.internal.R.layout.webviewchromium_two_field_date_picker;
         org.chromium.content.R.layout.multi_field_time_picker_dialog =
                 com.android.internal.R.layout.webviewchromium_multi_field_time_picker_dialog;
+        org.chromium.content.R.layout.validation_message_bubble =
+                com.android.internal.R.layout.webviewchromium_validation_message_bubble;
 
         org.chromium.ui.R.layout.color_picker_dialog_title =
                 com.android.internal.R.layout.webviewchromium_color_picker_dialog_title;
@@ -264,11 +272,11 @@ public class ResourceProvider {
 
         // Resources needed by android_webview/
 
-        AwResource.RAW_LOAD_ERROR = com.android.internal.R.raw.loaderror;
-        AwResource.RAW_NO_DOMAIN = com.android.internal.R.raw.nodomain;
-
-        AwResource.STRING_DEFAULT_TEXT_ENCODING =
-                com.android.internal.R.string.default_text_encoding;
+        AwResource.setErrorPageResources(
+                com.android.internal.R.raw.loaderror,
+                com.android.internal.R.raw.nodomain);
+        AwResource.setDefaultTextEncoding(
+                com.android.internal.R.string.default_text_encoding);
 
         sInitialized = true;
     }
