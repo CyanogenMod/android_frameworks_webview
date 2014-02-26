@@ -30,6 +30,8 @@
   <add-resource type="dimen" name="webviewchromium_color_picker_gradient_margin" />
   <add-resource type="dimen" name="webviewchromium_autofill_text_height" />
   <add-resource type="dimen" name="webviewchromium_autofill_text_divider_height" />
+  <add-resource type="dimen" name="webviewchromium_config_min_scaling_span" />
+  <add-resource type="dimen" name="webviewchromium_config_min_scaling_touch_major" />
   <add-resource type="dimen" name="webviewchromium_link_preview_overlay_radius" />
 
   <add-resource type="drawable" name="webviewchromium_color_advanced_select_handle" />
