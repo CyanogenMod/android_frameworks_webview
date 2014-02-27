@@ -257,6 +257,12 @@ class WebViewChromium implements WebViewProvider,
             // old apps use to enable that behavior is deprecated.
             AwContents.setShouldDownloadFavicons();
         }
+
+        if (mAppTargetSdkVersion <= Build.VERSION_CODES.KITKAT) {
+            // On KK and older versions, JavaScript objects injected via addJavascriptInterface
+            // were not inspectable.
+            mAwContents.disableJavascriptInterfacesInspection();
+        }
     }
 
     void startYourEngine() {
