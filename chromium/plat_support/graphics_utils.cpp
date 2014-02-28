@@ -82,36 +82,10 @@ void ReleasePixels(AwPixelInfo* pixels) {
   delete static_cast<PixelInfo*>(pixels);
 }
 
-jobject CreatePicture(JNIEnv* env, SkPicture* picture) {
-  jclass clazz = env->FindClass("android/graphics/Picture");
-  jmethodID constructor = env->GetMethodID(clazz, "<init>", "(IZ)V");
-  ALOG_ASSERT(clazz);
-  ALOG_ASSERT(constructor);
-  return env->NewObject(clazz, constructor, picture, false);
-}
-
-bool IsSkiaVersionCompatible(SkiaVersionFunction function) {
-  bool compatible = false;
-  if (function && function == &SkGraphics::GetVersion) {
-    int android_major, android_minor, android_patch;
-    SkGraphics::GetVersion(&android_major, &android_minor, &android_patch);
-
-    int chromium_major, chromium_minor, chromium_patch;
-    (*function)(&chromium_major, &chromium_minor, &chromium_patch);
-
-    compatible = android_major == chromium_major &&
-                 android_minor == chromium_minor &&
-                 android_patch == chromium_patch;
-  }
-  return compatible;
-}
-
 jint GetDrawSWFunctionTable(JNIEnv* env, jclass) {
   static const AwDrawSWFunctionTable function_table = {
       &GetPixels,
       &ReleasePixels,
-      &CreatePicture,
-      &IsSkiaVersionCompatible,
   };
   return reinterpret_cast<jint>(&function_table);
 }
