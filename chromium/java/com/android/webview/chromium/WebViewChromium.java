@@ -1706,17 +1706,7 @@ class WebViewChromium implements WebViewProvider,
             return;
         }
 
-        Runnable detachAwContents = new Runnable() {
-            @Override
-            public void run() {
-                mAwContents.onDetachedFromWindow();
-            }
-        };
-
-        if (mGLfunctor == null || !mWebView.executeHardwareAction(detachAwContents)) {
-            detachAwContents.run();
-        }
-
+        mAwContents.onDetachedFromWindow();
         if (mGLfunctor != null) {
             mGLfunctor.detach();
         }
@@ -2116,6 +2106,11 @@ class WebViewChromium implements WebViewProvider,
                 mGLfunctor = new DrawGLFunctor(mAwContents.getAwDrawGLViewContext());
             }
             return mGLfunctor.requestDrawGL((HardwareCanvas)canvas, mWebView.getViewRootImpl());
+        }
+
+        // @Override
+        public boolean executeHardwareAction(Runnable action) {
+            return mWebView.executeHardwareAction(action);
         }
     }
 }
