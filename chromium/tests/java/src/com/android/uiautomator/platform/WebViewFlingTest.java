@@ -40,7 +40,7 @@ import java.io.IOException;
 public class WebViewFlingTest extends JankTestBase {
 
     private static final long TEST_DELAY_TIME_MS = 2 * 1000; // 2 seconds
-    private static final long PAGE_LOAD_DELAY_TIME_MS = 20 * 1000; // 10 seconds
+    private static final long PAGE_LOAD_DELAY_TIME_MS = 20 * 1000; // 20 seconds
     private static final int MIN_DATA_SIZE = 50;
     private static final String AW_WINDOW_NAME =
             "com.android.webview.chromium.shell/com.android.webview.chromium.shell.JankActivity";
@@ -50,24 +50,14 @@ public class WebViewFlingTest extends JankTestBase {
     private UiScrollable mWebPageDisplay = null;
 
     public void testBrowserPageFling() throws UiObjectNotFoundException, IOException {
-        String externalStorage = System.getenv().get("EXTERNAL_STORAGE");
-        File base = new File(externalStorage, "AwJankPages");
-        File files[] = base.listFiles();
-        assertNotNull("No test pages", files);
-        for(File file: files) {
-            runBrowserPageFling(file, true);
-            runBrowserPageFling(file, false);
-        }
+        String url = mParams.getString("Url");
+        File webpage = new File(url);
+        assertNotNull("No test pages", webpage);
+        runBrowserPageFling(webpage);
     }
 
     private void resetFlingTest() throws UiObjectNotFoundException {
-        // the idea is to fling to beginning first then fling to middle-ish so we have enough
-        // room to fling both forward and backward without hitting either end
         getContainer().flingToBeginning(20);
-        getContainer().scrollForward();
-        getContainer().scrollForward();
-        getContainer().scrollForward();
-        getContainer().scrollForward();
     }
 
     private void loadUrl(String url) throws IOException {
@@ -80,10 +70,6 @@ public class WebViewFlingTest extends JankTestBase {
         getContainer().flingForward();
     }
 
-    private void flingBackward() throws UiObjectNotFoundException {
-        getContainer().flingBackward();
-    }
-
     private UiScrollable getContainer() {
         if (mWebPageDisplay == null) {
             mWebPageDisplay =
@@ -92,25 +78,14 @@ public class WebViewFlingTest extends JankTestBase {
         return mWebPageDisplay;
     }
 
-    private void runBrowserPageFling(File testDir, boolean down) throws UiObjectNotFoundException, IOException {
-        String testCaseName = String.format("%s_%s_%s", mTestCaseName, testDir.getName(), down? "down" : "up");
-
-        File testPageIndex = new File(testDir, "index.html");
-
-        assertTrue("Test page doesn't have an index.html", testPageIndex.exists());
-
-        loadUrl("file://" + testPageIndex.getAbsolutePath());
+    private void runBrowserPageFling(File testFile) throws UiObjectNotFoundException, IOException {
+        loadUrl("file://" + testFile.getAbsolutePath());
         for (int i = 0; i < getIteration(); i++) {
             resetFlingTest();
             sleep(TEST_DELAY_TIME_MS);
-
             startTrace(mTestCaseName, i);
             getSurfaceFlingerHelper().clearBuffer(AW_WINDOW_NAME);
-            if(down) {
-                flingForward();
-            } else {
-                flingBackward();
-            }
+            flingForward();
             sleep(DEFAULT_ANIMATION_TIME);
             boolean result =
                     getSurfaceFlingerHelper().dumpFrameLatency(AW_WINDOW_NAME, true);
@@ -120,9 +95,9 @@ public class WebViewFlingTest extends JankTestBase {
             assertTrue(String.format("Sample size is less than expected: %d", MIN_DATA_SIZE),
                     validateResults(MIN_DATA_SIZE));
             // record the result in an array
-            recordResults(testCaseName, i);
+            recordResults(mTestCaseName, i);
         }
         // calculate average and save the results
-        saveResults(testCaseName);
+        saveResults(mTestCaseName);
     }
 }
