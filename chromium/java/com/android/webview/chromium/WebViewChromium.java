@@ -2079,7 +2079,7 @@ class WebViewChromium implements WebViewProvider,
 
         @Override
         public void onScrollChanged(int l, int t, int oldl, int oldt) {
-	    // Intentional no-op.
+            // Intentional no-op.
             // Chromium calls this directly to trigger accessibility events. That isn't needed
             // for WebView since super_scrollTo invokes onScrollChanged for us.
         }
