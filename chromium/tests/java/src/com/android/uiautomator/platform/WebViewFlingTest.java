@@ -18,7 +18,6 @@ import com.android.uiautomator.core.UiObjectNotFoundException;
 import com.android.uiautomator.core.UiScrollable;
 import com.android.uiautomator.core.UiSelector;
 import com.android.uiautomator.janktesthelper.JankTestBase;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -76,6 +75,24 @@ public class WebViewFlingTest extends JankTestBase {
                     new UiScrollable(new UiSelector().resourceId(AW_CONTAINER).instance(0));
         }
         return mWebPageDisplay;
+    }
+
+    /**
+    * {@inheritDoc}
+    */
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        getUiDevice().setOrientationNatural();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void tearDown() throws Exception {
+        getUiDevice().unfreezeRotation();
+        super.tearDown();
     }
 
     private void runBrowserPageFling(File testFile) throws UiObjectNotFoundException, IOException {
