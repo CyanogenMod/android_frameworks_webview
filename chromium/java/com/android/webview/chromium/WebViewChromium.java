@@ -1915,8 +1915,18 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public void setLayerType(int layerType, Paint paint) {
-        // Intentional no-op
+    public void setLayerType(final int layerType, final Paint paint) {
+        mFactory.startYourEngines(false);
+        if (checkNeedsPost()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setLayerType(layerType, paint);
+                }
+            });
+            return;
+        }
+        mAwContents.setLayerType(layerType, paint);
     }
 
     // Remove from superclass
