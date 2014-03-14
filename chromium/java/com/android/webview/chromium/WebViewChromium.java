@@ -2030,9 +2030,9 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public PrintDocumentAdapter createPrintDocumentAdapter() {
+    public PrintDocumentAdapter createPrintDocumentAdapter(String documentName) {
         checkThread();
-        return new AwPrintDocumentAdapter(mAwContents.getPdfExporter());
+        return new AwPrintDocumentAdapter(mAwContents.getPdfExporter(), documentName);
     }
 
     public void preauthorizePermission(Uri origin, long resources) {
