@@ -16,7 +16,6 @@
 
 package com.android.webview.chromium;
 
-import android.view.DisplayList;
 import android.view.HardwareCanvas;
 import android.view.ViewRootImpl;
 import android.util.Log;
@@ -59,11 +58,7 @@ class DrawGLFunctor {
         }
         mDestroyRunnable.mViewRootImpl = viewRootImpl;
         if (canvas != null) {
-            int ret = canvas.callDrawGLFunction(mDestroyRunnable.mNativeDrawGLFunctor);
-            if (ret != DisplayList.STATUS_DONE) {
-                Log.e(TAG, "callDrawGLFunction error: " + ret);
-                return false;
-            }
+            canvas.callDrawGLFunction(mDestroyRunnable.mNativeDrawGLFunctor);
         } else {
             viewRootImpl.attachFunctor(mDestroyRunnable.mNativeDrawGLFunctor);
         }
