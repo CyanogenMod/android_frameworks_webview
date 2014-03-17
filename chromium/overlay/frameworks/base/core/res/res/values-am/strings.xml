@@ -43,7 +43,7 @@
     <string name="webviewchromium_color_picker_saturation" msgid="4190681539297946213">"የቀለም ሙሌት"</string>
     <string name="webviewchromium_color_picker_value" msgid="2922652345694917211">"ዕሴት"</string>
     <string name="webviewchromium_color_picker_button_set" msgid="6981883782092158499">"አዘጋጅ"</string>
-    <string name="webviewchromium_color_picker_button_cancel" msgid="11751988208172211">"ሰርዝ"</string>
+    <string name="webviewchromium_color_picker_button_cancel" msgid="11751988208172211">"ይቅር"</string>
     <string name="webviewchromium_color_picker_dialog_title" msgid="709749370892752246">"ቀለም ይምረጡ"</string>
     <string name="webviewchromium_color_picker_button_red" msgid="6131020724838687141">"ቀይ"</string>
     <string name="webviewchromium_color_picker_button_cyan" msgid="3140315356534580408">"አረንጓዴ-ሰማያዊ"</string>
