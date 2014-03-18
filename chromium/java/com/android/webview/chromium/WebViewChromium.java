@@ -257,6 +257,9 @@ class WebViewChromium implements WebViewProvider,
             // old apps use to enable that behavior is deprecated.
             AwContents.setShouldDownloadFavicons();
         }
+
+        // TODO: This assumes AwContents ignores second Paint param.
+        mAwContents.setLayerType(mWebView.getLayerType(), null);
     }
 
     void startYourEngine() {
@@ -1916,7 +1919,9 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void setLayerType(final int layerType, final Paint paint) {
-        mFactory.startYourEngines(false);
+        // This can be called from WebView constructor in which case mAwContents
+        // is still null. We set the layer type in initForReal in that case.
+        if (mAwContents == null) return;
         if (checkNeedsPost()) {
             ThreadUtils.postOnUiThread(new Runnable() {
                 @Override
