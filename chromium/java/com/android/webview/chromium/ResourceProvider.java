@@ -58,6 +58,10 @@ public class ResourceProvider {
                 com.android.internal.R.dimen.webviewchromium_autofill_text_divider_height;
         org.chromium.ui.R.dimen.color_button_height =
                 com.android.internal.R.dimen.webviewchromium_color_button_height;
+        org.chromium.ui.R.dimen.config_min_scaling_span =
+                com.android.internal.R.dimen.webviewchromium_config_min_scaling_span;
+        org.chromium.ui.R.dimen.config_min_scaling_touch_major =
+                com.android.internal.R.dimen.webviewchromium_config_min_scaling_touch_major;
 
         // drawable
         org.chromium.content.R.drawable.ondemand_overlay =

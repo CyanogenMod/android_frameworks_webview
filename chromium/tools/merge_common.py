@@ -57,6 +57,7 @@ THIRD_PARTY_PROJECTS_WITH_FULL_HISTORY = [
     'third_party/skia/gyp',
     'third_party/skia/src',
     'third_party/smhasher/src',
+    'third_party/usrsctp/usrsctplib',
     'third_party/webrtc',
     'third_party/yasm/source/patched-yasm',
     'tools/grit',

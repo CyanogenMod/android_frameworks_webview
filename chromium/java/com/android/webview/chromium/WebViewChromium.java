@@ -257,6 +257,15 @@ class WebViewChromium implements WebViewProvider,
             // old apps use to enable that behavior is deprecated.
             AwContents.setShouldDownloadFavicons();
         }
+
+        if (mAppTargetSdkVersion <= Build.VERSION_CODES.KITKAT) {
+            // On KK and older versions, JavaScript objects injected via addJavascriptInterface
+            // were not inspectable.
+            mAwContents.disableJavascriptInterfacesInspection();
+        }
+
+        // TODO: This assumes AwContents ignores second Paint param.
+        mAwContents.setLayerType(mWebView.getLayerType(), null);
     }
 
     void startYourEngine() {
@@ -1700,17 +1709,7 @@ class WebViewChromium implements WebViewProvider,
             return;
         }
 
-        Runnable detachAwContents = new Runnable() {
-            @Override
-            public void run() {
-                mAwContents.onDetachedFromWindow();
-            }
-        };
-
-        if (mGLfunctor == null || !mWebView.executeHardwareAction(detachAwContents)) {
-            detachAwContents.run();
-        }
-
+        mAwContents.onDetachedFromWindow();
         if (mGLfunctor != null) {
             mGLfunctor.detach();
         }
@@ -1915,8 +1914,20 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public void setLayerType(int layerType, Paint paint) {
-        // Intentional no-op
+    public void setLayerType(final int layerType, final Paint paint) {
+        // This can be called from WebView constructor in which case mAwContents
+        // is still null. We set the layer type in initForReal in that case.
+        if (mAwContents == null) return;
+        if (checkNeedsPost()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setLayerType(layerType, paint);
+                }
+            });
+            return;
+        }
+        mAwContents.setLayerType(layerType, paint);
     }
 
     // Remove from superclass
@@ -2110,6 +2121,11 @@ class WebViewChromium implements WebViewProvider,
                 mGLfunctor = new DrawGLFunctor(mAwContents.getAwDrawGLViewContext());
             }
             return mGLfunctor.requestDrawGL((HardwareCanvas)canvas, mWebView.getViewRootImpl());
+        }
+
+        // @Override
+        public boolean executeHardwareAction(Runnable action) {
+            return mWebView.executeHardwareAction(action);
         }
     }
 }

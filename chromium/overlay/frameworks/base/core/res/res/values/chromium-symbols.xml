@@ -33,6 +33,8 @@
   <java-symbol type="dimen" name="webviewchromium_color_picker_gradient_margin" />
   <java-symbol type="dimen" name="webviewchromium_autofill_text_height" />
   <java-symbol type="dimen" name="webviewchromium_autofill_text_divider_height" />
+  <java-symbol type="dimen" name="webviewchromium_config_min_scaling_span" />
+  <java-symbol type="dimen" name="webviewchromium_config_min_scaling_touch_major" />
   <java-symbol type="dimen" name="webviewchromium_link_preview_overlay_radius" />
 
   <java-symbol type="drawable" name="webviewchromium_color_button_background" />
