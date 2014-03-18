@@ -256,6 +256,8 @@ class WebViewChromium implements WebViewProvider,
             // old apps use to enable that behavior is deprecated.
             AwContents.setShouldDownloadFavicons();
         }
+
+        mAwContents.setLayerType(mWebView.getLayerType(), null);
     }
 
     void startYourEngine() {
@@ -1921,7 +1923,9 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void setLayerType(int layerType, Paint paint) {
-        // Intentional no-op
+        if (mAwContents != null) {
+            mAwContents.setLayerType(layerType, paint);
+        }
     }
 
     // Remove from superclass
