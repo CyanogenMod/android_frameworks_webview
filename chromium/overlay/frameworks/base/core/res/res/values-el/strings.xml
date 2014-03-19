@@ -7,7 +7,7 @@
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="webviewchromium_actionbar_share" msgid="8265707764014979342">"Κοινή χρήση"</string>
+    <string name="webviewchromium_actionbar_share" msgid="8265707764014979342">"Κοινοποίηση"</string>
     <string name="webviewchromium_actionbar_web_search" msgid="539283440381511128">"Αναζήτηση στον Ιστό"</string>
     <string name="webviewchromium_accessibility_content_view" msgid="4892710761369744296">"Προβολή ιστού"</string>
     <string name="webviewchromium_date_picker_dialog_title" msgid="2526916586861043590">"Ορισμός ημερομηνίας"</string>
