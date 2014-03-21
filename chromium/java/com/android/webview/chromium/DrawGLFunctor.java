@@ -36,7 +36,7 @@ class DrawGLFunctor {
     private CleanupReference mCleanupReference;
     private DestroyRunnable mDestroyRunnable;
 
-    public DrawGLFunctor(int viewContext) {
+    public DrawGLFunctor(long viewContext) {
         mDestroyRunnable = new DestroyRunnable(nativeCreateGLFunctor(viewContext));
         mCleanupReference = new CleanupReference(this, mDestroyRunnable);
     }
@@ -59,18 +59,18 @@ class DrawGLFunctor {
         }
         mDestroyRunnable.mViewRootImpl = viewRootImpl;
         if (canvas != null) {
-            int ret = canvas.callDrawGLFunction(mDestroyRunnable.mNativeDrawGLFunctor);
+            int ret = canvas.callDrawGLFunction(mDestroyRunnable.nativeDrawGLFunctor());
             if (ret != DisplayList.STATUS_DONE) {
                 Log.e(TAG, "callDrawGLFunction error: " + ret);
                 return false;
             }
         } else {
-            viewRootImpl.attachFunctor(mDestroyRunnable.mNativeDrawGLFunctor);
+            viewRootImpl.attachFunctor(mDestroyRunnable.nativeDrawGLFunctor());
         }
         return true;
     }
 
-    public static void setChromiumAwDrawGLFunction(int functionPointer) {
+    public static void setChromiumAwDrawGLFunction(long functionPointer) {
         nativeSetChromiumAwDrawGLFunction(functionPointer);
     }
 
@@ -79,9 +79,18 @@ class DrawGLFunctor {
     // instance, as that will defeat GC of that object.
     private static final class DestroyRunnable implements Runnable {
         ViewRootImpl mViewRootImpl;
-        int mNativeDrawGLFunctor;
-        DestroyRunnable(int nativeDrawGLFunctor) {
+        private long mNativeDrawGLFunctor;
+        DestroyRunnable(long nativeDrawGLFunctor) {
             mNativeDrawGLFunctor = nativeDrawGLFunctor;
+        }
+
+        int nativeDrawGLFunctor() {
+            if (mNativeDrawGLFunctor <= Integer.MAX_VALUE &&
+                    mNativeDrawGLFunctor >= Integer.MIN_VALUE) {
+                return (int)mNativeDrawGLFunctor;
+            } else {
+                throw new RuntimeException("64bit not supported yet");
+            }
         }
 
         // Called when the outer DrawGLFunctor instance has been GC'ed, i.e this is its finalizer.
@@ -94,13 +103,13 @@ class DrawGLFunctor {
 
         void detachNativeFunctor() {
             if (mNativeDrawGLFunctor != 0 && mViewRootImpl != null) {
-                mViewRootImpl.detachFunctor(mNativeDrawGLFunctor);
+                mViewRootImpl.detachFunctor(nativeDrawGLFunctor());
             }
             mViewRootImpl = null;
         }
     }
 
-    private static native int nativeCreateGLFunctor(int viewContext);
-    private static native void nativeDestroyGLFunctor(int functor);
-    private static native void nativeSetChromiumAwDrawGLFunction(int functionPointer);
+    private static native long nativeCreateGLFunctor(long viewContext);
+    private static native void nativeDestroyGLFunctor(long functor);
+    private static native void nativeSetChromiumAwDrawGLFunction(long functionPointer);
 }
