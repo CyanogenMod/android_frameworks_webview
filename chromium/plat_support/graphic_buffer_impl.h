@@ -30,12 +30,12 @@ class GraphicBufferImpl {
  public:
   ~GraphicBufferImpl();
 
-  static long Create(int w, int h);
-  static void Release(long buffer_id);
-  static int MapStatic(long buffer_id, AwMapMode mode, void** vaddr);
-  static int UnmapStatic(long buffer_id);
-  static void* GetNativeBufferStatic(long buffer_id);
-  static uint32_t GetStrideStatic(long buffer_id);
+  static int Create(int w, int h);
+  static void Release(int buffer_id);
+  static int MapStatic(int buffer_id, AwMapMode mode, void** vaddr);
+  static int UnmapStatic(int buffer_id);
+  static void* GetNativeBufferStatic(int buffer_id);
+  static uint32_t GetStrideStatic(int buffer_id);
 
  private:
   status_t Map(AwMapMode mode, void** vaddr);
