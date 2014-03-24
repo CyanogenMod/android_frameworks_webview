@@ -82,15 +82,15 @@ void ReleasePixels(AwPixelInfo* pixels) {
   delete static_cast<PixelInfo*>(pixels);
 }
 
-jint GetDrawSWFunctionTable(JNIEnv* env, jclass) {
+jlong GetDrawSWFunctionTable(JNIEnv* env, jclass) {
   static const AwDrawSWFunctionTable function_table = {
       &GetPixels,
       &ReleasePixels,
   };
-  return reinterpret_cast<jint>(&function_table);
+  return reinterpret_cast<intptr_t>(&function_table);
 }
 
-jint GetDrawGLFunctionTable(JNIEnv* env, jclass) {
+jlong GetDrawGLFunctionTable(JNIEnv* env, jclass) {
   static const AwDrawGLFunctionTable function_table = {
     &GraphicBufferImpl::Create,
     &GraphicBufferImpl::Release,
@@ -99,7 +99,7 @@ jint GetDrawGLFunctionTable(JNIEnv* env, jclass) {
     &GraphicBufferImpl::GetNativeBufferStatic,
     &GraphicBufferImpl::GetStrideStatic,
   };
-  return reinterpret_cast<jint>(&function_table);
+  return reinterpret_cast<intptr_t>(&function_table);
 }
 
 const char kClassName[] = "com/android/webview/chromium/GraphicsUtils";
