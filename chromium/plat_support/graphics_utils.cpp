@@ -104,9 +104,9 @@ jlong GetDrawGLFunctionTable(JNIEnv* env, jclass) {
 
 const char kClassName[] = "com/android/webview/chromium/GraphicsUtils";
 const JNINativeMethod kJniMethods[] = {
-    { "nativeGetDrawSWFunctionTable", "()I",
+    { "nativeGetDrawSWFunctionTable", "()J",
         reinterpret_cast<void*>(GetDrawSWFunctionTable) },
-    { "nativeGetDrawGLFunctionTable", "()I",
+    { "nativeGetDrawGLFunctionTable", "()J",
         reinterpret_cast<void*>(GetDrawGLFunctionTable) },
 };
 
