@@ -40,7 +40,7 @@ AwDrawGLFunction* g_aw_drawgl_function = NULL;
 
 class DrawGLFunctor : public Functor {
  public:
-  DrawGLFunctor(jint view_context) : view_context_(view_context) {}
+  DrawGLFunctor(jlong view_context) : view_context_(view_context) {}
   virtual ~DrawGLFunctor() {}
 
   // Functor
@@ -77,7 +77,7 @@ class DrawGLFunctor : public Functor {
   }
 
  private:
-  int view_context_;
+  intptr_t view_context_;
 };
 
 // Raise the file handle soft limit to the hard limit since gralloc buffers
@@ -101,26 +101,26 @@ void RaiseFileNumberLimit() {
   }
 }
 
-jint CreateGLFunctor(JNIEnv*, jclass, jint view_context) {
+jlong CreateGLFunctor(JNIEnv*, jclass, jlong view_context) {
   RaiseFileNumberLimit();
-  return reinterpret_cast<jint>(new DrawGLFunctor(view_context));
+  return reinterpret_cast<jlong>(new DrawGLFunctor(view_context));
 }
 
-void DestroyGLFunctor(JNIEnv*, jclass, jint functor) {
+void DestroyGLFunctor(JNIEnv*, jclass, jlong functor) {
   delete reinterpret_cast<DrawGLFunctor*>(functor);
 }
 
-void SetChromiumAwDrawGLFunction(JNIEnv*, jclass, jint draw_function) {
+void SetChromiumAwDrawGLFunction(JNIEnv*, jclass, jlong draw_function) {
   g_aw_drawgl_function = reinterpret_cast<AwDrawGLFunction*>(draw_function);
 }
 
 const char kClassName[] = "com/android/webview/chromium/DrawGLFunctor";
 const JNINativeMethod kJniMethods[] = {
-    { "nativeCreateGLFunctor", "(I)I",
+    { "nativeCreateGLFunctor", "(J)J",
         reinterpret_cast<void*>(CreateGLFunctor) },
-    { "nativeDestroyGLFunctor", "(I)V",
+    { "nativeDestroyGLFunctor", "(J)V",
         reinterpret_cast<void*>(DestroyGLFunctor) },
-    { "nativeSetChromiumAwDrawGLFunction", "(I)V",
+    { "nativeSetChromiumAwDrawGLFunction", "(J)V",
         reinterpret_cast<void*>(SetChromiumAwDrawGLFunction) },
 };
 

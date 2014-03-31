@@ -35,7 +35,7 @@ class DrawGLFunctor {
     private CleanupReference mCleanupReference;
     private DestroyRunnable mDestroyRunnable;
 
-    public DrawGLFunctor(int viewContext) {
+    public DrawGLFunctor(long viewContext) {
         mDestroyRunnable = new DestroyRunnable(nativeCreateGLFunctor(viewContext));
         mCleanupReference = new CleanupReference(this, mDestroyRunnable);
     }
@@ -65,7 +65,7 @@ class DrawGLFunctor {
         return true;
     }
 
-    public static void setChromiumAwDrawGLFunction(int functionPointer) {
+    public static void setChromiumAwDrawGLFunction(long functionPointer) {
         nativeSetChromiumAwDrawGLFunction(functionPointer);
     }
 
@@ -74,8 +74,8 @@ class DrawGLFunctor {
     // instance, as that will defeat GC of that object.
     private static final class DestroyRunnable implements Runnable {
         ViewRootImpl mViewRootImpl;
-        int mNativeDrawGLFunctor;
-        DestroyRunnable(int nativeDrawGLFunctor) {
+        long mNativeDrawGLFunctor;
+        DestroyRunnable(long nativeDrawGLFunctor) {
             mNativeDrawGLFunctor = nativeDrawGLFunctor;
         }
 
@@ -95,7 +95,7 @@ class DrawGLFunctor {
         }
     }
 
-    private static native int nativeCreateGLFunctor(int viewContext);
-    private static native void nativeDestroyGLFunctor(int functor);
-    private static native void nativeSetChromiumAwDrawGLFunction(int functionPointer);
+    private static native long nativeCreateGLFunctor(long viewContext);
+    private static native void nativeDestroyGLFunctor(long functor);
+    private static native void nativeSetChromiumAwDrawGLFunction(long functionPointer);
 }

@@ -34,42 +34,42 @@ GraphicBufferImpl::~GraphicBufferImpl() {
 }
 
 // static
-int GraphicBufferImpl::Create(int w, int h) {
+long GraphicBufferImpl::Create(int w, int h) {
   GraphicBufferImpl* buffer = new GraphicBufferImpl(
       static_cast<uint32_t>(w), static_cast<uint32_t>(h));
   if (buffer->InitCheck() != NO_ERROR) {
     delete buffer;
     return 0;
   }
-  return reinterpret_cast<int>(buffer);
+  return reinterpret_cast<intptr_t>(buffer);
 }
 
 // static
-void GraphicBufferImpl::Release(int buffer_id) {
+void GraphicBufferImpl::Release(long buffer_id) {
   GraphicBufferImpl* buffer = reinterpret_cast<GraphicBufferImpl*>(buffer_id);
   delete buffer;
 }
 
 // static
-int GraphicBufferImpl::MapStatic(int buffer_id, AwMapMode mode, void** vaddr) {
+int GraphicBufferImpl::MapStatic(long buffer_id, AwMapMode mode, void** vaddr) {
   GraphicBufferImpl* buffer = reinterpret_cast<GraphicBufferImpl*>(buffer_id);
   return buffer->Map(mode, vaddr);
 }
 
 // static
-int GraphicBufferImpl::UnmapStatic(int buffer_id) {
+int GraphicBufferImpl::UnmapStatic(long buffer_id) {
   GraphicBufferImpl* buffer = reinterpret_cast<GraphicBufferImpl*>(buffer_id);
   return buffer->Unmap();
 }
 
 // static
-void* GraphicBufferImpl::GetNativeBufferStatic(int buffer_id) {
+void* GraphicBufferImpl::GetNativeBufferStatic(long buffer_id) {
   GraphicBufferImpl* buffer = reinterpret_cast<GraphicBufferImpl*>(buffer_id);
   return buffer->GetNativeBuffer();
 }
 
 // static
-uint32_t GraphicBufferImpl::GetStrideStatic(int buffer_id) {
+uint32_t GraphicBufferImpl::GetStrideStatic(long buffer_id) {
   GraphicBufferImpl* buffer = reinterpret_cast<GraphicBufferImpl*>(buffer_id);
   return buffer->GetStride();
 }
