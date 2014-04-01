@@ -20,8 +20,13 @@ LOCAL_SRC_FILES := $(call all-java-files-under, src)
 LOCAL_MODULE := WebViewJankTests
 
 LOCAL_JAVA_LIBRARIES := uiautomator
-LOCAL_STATIC_JAVA_LIBRARIES := android-janktesthelper
-
+LOCAL_STATIC_JAVA_LIBRARIES := webview-janktesthelper
 LOCAL_MODULE_TAGS := tests
 include $(BUILD_JAVA_LIBRARY)
 
+####
+# TODO: remove our copy of JTH prebuilt (b/13743200)
+include $(CLEAR_VARS)
+LOCAL_PREBUILT_STATIC_JAVA_LIBRARIES := webview-janktesthelper:../prebuilts/android-janktesthelper.jar
+
+include $(BUILD_MULTI_PREBUILT)
