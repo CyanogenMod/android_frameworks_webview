@@ -17,7 +17,11 @@
 # This package provides the 'glue' layer between Chromium and WebView.
 
 LOCAL_PATH := $(call my-dir)
+
 CHROMIUM_PATH := external/chromium_org
+ifneq ($(wildcard $(CHROMIUM_PATH)/src),)
+CHROMIUM_PATH := external/chromium_org/src
+endif
 
 # Java glue layer JAR, calls directly into the chromium AwContents Java API.
 include $(CLEAR_VARS)
@@ -143,6 +147,9 @@ LOCAL_SHARED_LIBRARIES += \
         libutils \
 
 LOCAL_MODULE_TAGS := optional
+
+# To remove warnings from skia header files
+LOCAL_CFLAGS := -Wno-unused-parameter
 
 include $(BUILD_SHARED_LIBRARY)
 include $(call first-makefiles-under,$(LOCAL_PATH))

@@ -57,7 +57,6 @@ import android.widget.TextView;
 import org.chromium.android_webview.AwBrowserContext;
 import org.chromium.android_webview.AwContents;
 import org.chromium.android_webview.AwLayoutSizer;
-import org.chromium.android_webview.AwPdfExportAttributes;
 import org.chromium.android_webview.AwPrintDocumentAdapter;
 import org.chromium.android_webview.AwSettings;
 import org.chromium.base.ThreadUtils;
@@ -250,14 +249,15 @@ class WebViewChromium implements WebViewProvider,
 
     private void initForReal() {
         mAwContents = new AwContents(mFactory.getBrowserContext(), mWebView,
-                new InternalAccessAdapter(), mContentsClientAdapter, new AwLayoutSizer(),
-                mWebSettings.getAwSettings());
+                new InternalAccessAdapter(), mContentsClientAdapter, mWebSettings.getAwSettings());
 
         if (mAppTargetSdkVersion >= Build.VERSION_CODES.KITKAT) {
             // On KK and above, favicons are automatically downloaded as the method
             // old apps use to enable that behavior is deprecated.
             AwContents.setShouldDownloadFavicons();
         }
+
+        mAwContents.setLayerType(mWebView.getLayerType(), null);
     }
 
     void startYourEngine() {
@@ -1717,17 +1717,7 @@ class WebViewChromium implements WebViewProvider,
             return;
         }
 
-        Runnable detachAwContents = new Runnable() {
-            @Override
-            public void run() {
-                mAwContents.onDetachedFromWindow();
-            }
-        };
-
-        if (mGLfunctor == null || !mWebView.executeHardwareAction(detachAwContents)) {
-            detachAwContents.run();
-        }
-
+        mAwContents.onDetachedFromWindow();
         if (mGLfunctor != null) {
             mGLfunctor.detach();
         }
@@ -1933,7 +1923,9 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void setLayerType(int layerType, Paint paint) {
-        // Intentional no-op
+        if (mAwContents != null) {
+            mAwContents.setLayerType(layerType, paint);
+        }
     }
 
     // Remove from superclass
@@ -2090,9 +2082,9 @@ class WebViewChromium implements WebViewProvider,
 
         @Override
         public void onScrollChanged(int l, int t, int oldl, int oldt) {
-            mWebViewPrivate.setScrollXRaw(l);
-            mWebViewPrivate.setScrollYRaw(t);
-            mWebViewPrivate.onScrollChanged(l, t, oldl, oldt);
+            // Intentional no-op.
+            // Chromium calls this directly to trigger accessibility events. That isn't needed
+            // for WebView since super_scrollTo invokes onScrollChanged for us.
         }
 
         @Override
@@ -2121,6 +2113,11 @@ class WebViewChromium implements WebViewProvider,
                 mGLfunctor = new DrawGLFunctor(mAwContents.getAwDrawGLViewContext());
             }
             return mGLfunctor.requestDrawGL((HardwareCanvas)canvas, mWebView.getViewRootImpl());
+        }
+
+        // @Override
+        public boolean executeHardwareAction(Runnable action) {
+            return mWebView.executeHardwareAction(action);
         }
     }
 }

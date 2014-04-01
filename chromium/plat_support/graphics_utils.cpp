@@ -70,49 +70,27 @@ AwPixelInfo* GetPixels(JNIEnv* env, jobject java_canvas) {
     return NULL;
   }
 
-  UniquePtr<PixelInfo> pixels(new PixelInfo(canvas));
-  return pixels->state ? pixels.release() : NULL;
+  PixelInfo* pixels = new PixelInfo(canvas);
+  if (!pixels->state) {
+      delete pixels;
+      pixels = NULL;
+  }
+  return pixels;
 }
 
 void ReleasePixels(AwPixelInfo* pixels) {
   delete static_cast<PixelInfo*>(pixels);
 }
 
-jobject CreatePicture(JNIEnv* env, SkPicture* picture) {
-  jclass clazz = env->FindClass("android/graphics/Picture");
-  jmethodID constructor = env->GetMethodID(clazz, "<init>", "(IZ)V");
-  ALOG_ASSERT(clazz);
-  ALOG_ASSERT(constructor);
-  return env->NewObject(clazz, constructor, picture, false);
-}
-
-bool IsSkiaVersionCompatible(SkiaVersionFunction function) {
-  bool compatible = false;
-  if (function && function == &SkGraphics::GetVersion) {
-    int android_major, android_minor, android_patch;
-    SkGraphics::GetVersion(&android_major, &android_minor, &android_patch);
-
-    int chromium_major, chromium_minor, chromium_patch;
-    (*function)(&chromium_major, &chromium_minor, &chromium_patch);
-
-    compatible = android_major == chromium_major &&
-                 android_minor == chromium_minor &&
-                 android_patch == chromium_patch;
-  }
-  return compatible;
-}
-
-jint GetDrawSWFunctionTable(JNIEnv* env, jclass) {
+jlong GetDrawSWFunctionTable(JNIEnv* env, jclass) {
   static const AwDrawSWFunctionTable function_table = {
       &GetPixels,
       &ReleasePixels,
-      &CreatePicture,
-      &IsSkiaVersionCompatible,
   };
-  return reinterpret_cast<jint>(&function_table);
+  return reinterpret_cast<intptr_t>(&function_table);
 }
 
-jint GetDrawGLFunctionTable(JNIEnv* env, jclass) {
+jlong GetDrawGLFunctionTable(JNIEnv* env, jclass) {
   static const AwDrawGLFunctionTable function_table = {
     &GraphicBufferImpl::Create,
     &GraphicBufferImpl::Release,
@@ -121,14 +99,14 @@ jint GetDrawGLFunctionTable(JNIEnv* env, jclass) {
     &GraphicBufferImpl::GetNativeBufferStatic,
     &GraphicBufferImpl::GetStrideStatic,
   };
-  return reinterpret_cast<jint>(&function_table);
+  return reinterpret_cast<intptr_t>(&function_table);
 }
 
 const char kClassName[] = "com/android/webview/chromium/GraphicsUtils";
 const JNINativeMethod kJniMethods[] = {
-    { "nativeGetDrawSWFunctionTable", "()I",
+    { "nativeGetDrawSWFunctionTable", "()J",
         reinterpret_cast<void*>(GetDrawSWFunctionTable) },
-    { "nativeGetDrawGLFunctionTable", "()I",
+    { "nativeGetDrawGLFunctionTable", "()J",
         reinterpret_cast<void*>(GetDrawGLFunctionTable) },
 };
 

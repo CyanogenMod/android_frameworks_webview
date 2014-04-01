@@ -35,5 +35,4 @@
     <string name="webviewchromium_color_picker_dialog_title" msgid="709749370892752246">"Pilih warna"</string>
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"Tidak dapat menyelesaikan operasi sebelumnya akibat memori rendah"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"Gagal membuka fail yang dipilih"</string>
-    <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"Fungsi ini tidak disokong dalam Android versi ini."</string>
 </resources>
