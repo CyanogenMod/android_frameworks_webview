@@ -21,7 +21,6 @@ import logging
 import optparse
 import os
 import re
-import shutil
 import sys
 import urllib2
 
@@ -293,13 +292,6 @@ def _GenerateMakefiles(version, unattended):
             cwd=os.path.join(merge_common.REPOSITORY_ROOT, path))
       raise merge_common.TemporaryMergeError('Makefile generation failed: ' +
                                              str(e))
-
-  # Copy ARM makefile to ARM64 to allow multiarch builds
-  for host in ['linux', 'darwin']:
-    shutil.copy(os.path.join(merge_common.REPOSITORY_ROOT,
-                             'GypAndroid.%s-arm.mk' % host),
-                os.path.join(merge_common.REPOSITORY_ROOT,
-                             'GypAndroid.%s-arm64.mk' % host))
 
   for path in merge_common.ALL_PROJECTS:
     dest_dir = os.path.join(merge_common.REPOSITORY_ROOT, path)
