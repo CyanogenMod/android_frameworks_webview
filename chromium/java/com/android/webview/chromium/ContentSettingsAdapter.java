@@ -584,4 +584,14 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
     public boolean getMediaPlaybackRequiresUserGesture() {
         return mAwSettings.getMediaPlaybackRequiresUserGesture();
     }
+
+//    @Override
+    public void setMixedContentMode(int mode) {
+        mAwSettings.setMixedContentMode(mode);
+    }
+
+//    @Override
+    public int getMixedContentMode() {
+        return mAwSettings.getMixedContentMode();
+    }
 }
