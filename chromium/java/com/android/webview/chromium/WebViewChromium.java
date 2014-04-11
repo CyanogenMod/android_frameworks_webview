@@ -234,6 +234,10 @@ class WebViewChromium implements WebViewProvider,
                 mWebView.getContext(), isAccessFromFileURLsGrantedByDefault,
                 areLegacyQuirksEnabled));
 
+        if (mAppTargetSdkVersion <= Build.VERSION_CODES.KITKAT) {
+            mWebSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        }
+
         mRunQueue.addTask(new Runnable() {
                 @Override
                 public void run() {
