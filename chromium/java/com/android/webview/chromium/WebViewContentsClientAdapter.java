@@ -35,6 +35,7 @@ import android.provider.Browser;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.webkit.ClientCertRequest;
 import android.webkit.ConsoleMessage;
 import android.webkit.DownloadListener;
 import android.webkit.GeolocationPermissions;
@@ -50,6 +51,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import org.chromium.android_webview.AwContentsClient;
+import org.chromium.android_webview.AwContentsClientBridge;
 import org.chromium.android_webview.AwHttpAuthHandler;
 import org.chromium.android_webview.InterceptedRequestData;
 import org.chromium.android_webview.JsPromptResultReceiver;
@@ -60,8 +62,10 @@ import org.chromium.content.browser.ContentView;
 import org.chromium.content.browser.ContentViewClient;
 
 import java.net.URISyntaxException;
+import java.security.Principal;
+import java.security.PrivateKey;
+import java.security.cert.X509Certificate;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 
 /**
  * An adapter class that forwards the callbacks from {@link ContentViewClient}
@@ -698,6 +702,74 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
         TraceEvent.begin();
         if (TRACE) Log.d(TAG, "onReceivedSslError");
         mWebViewClient.onReceivedSslError(mWebView, handler, error);
+        TraceEvent.end();
+    }
+
+    private static class ClientCertRequestImpl implements ClientCertRequest {
+
+        final private AwContentsClientBridge.ClientCertificateRequestCallback mCallback;
+        final private String[] mKeyTypes;
+        final private Principal[] mPrincipals;
+        final private String mHost;
+        final private int mPort;
+
+        public ClientCertRequestImpl(
+                AwContentsClientBridge.ClientCertificateRequestCallback callback,
+                String[] keyTypes, Principal[] principals, String host, int port) {
+            mCallback = callback;
+            mKeyTypes = keyTypes;
+            mPrincipals = principals;
+            mHost = host;
+            mPort = port;
+        }
+
+        @Override
+        public String[] getKeyTypes() {
+            // This is already a copy of native argument, so return directly.
+            return mKeyTypes;
+        }
+
+        @Override
+        public Principal[] getPrincipals() {
+            // This is already a copy of native argument, so return directly.
+            return mPrincipals;
+        }
+
+        @Override
+        public String getHost() {
+            return mHost;
+        }
+
+        @Override
+        public int getPort() {
+            return mPort;
+        }
+
+        @Override
+        public void proceed(final PrivateKey privateKey, final X509Certificate[] chain) {
+            mCallback.proceed(privateKey, chain);
+        }
+
+        @Override
+        public void ignore() {
+            mCallback.ignore();
+        }
+
+        @Override
+        public void cancel() {
+            mCallback.cancel();
+        }
+    }
+
+    @Override
+    public void onReceivedClientCertRequest(
+            AwContentsClientBridge.ClientCertificateRequestCallback callback,
+            String[] keyTypes, Principal[] principals, String host, int port) {
+        if (TRACE) Log.d(TAG, "onReceivedClientCertRequest");
+        TraceEvent.begin();
+        final ClientCertRequestImpl request = new ClientCertRequestImpl(callback,
+            keyTypes, principals, host, port);
+        mWebViewClient.onReceivedClientCertRequest(mWebView, request);
         TraceEvent.end();
     }
 
