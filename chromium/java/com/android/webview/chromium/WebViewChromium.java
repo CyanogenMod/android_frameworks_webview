@@ -1135,6 +1135,21 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
+    public void clearClientCertPreferences(final ValueCallback<Void> resultCallback) {
+        if (checkNeedsPost()) {
+            mRunQueue.addTask(new Runnable() {
+                @Override
+                public void run() {
+                    clearClientCertPreferences(resultCallback);
+                }
+            });
+            return;
+        }
+        // TODO(sgurun) plumb resultCallback after adding the change in chromium side.
+        mAwContents.clearClientCertPreferences();
+    }
+
+    @Override
     public WebBackForwardList copyBackForwardList() {
         mFactory.startYourEngines(true);
         if (checkNeedsPost()) {
