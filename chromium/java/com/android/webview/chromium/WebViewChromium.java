@@ -23,6 +23,7 @@ import android.graphics.Paint;
 import android.graphics.Picture;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.net.http.SslCertificate;
 import android.os.Build;
 import android.os.Bundle;
@@ -2032,6 +2033,10 @@ class WebViewChromium implements WebViewProvider,
     public PrintDocumentAdapter createPrintDocumentAdapter() {
         checkThread();
         return new AwPrintDocumentAdapter(mAwContents.getPdfExporter());
+    }
+
+    public void preauthorizePermission(Uri origin, long resources) {
+        // TODO: implement preauthorizePermission.
     }
 
     // AwContents.InternalAccessDelegate implementation --------------------------------------
