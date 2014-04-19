@@ -2029,7 +2029,12 @@ class WebViewChromium implements WebViewProvider,
         mAwContents.computeScroll();
     }
 
-    @Override
+    // TODO(sgurun) this is only to have master-gpl compiling.
+    public PrintDocumentAdapter createPrintDocumentAdapter() {
+         return createPrintDocumentAdapter("default");
+    }
+
+    //@Override TODO(sgurun) commenting this out to have master-gpl compiling.
     public PrintDocumentAdapter createPrintDocumentAdapter(String documentName) {
         checkThread();
         return new AwPrintDocumentAdapter(mAwContents.getPdfExporter(), documentName);
