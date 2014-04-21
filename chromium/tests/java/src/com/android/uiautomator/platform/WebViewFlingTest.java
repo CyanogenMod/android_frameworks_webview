@@ -39,6 +39,7 @@ import java.io.IOException;
 public class WebViewFlingTest extends JankTestBase {
 
     private static final long TEST_DELAY_TIME_MS = 2 * 1000; // 2 seconds
+    private static final long PAGE_LOAD_DELAY_TIMEOUT_MS = 10 * 1000; // 10 seconds
     private static final long PAGE_LOAD_DELAY_TIME_MS = 20 * 1000; // 20 seconds
     private static final int MIN_DATA_SIZE = 50;
     private static final String AW_WINDOW_NAME =
@@ -73,6 +74,8 @@ public class WebViewFlingTest extends JankTestBase {
         if (mWebPageDisplay == null) {
             mWebPageDisplay =
                     new UiScrollable(new UiSelector().resourceId(AW_CONTAINER).instance(0));
+            assertTrue("Failed to get web container",
+                mWebPageDisplay.waitForExists(PAGE_LOAD_DELAY_TIMEOUT_MS));
         }
         return mWebPageDisplay;
     }
