@@ -40,19 +40,21 @@ import org.chromium.android_webview.AwFormDatabase;
 import org.chromium.android_webview.AwGeolocationPermissions;
 import org.chromium.android_webview.AwQuotaManagerBridge;
 import org.chromium.android_webview.AwSettings;
+import org.chromium.base.CommandLine;
 import org.chromium.base.PathService;
 import org.chromium.base.ThreadUtils;
+import org.chromium.base.library_loader.LibraryLoader;
+import org.chromium.base.library_loader.ProcessInitException;
 import org.chromium.content.app.ContentMain;
-import org.chromium.content.app.LibraryLoader;
 import org.chromium.content.browser.ContentViewStatics;
 import org.chromium.content.browser.ResourceExtractor;
-import org.chromium.content.common.CommandLine;
-import org.chromium.content.common.ProcessInitException;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
+
+    private final String TAG = "WebViewChromiumFactoryProvider";
 
     private static final String CHROMIUM_PREFS_NAME = "WebViewChromiumPrefs";
     private static final String COMMAND_LINE_FILE = "/data/local/tmp/webview-command-line";
@@ -99,8 +101,9 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         }
 
         Looper looper = !onMainThread ? Looper.myLooper() : Looper.getMainLooper();
-        Log.v("WebViewChromium", "Binding Chromium to the " +
-                (onMainThread ? "main":"background") + " looper " + looper);
+        Log.v(TAG, "Binding Chromium to " +
+                (Looper.getMainLooper().equals(looper) ? "main":"background") +
+                " looper " + looper);
         ThreadUtils.setUiThread(looper);
 
         if (ThreadUtils.runningOnUiThread()) {
@@ -199,6 +202,47 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         mWebViewsToStart = null;
     }
 
+    boolean hasStarted() {
+        return mStarted;
+    }
+
+    void startYourEngines(boolean onMainThread) {
+        synchronized (mLock) {
+            ensureChromiumStartedLocked(onMainThread);
+
+        }
+    }
+
+    AwBrowserContext getBrowserContext() {
+        synchronized (mLock) {
+            return getBrowserContextLocked();
+        }
+    }
+
+    private AwBrowserContext getBrowserContextLocked() {
+        assert Thread.holdsLock(mLock);
+        assert mStarted;
+        if (mBrowserContext == null) {
+            mBrowserContext = new AwBrowserContext(
+                    ActivityThread.currentApplication().getSharedPreferences(
+                            CHROMIUM_PREFS_NAME, Context.MODE_PRIVATE));
+        }
+        return mBrowserContext;
+    }
+
+    private void setWebContentsDebuggingEnabled(boolean enable) {
+        if (Looper.myLooper() != ThreadUtils.getUiThreadLooper()) {
+            throw new RuntimeException(
+                    "Toggling of Web Contents Debugging must be done on the UI thread");
+        }
+        if (mDevToolsServer == null) {
+            if (!enable) return;
+            mDevToolsServer = new AwDevToolsServer();
+        }
+        mDevToolsServer.setRemoteDebuggingEnabled(enable);
+    }
+
+
     @Override
     public Statics getStatics() {
         synchronized (mLock) {
@@ -250,17 +294,6 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         return wvc;
     }
 
-    boolean hasStarted() {
-        return mStarted;
-    }
-
-    void startYourEngines(boolean onMainThread) {
-        synchronized (mLock) {
-            ensureChromiumStartedLocked(onMainThread);
-
-        }
-    }
-
     @Override
     public GeolocationPermissions getGeolocationPermissions() {
         synchronized (mLock) {
@@ -271,23 +304,6 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
             }
         }
         return mGeolocationPermissions;
-    }
-
-    AwBrowserContext getBrowserContext() {
-        synchronized (mLock) {
-            return getBrowserContextLocked();
-        }
-    }
-
-    private AwBrowserContext getBrowserContextLocked() {
-        assert Thread.holdsLock(mLock);
-        assert mStarted;
-        if (mBrowserContext == null) {
-            mBrowserContext = new AwBrowserContext(
-                    ActivityThread.currentApplication().getSharedPreferences(
-                            CHROMIUM_PREFS_NAME, Context.MODE_PRIVATE));
-        }
-        return mBrowserContext;
     }
 
     @Override
@@ -341,17 +357,5 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
             }
         }
         return mWebViewDatabase;
-    }
-
-    private void setWebContentsDebuggingEnabled(boolean enable) {
-        if (Looper.myLooper() != ThreadUtils.getUiThreadLooper()) {
-            throw new RuntimeException(
-                    "Toggling of Web Contents Debugging must be done on the UI thread");
-        }
-        if (mDevToolsServer == null) {
-            if (!enable) return;
-            mDevToolsServer = new AwDevToolsServer();
-        }
-        mDevToolsServer.setRemoteDebuggingEnabled(enable);
     }
 }

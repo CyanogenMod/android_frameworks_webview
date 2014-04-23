@@ -35,5 +35,4 @@
     <string name="webviewchromium_color_picker_dialog_title" msgid="709749370892752246">"ເລືອກສີ"</string>
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"ບໍ່​ສາ​ມາດ​ດຳເນີນປະຕິບັດການກ່ອນໜ້ານີ້ໄດ້ ເນື່ອງຈາກໜ່ວຍຄວາມຈຳເຫຼືອໜ້ອຍເກີນໄປ"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"ລົ້ມເຫລວໃນການເປີດໄຟລ໌ທີ່ທ່ານເລືອກ"</string>
-    <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"ຄວາມສາມາດນີ້ຍັງບໍ່ຖືກຮອງຮັບໃນ Android ເວີຊັນນີ້ເທື່ອ."</string>
 </resources>
