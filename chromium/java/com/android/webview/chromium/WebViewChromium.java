@@ -2147,5 +2147,10 @@ class WebViewChromium implements WebViewProvider,
         public boolean executeHardwareAction(Runnable action) {
             return mWebView.executeHardwareAction(action);
         }
+
+        // @Override
+        public boolean super_onHoverEvent(MotionEvent event) {
+            return mWebViewPrivate.super_onHoverEvent(event);
+        }
     }
 }
