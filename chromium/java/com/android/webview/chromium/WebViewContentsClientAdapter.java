@@ -680,7 +680,7 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     }
 
     @Override
-    public void onReceivedSslError(ValueCallback<Boolean> callback, SslError error) {
+    public void onReceivedSslError(final ValueCallback<Boolean> callback, SslError error) {
         SslErrorHandler handler = new SslErrorHandler() {
             @Override
             public void proceed() {
