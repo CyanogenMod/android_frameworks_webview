@@ -36,7 +36,7 @@ THIRD_PARTY_PROJECTS_WITH_FLAT_HISTORY = [
 THIRD_PARTY_PROJECTS_WITH_FULL_HISTORY = [
     'sdch/open-vcdiff',
     'testing/gtest',
-    'third_party/angle_dx11',
+    'third_party/angle',
     'third_party/eyesfree/src/android/java/src/com/googlecode/eyesfree/braille',
     'third_party/freetype',
     'third_party/icu',
@@ -48,6 +48,7 @@ THIRD_PARTY_PROJECTS_WITH_FULL_HISTORY = [
     'third_party/openssl',
     'third_party/opus/src',
     'third_party/ots',
+    'third_party/sfntly/cpp/src',
     'third_party/skia/include',
     'third_party/skia/gyp',
     'third_party/skia/src',

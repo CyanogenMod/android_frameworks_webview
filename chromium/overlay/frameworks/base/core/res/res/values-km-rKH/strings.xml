@@ -10,9 +10,10 @@
     <string name="webviewchromium_actionbar_share" msgid="8265707764014979342">"ចែករំលែក"</string>
     <string name="webviewchromium_actionbar_web_search" msgid="539283440381511128">"ស្វែងរក​តំបន់បណ្ដាញ"</string>
     <string name="webviewchromium_accessibility_content_view" msgid="4892710761369744296">"ទិដ្ឋភាព​តំបន់​បណ្ដាញ"</string>
+    <string name="webviewchromium_date_picker_dialog_title" msgid="2526916586861043590">"កំណត់​កាលបរិច្ឆេទ"</string>
     <string name="webviewchromium_date_picker_dialog_set" msgid="1106446820088863527">"កំណត់"</string>
     <string name="webviewchromium_date_picker_dialog_clear" msgid="6439296286509386196">"សម្អាត"</string>
-    <string name="webviewchromium_date_picker_dialog_title" msgid="2526916586861043590">"កំណត់​កាលបរិច្ឆេទ"</string>
+    <string name="webviewchromium_date_picker_dialog_other_button_label" msgid="3985479506807823488">"ផ្សេងៗ"</string>
     <string name="webviewchromium_date_time_picker_dialog_title" msgid="1993749766330125085">"កំណត់​កាលបរិច្ឆេទ និង​ពេលវេលា"</string>
     <string name="webviewchromium_time_picker_dialog_title" msgid="8828361788181511983">"កំណត់​ម៉ោង"</string>
     <string name="webviewchromium_time_picker_dialog_am" msgid="7424804671722276100">"ព្រឹក"</string>
@@ -44,7 +45,20 @@
     <string name="webviewchromium_color_picker_button_set" msgid="6981883782092158499">"កំណត់"</string>
     <string name="webviewchromium_color_picker_button_cancel" msgid="11751988208172211">"បោះ​បង់"</string>
     <string name="webviewchromium_color_picker_dialog_title" msgid="709749370892752246">"ជ្រើស​ពណ៌"</string>
+    <string name="webviewchromium_color_picker_button_red" msgid="6131020724838687141">"ក្រហម"</string>
+    <string name="webviewchromium_color_picker_button_cyan" msgid="3140315356534580408">"​ផ្ទៃមេឃ"</string>
+    <string name="webviewchromium_color_picker_button_blue" msgid="1572313634116404709">"ខៀវ"</string>
+    <string name="webviewchromium_color_picker_button_green" msgid="1003720528095717795">"បៃតង"</string>
+    <string name="webviewchromium_color_picker_button_magenta" msgid="2912944065975017462">"​ក្រហម​ស្វាយ"</string>
+    <string name="webviewchromium_color_picker_button_yellow" msgid="3473794849605150015">"លឿង"</string>
+    <string name="webviewchromium_color_picker_button_black" msgid="4355127282571397998">"ខ្មៅ"</string>
+    <string name="webviewchromium_color_picker_button_white" msgid="1315573027769681132">"ស"</string>
+    <string name="webviewchromium_copy_to_clipboard_failure_message" msgid="522732862171513811">"បាន​បរាជ័យ​ក្នុង​ការ​ចម្លង​ទៅ​ក្ដារ​តម្បៀត​ខ្ទាស់"</string>
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"មិន​អាច​បញ្ចប់​ប្រតិបត្តិការ​ពី​មុន​បាន​ព្រោះ​ជិត​អស់​អង្គ​ចងចាំ"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"បាន​បរាជ័យ​ក្នុង​ការ​បើក​ឯកសារ​ដែល​បាន​ជ្រើស"</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"មុខងារ​នេះ​មិន​ត្រូវ​បាន​គាំទ្រ​នៅ​ក្នុង​កំណែ​របស់ Android នេះ​ទេ។"</string>
+    <string name="webviewchromium_profiler_started_toast" msgid="5173879436794997552">"បាន​ចាប់ផ្ដើម​កម្មវិធី​គូស​ព្រាង"</string>
+    <string name="webviewchromium_profiler_stopped_toast" msgid="7610282533871917576">"បាន​បញ្ចប់​កម្មវិធី​គំនូស​ព្រាង។ លទ្ធផល​គឺ %1$s ។"</string>
+    <string name="webviewchromium_profiler_no_storage_toast" msgid="6415118515448171108">"មិន​អាច​ចាប់ផ្ដើម​កម្មវិធី​គំនូស​ព្រាង​ ព្រោះ​ឧបករណ៍​ផ្ទុក​ខាងក្រៅ​មិន​ទាន់​រួចរាល់"</string>
+    <string name="webviewchromium_profiler_error_toast" msgid="3020154324443664032">"បាន​បរាជ័យ​ក្នុង​ការ​ចាប់ផ្ដើម​កម្មវិធី​គូស​ព្រាង"</string>
 </resources>
