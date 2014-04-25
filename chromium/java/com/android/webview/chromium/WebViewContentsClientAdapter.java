@@ -680,23 +680,15 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     }
 
     @Override
-    public void onReceivedSslError(final ValueCallback<Boolean> callback, SslError error) {
+    public void onReceivedSslError(ValueCallback<Boolean> callback, SslError error) {
         SslErrorHandler handler = new SslErrorHandler() {
             @Override
             public void proceed() {
-                postProceed(true);
+                callback.onReceiveValue(true);
             }
             @Override
             public void cancel() {
-                postProceed(false);
-            }
-            private void postProceed(final boolean proceed) {
-                post(new Runnable() {
-                        @Override
-                        public void run() {
-                            callback.onReceiveValue(proceed);
-                        }
-                    });
+                callback.onReceiveValue(false);
             }
         };
         TraceEvent.begin();
