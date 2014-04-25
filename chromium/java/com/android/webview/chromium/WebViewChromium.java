@@ -1134,7 +1134,8 @@ class WebViewChromium implements WebViewProvider,
         mAwContents.clearSslPreferences();
     }
 
-    @Override
+    // @Override
+    // TODO(sgurun) remove override to have master-gpl compiling.
     public void clearClientCertPreferences(final ValueCallback<Void> resultCallback) {
         if (checkNeedsPost()) {
             mRunQueue.addTask(new Runnable() {
