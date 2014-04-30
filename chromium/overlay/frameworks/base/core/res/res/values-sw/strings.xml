@@ -34,7 +34,7 @@
     <string name="webviewchromium_accessibility_time_picker_milli" msgid="2292614892317672079">"Milisekunde"</string>
     <string name="webviewchromium_accessibility_time_picker_ampm" msgid="962162358043185447">"AM/PM"</string>
     <string name="webviewchromium_media_player_error_title" msgid="1520808434237404056">"Haiwezi kucheza video"</string>
-    <string name="webviewchromium_media_player_error_text_invalid_progressive_playback" msgid="7520069921018550187">"Samahani, video hii sio halali kwa mfululizo kwa kifaa hiki."</string>
+    <string name="webviewchromium_media_player_error_text_invalid_progressive_playback" msgid="7520069921018550187">"Samahani, video hii haiwezi kutiririshwa kwenye kifaa hiki."</string>
     <string name="webviewchromium_media_player_error_text_unknown" msgid="7167964728541888883">"Samahani, video hii haiwezi kuchezwa."</string>
     <string name="webviewchromium_media_player_error_button" msgid="3693971589377075815">"Sawa"</string>
     <string name="webviewchromium_media_player_loading_video" msgid="2617709614462333117">"Inapakia video"</string>
