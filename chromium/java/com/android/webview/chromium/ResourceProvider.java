@@ -41,10 +41,10 @@ public class ResourceProvider {
                 com.android.internal.R.attr.webviewchromium_select_dialog_singlechoice;
 
         // color
-        org.chromium.ui.R.color.autofill_dark_divider_color =
-                com.android.internal.R.color.webviewchromium_autofill_dark_divider_color;
-        org.chromium.ui.R.color.autofill_divider_color =
-                com.android.internal.R.color.webviewchromium_autofill_divider_color;
+        org.chromium.ui.R.color.dropdown_dark_divider_color =
+                com.android.internal.R.color.webviewchromium_dropdown_dark_divider_color;
+        org.chromium.ui.R.color.dropdown_divider_color =
+                com.android.internal.R.color.webviewchromium_dropdown_divider_color;
         org.chromium.ui.R.color.color_picker_border_color =
                 com.android.internal.R.color.webviewchromium_color_picker_border_color;
 
@@ -52,10 +52,10 @@ public class ResourceProvider {
 
         org.chromium.content.R.dimen.link_preview_overlay_radius =
                 com.android.internal.R.dimen.webviewchromium_link_preview_overlay_radius;
-        org.chromium.ui.R.dimen.autofill_text_height =
-                com.android.internal.R.dimen.webviewchromium_autofill_text_height;
-        org.chromium.ui.R.dimen.autofill_text_divider_height =
-                com.android.internal.R.dimen.webviewchromium_autofill_text_divider_height;
+        org.chromium.ui.R.dimen.dropdown_item_height =
+                com.android.internal.R.dimen.webviewchromium_dropdown_text_height;
+        org.chromium.ui.R.dimen.dropdown_item_divider_height =
+                com.android.internal.R.dimen.webviewchromium_dropdown_text_divider_height;
         org.chromium.ui.R.dimen.color_button_height =
                 com.android.internal.R.dimen.webviewchromium_color_button_height;
         org.chromium.ui.R.dimen.config_min_scaling_span =
@@ -134,12 +134,12 @@ public class ResourceProvider {
                 com.android.internal.R.id.webviewchromium_color_picker_text;
         org.chromium.ui.R.id.seek_bar =
                 com.android.internal.R.id.webviewchromium_color_picker_seek_bar;
-        org.chromium.ui.R.id.autofill_label =
-                com.android.internal.R.id.webviewchromium_autofill_label;
-        org.chromium.ui.R.id.autofill_popup_window =
-                com.android.internal.R.id.webviewchromium_autofill_popup_window;
-        org.chromium.ui.R.id.autofill_sublabel =
-                com.android.internal.R.id.webviewchromium_autofill_sublabel;
+        org.chromium.ui.R.id.dropdown_label =
+                com.android.internal.R.id.webviewchromium_dropdown_label;
+        org.chromium.ui.R.id.dropdown_popup_window =
+                com.android.internal.R.id.webviewchromium_dropdown_popup_window;
+        org.chromium.ui.R.id.dropdown_sublabel =
+                com.android.internal.R.id.webviewchromium_dropdown_sublabel;
 
         // layout
 
@@ -160,8 +160,8 @@ public class ResourceProvider {
                 com.android.internal.R.layout.webviewchromium_color_picker_dialog_content;
         org.chromium.ui.R.layout.color_picker_advanced_component =
                 com.android.internal.R.layout.webviewchromium_color_picker_advanced_component;
-        org.chromium.ui.R.layout.autofill_text =
-                com.android.internal.R.layout.webviewchromium_autofill_text;
+        org.chromium.ui.R.layout.dropdown_item =
+                com.android.internal.R.layout.webviewchromium_dropdown_text;
 
         // menu
         org.chromium.content.R.menu.select_action_menu =
@@ -265,8 +265,8 @@ public class ResourceProvider {
         // style
         org.chromium.content.R.style.SelectPopupDialog =
                 com.android.internal.R.style.webviewchromium_SelectPopupDialog;
-        org.chromium.ui.R.style.AutofillPopupWindow =
-                com.android.internal.R.style.webviewchromium_AutofillPopupWindow;
+        org.chromium.ui.R.style.DropdownPopupWindow =
+                com.android.internal.R.style.webviewchromium_DropdownPopupWindow;
 
         if (Build.IS_DEBUGGABLE) {
             // Ensure that we aren't missing any resource mappings.
