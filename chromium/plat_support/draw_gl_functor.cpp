@@ -52,22 +52,36 @@ class DrawGLFunctor : public Functor {
     }
 
     AwDrawGLInfo aw_info;
-    aw_info.mode = (what == DrawGlInfo::kModeProcess) ?
-        AwDrawGLInfo::kModeProcess : AwDrawGLInfo::kModeDraw;
-    DrawGlInfo* gl_info = reinterpret_cast<DrawGlInfo*>(data);
+    switch (what) {
+      case DrawGlInfo::kModeDraw: {
+        aw_info.mode = AwDrawGLInfo::kModeDraw;
+        DrawGlInfo* gl_info = reinterpret_cast<DrawGlInfo*>(data);
 
-    // Map across the input values.
-    aw_info.clip_left = gl_info->clipLeft;
-    aw_info.clip_top = gl_info->clipTop;
-    aw_info.clip_right = gl_info->clipRight;
-    aw_info.clip_bottom = gl_info->clipBottom;
-    aw_info.width = gl_info->width;
-    aw_info.height = gl_info->height;
-    aw_info.is_layer = gl_info->isLayer;
-    COMPILE_ASSERT(NELEM(aw_info.transform) == NELEM(gl_info->transform),
-                   mismatched_transform_matrix_sizes);
-    for (int i = 0; i < NELEM(aw_info.transform); ++i) {
-      aw_info.transform[i] = gl_info->transform[i];
+        // Map across the input values.
+        aw_info.clip_left = gl_info->clipLeft;
+        aw_info.clip_top = gl_info->clipTop;
+        aw_info.clip_right = gl_info->clipRight;
+        aw_info.clip_bottom = gl_info->clipBottom;
+        aw_info.width = gl_info->width;
+        aw_info.height = gl_info->height;
+        aw_info.is_layer = gl_info->isLayer;
+        COMPILE_ASSERT(NELEM(aw_info.transform) == NELEM(gl_info->transform),
+                       mismatched_transform_matrix_sizes);
+        for (int i = 0; i < NELEM(aw_info.transform); ++i) {
+          aw_info.transform[i] = gl_info->transform[i];
+        }
+        break;
+      }
+      case DrawGlInfo::kModeProcess:
+        aw_info.mode = AwDrawGLInfo::kModeProcess;
+        break;
+      case DrawGlInfo::kModeProcessNoContext:
+        // TODO: Fix once ProcessNoContext is in chromium.
+        aw_info.mode = AwDrawGLInfo::kModeProcess;
+        break;
+      default:
+        ALOGE("Unexpected DrawGLInfo type %d", what);
+        return DrawGlInfo::kStatusDone;
     }
 
     // Invoke the DrawGL method.

@@ -52,15 +52,25 @@ class DrawGLFunctor {
         mDestroyRunnable.detachNativeFunctor();
     }
 
-    public boolean requestDrawGL(HardwareCanvas canvas, ViewRootImpl viewRootImpl) {
+    public boolean requestDrawGL(HardwareCanvas canvas, ViewRootImpl viewRootImpl,
+            boolean waitForCompletion) {
         if (mDestroyRunnable.mNativeDrawGLFunctor == 0) {
             throw new RuntimeException("requested DrawGL on already destroyed DrawGLFunctor");
         }
+        if (viewRootImpl == null) {
+            // Can happen during teardown when window is leaked.
+            return false;
+        }
+
         mDestroyRunnable.mViewRootImpl = viewRootImpl;
-        if (canvas != null) {
-            canvas.callDrawGLFunction(mDestroyRunnable.mNativeDrawGLFunctor);
-        } else {
-            viewRootImpl.attachFunctor(mDestroyRunnable.mNativeDrawGLFunctor);
+        if (canvas == null) {
+            return viewRootImpl.invokeFunctor(mDestroyRunnable.mNativeDrawGLFunctor, waitForCompletion);
+        }
+
+        canvas.callDrawGLFunction(mDestroyRunnable.mNativeDrawGLFunctor);
+        if (waitForCompletion) {
+            viewRootImpl.invokeFunctor(mDestroyRunnable.mNativeDrawGLFunctor,
+                    waitForCompletion);
         }
         return true;
     }

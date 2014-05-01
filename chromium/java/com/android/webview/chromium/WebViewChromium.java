@@ -2141,17 +2141,27 @@ class WebViewChromium implements WebViewProvider,
             mWebViewPrivate.setMeasuredDimension(measuredWidth, measuredHeight);
         }
 
-        @Override
         public boolean requestDrawGL(Canvas canvas) {
+            return requestDrawGL(canvas, false);
+        }
+
+        // @Override
+        public boolean requestDrawGL(Canvas canvas, boolean waitForCompletion) {
             if (mGLfunctor == null) {
                 mGLfunctor = new DrawGLFunctor(mAwContents.getAwDrawGLViewContext());
             }
-            return mGLfunctor.requestDrawGL((HardwareCanvas)canvas, mWebView.getViewRootImpl());
+            return mGLfunctor.requestDrawGL((HardwareCanvas)canvas, mWebView.getViewRootImpl(),
+                    waitForCompletion);
         }
 
         // @Override
         public boolean executeHardwareAction(Runnable action) {
             return mWebView.executeHardwareAction(action);
+        }
+
+        // @Override
+        public boolean super_onHoverEvent(MotionEvent event) {
+            return mWebViewPrivate.super_onHoverEvent(event);
         }
     }
 }

@@ -23,6 +23,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Looper;
+import android.os.SystemProperties;
+import android.os.Trace;
 import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.GeolocationPermissions;
@@ -46,6 +48,7 @@ import org.chromium.base.CommandLine;
 import org.chromium.base.MemoryPressureListener;
 import org.chromium.base.PathService;
 import org.chromium.base.ThreadUtils;
+import org.chromium.base.TraceEvent;
 import org.chromium.base.library_loader.LibraryLoader;
 import org.chromium.base.library_loader.ProcessInitException;
 import org.chromium.content.app.ContentMain;
@@ -57,7 +60,7 @@ import java.util.ArrayList;
 
 public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
 
-    private final String TAG = "WebViewChromiumFactoryProvider";
+    private static final String TAG = "WebViewChromiumFactoryProvider";
 
     private static final String CHROMIUM_PREFS_NAME = "WebViewChromiumPrefs";
     private static final String COMMAND_LINE_FILE = "/data/local/tmp/webview-command-line";
@@ -83,17 +86,32 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     private boolean mStarted;
 
     public WebViewChromiumFactoryProvider() {
+        ThreadUtils.setWillOverrideUiThread();
         // Load chromium library.
         AwBrowserProcess.loadLibrary();
         // Load glue-layer support library.
         System.loadLibrary("webviewchromium_plat_support");
-        ThreadUtils.setWillOverrideUiThread();
     }
 
     private void initPlatSupportLibrary() {
         DrawGLFunctor.setChromiumAwDrawGLFunction(AwContents.getAwDrawGLFunction());
         AwContents.setAwDrawSWFunctionTable(GraphicsUtils.getDrawSWFunctionTable());
         AwContents.setAwDrawGLFunctionTable(GraphicsUtils.getDrawGLFunctionTable());
+    }
+
+    private static void initTraceEvent() {
+        syncATraceState();
+        SystemProperties.addChangeCallback(new Runnable() {
+            @Override
+            public void run() {
+                syncATraceState();
+            }
+        });
+    }
+
+    private static void syncATraceState() {
+        long enabledFlags = SystemProperties.getLong("debug.atrace.tags.enableflags", 0);
+        TraceEvent.setATraceEnabled((enabledFlags & Trace.TRACE_TAG_WEBVIEW) != 0);
     }
 
     private void ensureChromiumStartedLocked(boolean onMainThread) {
@@ -188,6 +206,8 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         if (Build.IS_DEBUGGABLE) {
             setWebContentsDebuggingEnabled(true);
         }
+
+        initTraceEvent();
         mStarted = true;
 
         for (WeakReference<WebViewChromium> wvc : mWebViewsToStart) {
