@@ -294,6 +294,12 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
                         }
                     }
 
+                    // TODO enable after L release to AOSP
+                    //@verride
+                    public void clearClientCertPreferences(Runnable onCleared) {
+                        // TODO implement after chromium rolls to master
+                    }
+
                     public void freeMemoryForTests() {
                         if (ActivityManager.isRunningInTestHarness()) {
                             MemoryPressureListener.maybeNotifyMemoryPresure(
