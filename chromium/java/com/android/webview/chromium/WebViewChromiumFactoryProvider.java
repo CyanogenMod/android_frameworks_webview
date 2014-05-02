@@ -38,6 +38,7 @@ import android.webkit.WebViewProvider;
 import org.chromium.android_webview.AwBrowserContext;
 import org.chromium.android_webview.AwBrowserProcess;
 import org.chromium.android_webview.AwContents;
+import org.chromium.android_webview.AwContentsStatics;
 import org.chromium.android_webview.AwCookieManager;
 import org.chromium.android_webview.AwDevToolsServer;
 import org.chromium.android_webview.AwFormDatabase;
@@ -292,6 +293,12 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
                             WebViewChromiumFactoryProvider.this.
                                     setWebContentsDebuggingEnabled(enable);
                         }
+                    }
+
+                    // TODO enable after L release to AOSP
+                    //@Override
+                    public void clearClientCertPreferences(Runnable onCleared) {
+                        AwContentsStatics.clearClientCertPreferences(onCleared);
                     }
 
                     @Override
