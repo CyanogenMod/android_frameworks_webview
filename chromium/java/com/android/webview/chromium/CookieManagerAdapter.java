@@ -78,6 +78,11 @@ public class CookieManagerAdapter extends CookieManager {
     }
 
     @Override
+    public int countCookies() {
+        return mChromeCookieManager.countCookies();
+    }
+
+    @Override
     public void removeAllCookie() {
         mChromeCookieManager.removeAllCookie();
     }
