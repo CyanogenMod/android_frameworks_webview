@@ -27,7 +27,7 @@
     <string name="webviewchromium_accessibility_datetime_picker_time" msgid="7658727779659492209">"ሰዓት"</string>
     <string name="webviewchromium_accessibility_date_picker_month" msgid="3073851955733780910">"ወር"</string>
     <string name="webviewchromium_accessibility_date_picker_week" msgid="3705851794085779778">"ሳምንት"</string>
-    <string name="webviewchromium_accessibility_date_picker_year" msgid="1016706432863812811">"አመት"</string>
+    <string name="webviewchromium_accessibility_date_picker_year" msgid="1016706432863812811">"ዓመት"</string>
     <string name="webviewchromium_accessibility_time_picker_hour" msgid="1821975181397712995">"ሰዓት"</string>
     <string name="webviewchromium_accessibility_time_picker_minute" msgid="6248299523645733594">"ደቂቃ"</string>
     <string name="webviewchromium_accessibility_time_picker_second" msgid="4035159448510540572">"ሴኮንድ"</string>
