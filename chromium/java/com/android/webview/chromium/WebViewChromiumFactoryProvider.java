@@ -18,13 +18,17 @@ package com.android.webview.chromium;
 
 import android.app.ActivityManager;
 import android.app.ActivityThread;
+import android.content.BroadcastReceiver;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Looper;
 import android.os.SystemProperties;
 import android.os.Trace;
+import android.provider.Settings;
 import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.GeolocationPermissions;
@@ -61,6 +65,16 @@ import java.util.ArrayList;
 
 public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
 
+    /*
+     * Listen for DataReductionProxySetting changes and take action.
+     */
+    private static final class DataReductionProxySettingListener extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            AwContentsStatics.setDataReductionProxyEnabled(isDataReductionProxyEnabled(context));
+        }
+    }
+
     private static final String TAG = "WebViewChromiumFactoryProvider";
 
     private static final String CHROMIUM_PREFS_NAME = "WebViewChromiumPrefs";
@@ -85,6 +99,8 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
 
     // Read/write protected by mLock.
     private boolean mStarted;
+
+    private DataReductionProxySettingListener mProxySettingListener;
 
     public WebViewChromiumFactoryProvider() {
         ThreadUtils.setWillOverrideUiThread();
@@ -219,6 +235,26 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         }
         mWebViewsToStart.clear();
         mWebViewsToStart = null;
+
+        // starts listening for data reduction proxy setting changes.
+        initDataReductionProxySettingListener();
+    }
+
+    private void initDataReductionProxySettingListener() {
+        // Set the data reduction proxy key.
+        AwContentsStatics.setDataReductionProxyKey("invalid-test-key");
+        // Enable data reduction proxy if the setting is set to enabled.
+        Context context = ActivityThread.currentApplication();
+        AwContentsStatics.setDataReductionProxyEnabled(isDataReductionProxyEnabled(context));
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(WebView.DATA_REDUCTION_PROXY_SETTING_CHANGED);
+        mProxySettingListener = new DataReductionProxySettingListener();
+        context.registerReceiver(mProxySettingListener, filter);
+    }
+
+    private static boolean isDataReductionProxyEnabled(Context context) {
+        return Settings.Secure.getInt(context.getContentResolver(),
+                    Settings.Secure.WEBVIEW_DATA_REDUCTION_PROXY, 0) != 0;
     }
 
     boolean hasStarted() {
