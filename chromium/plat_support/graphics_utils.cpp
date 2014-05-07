@@ -63,7 +63,7 @@ AwPixelInfo* GetPixels(JNIEnv* env, jobject java_canvas) {
   // translate & scale transforms, and a simple rectangular clip.
   // (This also avoids significant wasted time in calling
   // SkCanvasStateUtils::CaptureCanvasState when the clip is complex).
-  if (!canvas->getTotalClip().isRect() ||
+  if (!canvas->isClipRect() ||
       (canvas->getTotalMatrix().getType() &
                 ~(SkMatrix::kTranslate_Mask | SkMatrix::kScale_Mask))) {
     return NULL;
