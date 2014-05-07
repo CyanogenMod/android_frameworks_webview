@@ -105,17 +105,17 @@ bool IsSkiaVersionCompatible(SkiaVersionFunction function) {
   return compatible;
 }
 
-jlong GetDrawSWFunctionTable(JNIEnv* env, jclass) {
+jint GetDrawSWFunctionTable(JNIEnv* env, jclass) {
   static const AwDrawSWFunctionTable function_table = {
       &GetPixels,
       &ReleasePixels,
       &CreatePicture,
       &IsSkiaVersionCompatible,
   };
-  return reinterpret_cast<intptr_t>(&function_table);
+  return reinterpret_cast<jint>(&function_table);
 }
 
-jlong GetDrawGLFunctionTable(JNIEnv* env, jclass) {
+jint GetDrawGLFunctionTable(JNIEnv* env, jclass) {
   static const AwDrawGLFunctionTable function_table = {
     &GraphicBufferImpl::Create,
     &GraphicBufferImpl::Release,
@@ -124,7 +124,7 @@ jlong GetDrawGLFunctionTable(JNIEnv* env, jclass) {
     &GraphicBufferImpl::GetNativeBufferStatic,
     &GraphicBufferImpl::GetStrideStatic,
   };
-  return reinterpret_cast<intptr_t>(&function_table);
+  return reinterpret_cast<jint>(&function_table);
 }
 
 const char kClassName[] = "com/android/webview/chromium/GraphicsUtils";

@@ -17,15 +17,15 @@
 package com.android.webview.chromium;
 
 abstract class GraphicsUtils {
-    public static long getDrawSWFunctionTable() {
+    public static int getDrawSWFunctionTable() {
         return nativeGetDrawSWFunctionTable();
     }
 
-    public static long getDrawGLFunctionTable() {
+    public static int getDrawGLFunctionTable() {
         return nativeGetDrawGLFunctionTable();
     }
 
-    private static native long nativeGetDrawSWFunctionTable();
-    private static native long nativeGetDrawGLFunctionTable();
+    private static native int nativeGetDrawSWFunctionTable();
+    private static native int nativeGetDrawGLFunctionTable();
 
 }
