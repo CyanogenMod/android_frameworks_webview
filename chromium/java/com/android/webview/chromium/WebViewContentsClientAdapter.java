@@ -42,6 +42,7 @@ import android.webkit.GeolocationPermissions;
 import android.webkit.JsDialogHelper;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
+import android.webkit.PermissionRequest;
 import android.webkit.SslErrorHandler;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
@@ -56,6 +57,7 @@ import org.chromium.android_webview.AwHttpAuthHandler;
 import org.chromium.android_webview.InterceptedRequestData;
 import org.chromium.android_webview.JsPromptResultReceiver;
 import org.chromium.android_webview.JsResultReceiver;
+import org.chromium.android_webview.permission.AwPermissionRequest;
 import org.chromium.base.ThreadUtils;
 import org.chromium.base.TraceEvent;
 import org.chromium.content.browser.ContentView;
@@ -569,6 +571,31 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
         TraceEvent.end();
     }
 
+    @Override
+    public void onPermissionRequest(AwPermissionRequest permissionRequest) {
+        TraceEvent.begin();
+        if (mWebChromeClient != null) {
+            if (TRACE) Log.d(TAG, "onPermissionRequest");
+            mWebChromeClient.onPermissionRequest(
+                    new AwPermissionRequestAdapter(permissionRequest));
+        } else {
+            // By default, we deny the permission.
+            permissionRequest.deny();
+        }
+        TraceEvent.end();
+    }
+
+    @Override
+    public void onPermissionRequestCanceled(AwPermissionRequest permissionRequest) {
+        TraceEvent.begin();
+        if (mWebChromeClient != null) {
+            if (TRACE) Log.d(TAG, "onPermissionRequestCanceled");
+            mWebChromeClient.onPermissionRequestCanceled(
+                    new AwPermissionRequestAdapter(permissionRequest));
+        }
+        TraceEvent.end();
+    }
+
     private static class JsPromptResultReceiverAdapter implements JsResult.ResultReceiver {
         private JsPromptResultReceiver mChromePromptResultReceiver;
         private JsResultReceiver mChromeResultReceiver;
@@ -911,6 +938,7 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
         return result;
     }
 
+    // TODO: Move to upstream.
     private static class AwHttpAuthHandlerAdapter extends android.webkit.HttpAuthHandler {
         private AwHttpAuthHandler mAwHandler;
 
@@ -938,6 +966,60 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
         @Override
         public boolean useHttpAuthUsernamePassword() {
             return mAwHandler.isFirstAttempt();
+        }
+    }
+
+    // TODO: Move to the upstream once the PermissionRequest is part of SDK.
+    private static class AwPermissionRequestAdapter implements PermissionRequest {
+        private AwPermissionRequest mAwPermissionRequest;
+
+        public AwPermissionRequestAdapter(AwPermissionRequest awPermissionRequest) {
+            assert awPermissionRequest != null;
+            mAwPermissionRequest = awPermissionRequest;
+        }
+
+        @Override
+        public Uri getOrigin() {
+            return mAwPermissionRequest.getOrigin();
+        }
+
+        @Override
+        public long getResources() {
+            return mAwPermissionRequest.getResources();
+        }
+
+        @Override
+        public void grant(long resources) {
+            long requestedResource = getResources();
+            if ((requestedResource & resources) == requestedResource)
+                mAwPermissionRequest.grant();
+            else
+                mAwPermissionRequest.deny();
+        }
+
+        @Override
+        public void deny() {
+            mAwPermissionRequest.deny();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            /*
+             * Override equals because the PermissionRequest passed in from OnPermissionRequest
+             * will be used to compare the one passed in from OnPermissionRequest(), but we
+             * don't want to keep the AwPermissionRequestAdapter instance around. So we override
+             * equals to compare AwPermissionRequest.
+             */
+            if (obj instanceof AwPermissionRequestAdapter) {
+                AwPermissionRequestAdapter adapter = (AwPermissionRequestAdapter)obj;
+                return mAwPermissionRequest == adapter.mAwPermissionRequest;
+            }
+            return false;
+        }
+
+        @Override
+        public int hashCode() {
+            return mAwPermissionRequest.hashCode();
         }
     }
 }
