@@ -832,7 +832,7 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
             // background.
             Bitmap poster = BitmapFactory.decodeResource(
                     mWebView.getContext().getResources(),
-                    com.android.internal.R.drawable.ic_media_video_poster);
+                    R.drawable.ic_media_video_poster);
             result = Bitmap.createBitmap(poster.getWidth(), poster.getHeight(), poster.getConfig());
             result.eraseColor(Color.GRAY);
             Canvas canvas = new Canvas(result);
