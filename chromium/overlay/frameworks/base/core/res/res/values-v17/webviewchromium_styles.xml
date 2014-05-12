@@ -7,8 +7,8 @@
 -->
 
 <resources>
-    <style name="webviewchromium_AutofillPopupWindow" parent="@android:style/Widget.ListPopupWindow">
-        <item name="android:popupBackground">@drawable/webviewchromium_autofill_popup_background</item>
+    <style name="webviewchromium_DropdownPopupWindow" parent="@android:style/Widget.ListPopupWindow">
+        <item name="android:popupBackground">@drawable/webviewchromium_dropdown_popup_background</item>
     </style>
     <style name="webviewchromium_SelectPopupDialog">
         <item name="webviewchromium_select_dialog_multichoice">@android:layout/select_dialog_multichoice</item>
