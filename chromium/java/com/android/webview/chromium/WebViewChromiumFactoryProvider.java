@@ -16,6 +16,8 @@
 
 package com.android.webview.chromium;
 
+import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.app.ActivityManager;
 import android.app.ActivityThread;
 import android.content.BroadcastReceiver;
@@ -48,6 +50,7 @@ import org.chromium.android_webview.AwDevToolsServer;
 import org.chromium.android_webview.AwFormDatabase;
 import org.chromium.android_webview.AwGeolocationPermissions;
 import org.chromium.android_webview.AwQuotaManagerBridge;
+import org.chromium.android_webview.AwResource;
 import org.chromium.android_webview.AwSettings;
 import org.chromium.base.CommandLine;
 import org.chromium.base.MemoryPressureListener;
@@ -221,7 +224,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
                 "/system/framework/webview/paks");
 
         // Make sure that ResourceProvider is initialized before starting the browser process.
-        ResourceProvider.registerResources(ActivityThread.currentApplication());
+        setUpResources(ActivityThread.currentApplication());
         AwBrowserProcess.start(ActivityThread.currentApplication());
         initPlatSupportLibrary();
 
@@ -326,6 +329,17 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         mDevToolsServer.setRemoteDebuggingEnabled(enable);
     }
 
+    private void setUpResources(Context ctx) {
+        ResourceRewriter.rewriteRValues(ctx);
+
+        AwResource.setResources(ctx.getResources());
+        AwResource.setErrorPageResources(com.android.internal.R.raw.loaderror,
+                com.android.internal.R.raw.nodomain);
+        AwResource.setDefaultTextEncoding(
+                com.android.internal.R.string.default_text_encoding);
+        AwResource.setConfigKeySystemUuidMapping(
+                com.android.internal.R.array.config_keySystemUuidMapping);
+    }
 
     @Override
     public Statics getStatics() {
@@ -396,7 +410,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
                 mWebViewsToStart.add(new WeakReference<WebViewChromium>(wvc));
             }
         }
-        ResourceProvider.registerResources(webView.getContext());
+
         return wvc;
     }
 
