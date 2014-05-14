@@ -15,6 +15,6 @@
     -->
     <dimen name="webviewchromium_color_button_height">60dp</dimen>
     <dimen name="webviewchromium_color_picker_gradient_margin">14.5dp</dimen>
-    <dimen name="webviewchromium_autofill_text_height">44dp</dimen>
-    <dimen name="webviewchromium_autofill_text_divider_height">1px</dimen>
+    <dimen name="webviewchromium_dropdown_text_height">44dp</dimen>
+    <dimen name="webviewchromium_dropdown_text_divider_height">1px</dimen>
 </resources>
