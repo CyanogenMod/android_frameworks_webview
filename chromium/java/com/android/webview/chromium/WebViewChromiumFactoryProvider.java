@@ -38,6 +38,7 @@ import android.webkit.WebViewProvider;
 import org.chromium.android_webview.AwBrowserContext;
 import org.chromium.android_webview.AwBrowserProcess;
 import org.chromium.android_webview.AwContents;
+import org.chromium.android_webview.AwContentsStatics;
 import org.chromium.android_webview.AwCookieManager;
 import org.chromium.android_webview.AwDevToolsServer;
 import org.chromium.android_webview.AwFormDatabase;
@@ -295,11 +296,12 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
                     }
 
                     // TODO enable after L release to AOSP
-                    //@verride
+                    //@Override
                     public void clearClientCertPreferences(Runnable onCleared) {
-                        // TODO implement after chromium rolls to master
+                        AwContentsStatics.clearClientCertPreferences(onCleared);
                     }
 
+                    @Override
                     public void freeMemoryForTests() {
                         if (ActivityManager.isRunningInTestHarness()) {
                             MemoryPressureListener.maybeNotifyMemoryPresure(

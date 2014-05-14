@@ -18,6 +18,6 @@
 -->
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-  <item type="id" name="webviewchromium_autofill_popup_window" />
+  <item type="id" name="webviewchromium_dropdown_popup_window" />
 </resources>
 

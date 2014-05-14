@@ -234,6 +234,10 @@ class WebViewChromium implements WebViewProvider,
                 mWebView.getContext(), isAccessFromFileURLsGrantedByDefault,
                 areLegacyQuirksEnabled));
 
+        if (mAppTargetSdkVersion <= Build.VERSION_CODES.KITKAT) {
+            mWebSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        }
+
         mRunQueue.addTask(new Runnable() {
                 @Override
                 public void run() {
@@ -2125,22 +2129,13 @@ class WebViewChromium implements WebViewProvider,
             mWebViewPrivate.setMeasuredDimension(measuredWidth, measuredHeight);
         }
 
-        public boolean requestDrawGL(Canvas canvas) {
-            return requestDrawGL(canvas, false);
-        }
-
-        // @Override
+        @Override
         public boolean requestDrawGL(Canvas canvas, boolean waitForCompletion) {
             if (mGLfunctor == null) {
                 mGLfunctor = new DrawGLFunctor(mAwContents.getAwDrawGLViewContext());
             }
             return mGLfunctor.requestDrawGL((HardwareCanvas)canvas, mWebView.getViewRootImpl(),
                     waitForCompletion);
-        }
-
-        // @Override
-        public boolean executeHardwareAction(Runnable action) {
-            return mWebView.executeHardwareAction(action);
         }
 
         // @Override
