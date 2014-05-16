@@ -594,4 +594,14 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
     public int getMixedContentMode() {
         return mAwSettings.getMixedContentMode();
     }
+
+//    @Override
+    public void setVideoOverlayForEmbeddedEncryptedVideoEnabled(boolean flag) {
+        mAwSettings.setVideoOverlayForEmbeddedVideoEnabled(flag);
+    }
+
+//    @Override
+    public boolean getVideoOverlayForEmbeddedEncryptedVideoEnabled() {
+        return mAwSettings.getVideoOverlayForEmbeddedVideoEnabled();
+    }
 }
