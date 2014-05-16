@@ -35,6 +35,7 @@ LOCAL_JARJAR_RULES := $(CHROMIUM_PATH)/android_webview/build/jarjar-rules.txt
 # TODO: filter webviewchromium_webkit_strings based on PRODUCT_LOCALES.
 LOCAL_REQUIRED_MODULES := \
         libwebviewchromium \
+        libwebviewchromium_loader \
         libwebviewchromium_plat_support \
         webviewchromium_pak \
         webviewchromium_webkit_strings_am.pak \
@@ -148,4 +149,27 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_CFLAGS := -Wno-unused-parameter
 
 include $(BUILD_SHARED_LIBRARY)
+
+
+# Loader library which handles address space reservation and relro sharing.
+# Does NOT link any native chromium code.
+include $(CLEAR_VARS)
+
+LOCAL_MODULE:= libwebviewchromium_loader
+
+LOCAL_SRC_FILES := \
+        loader/loader.cpp \
+
+LOCAL_CFLAGS := \
+        -Werror \
+
+LOCAL_SHARED_LIBRARIES += \
+        libdl \
+        liblog \
+
+LOCAL_MODULE_TAGS := optional
+
+include $(BUILD_SHARED_LIBRARY)
+
+
 include $(call first-makefiles-under,$(LOCAL_PATH))
