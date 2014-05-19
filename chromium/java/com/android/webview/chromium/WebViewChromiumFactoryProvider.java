@@ -241,10 +241,16 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     }
 
     private void initDataReductionProxySettingListener() {
-        // Set the data reduction proxy key.
-        AwContentsStatics.setDataReductionProxyKey("invalid-test-key");
         // Enable data reduction proxy if the setting is set to enabled.
         Context context = ActivityThread.currentApplication();
+        if (context == null) {
+            Log.w(TAG, "Failed to read data reduction proxy key due to null application context");
+            return;
+        }
+        String key = Settings.Secure.getString(context.getContentResolver(),
+                Settings.Global.WEBVIEW_DATA_REDUCTION_PROXY_KEY);
+        // Set the data reduction proxy key.
+        AwContentsStatics.setDataReductionProxyKey(key);
         AwContentsStatics.setDataReductionProxyEnabled(isDataReductionProxyEnabled(context));
         IntentFilter filter = new IntentFilter();
         filter.addAction(WebView.DATA_REDUCTION_PROXY_SETTING_CHANGED);
