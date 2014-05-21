@@ -20,6 +20,7 @@ import android.net.ParseException;
 import android.net.WebAddress;
 import android.util.Log;
 import android.webkit.CookieManager;
+import android.webkit.ValueCallback;
 
 import org.chromium.android_webview.AwCookieManager;
 
@@ -53,6 +54,15 @@ public class CookieManagerAdapter extends CookieManager {
     }
 
     @Override
+    public void setCookie(String url, String value, ValueCallback<Boolean> callback) {
+        try {
+            mChromeCookieManager.setCookie(fixupUrl(url), value, callback);
+        } catch (ParseException e) {
+            Log.e(LOGTAG, "Not setting cookie due to error parsing URL: " + url, e);
+        }
+    }
+
+    @Override
     public String getCookie(String url) {
         try {
             return mChromeCookieManager.getCookie(fixupUrl(url));
@@ -74,12 +84,22 @@ public class CookieManagerAdapter extends CookieManager {
 
     @Override
     public void removeSessionCookie() {
-        mChromeCookieManager.removeSessionCookie();
+        mChromeCookieManager.removeSessionCookies();
+    }
+
+    @Override
+    public void removeSessionCookies(ValueCallback<Boolean> callback) {
+        mChromeCookieManager.removeSessionCookies(callback);
     }
 
     @Override
     public void removeAllCookie() {
-        mChromeCookieManager.removeAllCookie();
+        mChromeCookieManager.removeAllCookies();
+    }
+
+    @Override
+    public void removeAllCookies(ValueCallback<Boolean> callback) {
+        mChromeCookieManager.removeAllCookies(callback);
     }
 
     @Override
