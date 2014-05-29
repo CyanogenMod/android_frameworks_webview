@@ -129,8 +129,12 @@ public class CookieManagerAdapter extends CookieManager {
     }
 
     @Override
-    protected void flushCookieStore() {
+    public void flush() {
         mChromeCookieManager.flushCookieStore();
+    }
+
+    protected void flushCookieStore() {
+        flush();
     }
 
     @Override
