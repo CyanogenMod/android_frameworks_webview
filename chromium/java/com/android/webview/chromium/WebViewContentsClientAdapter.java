@@ -160,25 +160,9 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
         @Override
         public boolean shouldOverrideKeyEvent(WebView view, KeyEvent event) {
             // TODO: Investigate more and add a test case.
-            // This is a copy of what Clank does. The WebViewCore key handling code and Clank key
-            // handling code differ enough that it's not trivial to figure out how keycodes are
-            // being filtered.
+            // This is reflecting Clank's behavior.
             int keyCode = event.getKeyCode();
-            if (keyCode == KeyEvent.KEYCODE_MENU ||
-                keyCode == KeyEvent.KEYCODE_HOME ||
-                keyCode == KeyEvent.KEYCODE_BACK ||
-                keyCode == KeyEvent.KEYCODE_CALL ||
-                keyCode == KeyEvent.KEYCODE_ENDCALL ||
-                keyCode == KeyEvent.KEYCODE_POWER ||
-                keyCode == KeyEvent.KEYCODE_HEADSETHOOK ||
-                keyCode == KeyEvent.KEYCODE_CAMERA ||
-                keyCode == KeyEvent.KEYCODE_FOCUS ||
-                keyCode == KeyEvent.KEYCODE_VOLUME_DOWN ||
-                keyCode == KeyEvent.KEYCODE_VOLUME_MUTE ||
-                keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-                return true;
-            }
-            return false;
+            return !ContentViewClient.shouldPropagateKey(keyCode);
         }
 
         @Override
@@ -524,12 +508,12 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
      */
     @Override
     public boolean shouldOverrideKeyEvent(KeyEvent event) {
-        // TODO(joth): The expression here is a workaround for http://b/7697782 :-
-        // 1. The check for system key should be made in AwContents or ContentViewCore,
-        //    before shouldOverrideKeyEvent() is called at all.
+        // The check below is reflecting Clank's behavior and is a workaround for http://b/7697782.
+        // 1. The check for system key should be made in AwContents or ContentViewCore, before
+        //    shouldOverrideKeyEvent() is called at all.
         // 2. shouldOverrideKeyEvent() should be called in onKeyDown/onKeyUp, not from
         //    dispatchKeyEvent().
-        if (event.isSystem()) return true;
+        if (!ContentViewClient.shouldPropagateKey(event.getKeyCode())) return true;
         TraceEvent.begin();
         if (TRACE) Log.d(TAG, "shouldOverrideKeyEvent");
         boolean result = mWebViewClient.shouldOverrideKeyEvent(mWebView, event);
