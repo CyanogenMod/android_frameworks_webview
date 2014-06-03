@@ -36,6 +36,7 @@ import android.view.HardwareCanvas;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
@@ -57,9 +58,8 @@ import android.widget.TextView;
 import org.chromium.android_webview.AwBrowserContext;
 import org.chromium.android_webview.AwContents;
 import org.chromium.android_webview.AwLayoutSizer;
-import org.chromium.android_webview.AwPdfExportAttributes;
-import org.chromium.android_webview.AwPrintDocumentAdapter;
 import org.chromium.android_webview.AwSettings;
+import org.chromium.android_webview.AwPrintDocumentAdapter;
 import org.chromium.base.ThreadUtils;
 import org.chromium.content.browser.LoadUrlParams;
 import org.chromium.net.NetworkChangeNotifier;
@@ -250,14 +250,16 @@ class WebViewChromium implements WebViewProvider,
 
     private void initForReal() {
         mAwContents = new AwContents(mFactory.getBrowserContext(), mWebView,
-                new InternalAccessAdapter(), mContentsClientAdapter, new AwLayoutSizer(),
-                mWebSettings.getAwSettings());
+                new InternalAccessAdapter(), mContentsClientAdapter, mWebSettings.getAwSettings());
 
         if (mAppTargetSdkVersion >= Build.VERSION_CODES.KITKAT) {
             // On KK and above, favicons are automatically downloaded as the method
             // old apps use to enable that behavior is deprecated.
             AwContents.setShouldDownloadFavicons();
         }
+
+        // TODO: This assumes AwContents ignores second Paint param.
+        mAwContents.setLayerType(mWebView.getLayerType(), null);
     }
 
     void startYourEngine() {
@@ -598,16 +600,6 @@ class WebViewChromium implements WebViewProvider,
             }
         }
         loadUrlOnUiThread(loadUrlParams);
-
-        // Data url's with a base url will be resolved in Blink, and not cause an onPageStarted
-        // event to be sent. Sending the callback directly from here.
-        final String finalBaseUrl = loadUrlParams.getBaseUrl();
-        ThreadUtils.postOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mContentsClientAdapter.onPageStarted(finalBaseUrl);
-            }
-        });
     }
 
     private void loadUrlOnUiThread(final LoadUrlParams loadUrlParams) {
@@ -833,12 +825,6 @@ class WebViewChromium implements WebViewProvider,
             return ret;
         }
         return mAwContents.capturePicture();
-    }
-
-    @Override
-    public PrintDocumentAdapter createPrintDocumentAdapter() {
-        checkThread();
-        return new AwPrintDocumentAdapter(mAwContents.getPdfExporter());
     }
 
     @Override
@@ -1932,8 +1918,20 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public void setLayerType(int layerType, Paint paint) {
-        // Intentional no-op
+    public void setLayerType(final int layerType, final Paint paint) {
+        // This can be called from WebView constructor in which case mAwContents
+        // is still null. We set the layer type in initForReal in that case.
+        if (mAwContents == null) return;
+        if (checkNeedsPost()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setLayerType(layerType, paint);
+                }
+            });
+            return;
+        }
+        mAwContents.setLayerType(layerType, paint);
     }
 
     // Remove from superclass
@@ -2034,6 +2032,12 @@ class WebViewChromium implements WebViewProvider,
         mAwContents.computeScroll();
     }
 
+    @Override
+    public PrintDocumentAdapter createPrintDocumentAdapter() {
+        checkThread();
+        return new AwPrintDocumentAdapter(mAwContents.getPdfExporter());
+    }
+
     // AwContents.InternalAccessDelegate implementation --------------------------------------
     private class InternalAccessAdapter implements AwContents.InternalAccessDelegate {
         @Override
@@ -2090,9 +2094,9 @@ class WebViewChromium implements WebViewProvider,
 
         @Override
         public void onScrollChanged(int l, int t, int oldl, int oldt) {
-            mWebViewPrivate.setScrollXRaw(l);
-            mWebViewPrivate.setScrollYRaw(t);
-            mWebViewPrivate.onScrollChanged(l, t, oldl, oldt);
+	    // Intentional no-op.
+            // Chromium calls this directly to trigger accessibility events. That isn't needed
+            // for WebView since super_scrollTo invokes onScrollChanged for us.
         }
 
         @Override

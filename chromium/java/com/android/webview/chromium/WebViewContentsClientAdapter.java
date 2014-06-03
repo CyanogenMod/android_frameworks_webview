@@ -26,6 +26,8 @@ import android.graphics.Color;
 import android.graphics.Picture;
 import android.net.http.ErrorStrings;
 import android.net.http.SslError;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -57,8 +59,9 @@ import org.chromium.content.browser.ContentView;
 import org.chromium.content.browser.ContentViewClient;
 import org.chromium.content.common.TraceEvent;
 
-import java.lang.ref.SoftReference;
 import java.net.URISyntaxException;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 
 /**
  * An adapter class that forwards the callbacks from {@link ContentViewClient}
@@ -96,8 +99,6 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     private DownloadListener mDownloadListener;
 
     private Handler mUiThreadHandler;
-
-    private SoftReference<Bitmap> mCachedDefaultVideoPoster;
 
     private static final int NEW_WEBVIEW_CREATED = 100;
 
@@ -314,7 +315,7 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
         TraceEvent.begin();
         boolean result;
         if (mWebChromeClient != null) {
-            if (TRACE) Log.d(TAG, "onConsoleMessage");
+            if (TRACE) Log.d(TAG, "onConsoleMessage: " + consoleMessage.message());
             result = mWebChromeClient.onConsoleMessage(consoleMessage);
             String message = consoleMessage.message();
             if (result && message != null && message.startsWith("[blocked]")) {
@@ -735,15 +736,44 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     }
 
     @Override
-    public void showFileChooser(ValueCallback<String[]> uploadFilePathsCallback,
-            FileChooserParams fileChooserParams) {
-        TraceEvent.begin();
-        if (mWebChromeClient != null) {
-            if (TRACE) Log.d(TAG, "showFileChooser");
-            mWebChromeClient.showFileChooser(uploadFilePathsCallback,
-                    fileChooserParams.acceptTypes,
-                    fileChooserParams.capture);
+    public void showFileChooser(final ValueCallback<String[]> uploadFileCallback,
+            final AwContentsClient.FileChooserParams fileChooserParams) {
+        if (mWebChromeClient == null) {
+            uploadFileCallback.onReceiveValue(null);
+            return;
         }
+        TraceEvent.begin();
+        /*
+        // TODO: Call new API here when it's added in frameworks/base - see http://ag/335990
+        WebChromeClient.FileChooserParams p = new WebChromeClient.FileChooserParams();
+        p.mode = fileChooserParams.mode;
+        p.acceptTypes = fileChooserParams.acceptTypes;
+        p.title = fileChooserParams.title;
+        p.defaultFilename = fileChooserParams.defaultFilename;
+        p.capture = fileChooserParams.capture;
+        if (TRACE) Log.d(TAG, "showFileChooser");
+        if (Build.VERSION.SDK_INT > VERSION_CODES.KIT_KAT &&
+               !mWebChromeClient.showFileChooser(mWebView, uploadFileCallback, p)) {
+            return;
+        }
+        if (mWebView.getContext().getApplicationInfo().targetSdkVersion >
+                Build.VERSION_CODES.KIT_KAT) {
+            uploadFileCallback.onReceiveValue(null);
+            return;
+        }
+        */
+        ValueCallback<Uri> innerCallback = new ValueCallback<Uri>() {
+            final AtomicBoolean completed = new AtomicBoolean(false);
+            @Override
+            public void onReceiveValue(Uri uri) {
+                if (completed.getAndSet(true)) return;
+                uploadFileCallback.onReceiveValue(
+                        uri == null ? null : new String[] { uri.toString() });
+            }
+        };
+        if (TRACE) Log.d(TAG, "openFileChooser");
+        mWebChromeClient.openFileChooser(innerCallback, fileChooserParams.acceptTypes,
+                fileChooserParams.capture ? "*" : "");
         TraceEvent.end();
     }
 
@@ -798,21 +828,15 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
             result = mWebChromeClient.getDefaultVideoPoster();
         }
         if (result == null) {
-            if (mCachedDefaultVideoPoster != null) {
-                result = mCachedDefaultVideoPoster.get();
-            }
-            if (result == null) {
-                Bitmap poster = BitmapFactory.decodeResource(
-                        mWebView.getContext().getResources(),
-                        com.android.internal.R.drawable.ic_media_video_poster);
-                result = Bitmap.createBitmap(poster.getWidth(),
-                                             poster.getHeight(),
-                                             poster.getConfig());
-                result.eraseColor(Color.GRAY);
-                Canvas canvas = new Canvas(result);
-                canvas.drawBitmap(poster, 0f, 0f, null);
-                mCachedDefaultVideoPoster = new SoftReference<Bitmap>(result);
-            }
+            // The ic_media_video_poster icon is transparent so we need to draw it on a gray
+            // background.
+            Bitmap poster = BitmapFactory.decodeResource(
+                    mWebView.getContext().getResources(),
+                    com.android.internal.R.drawable.ic_media_video_poster);
+            result = Bitmap.createBitmap(poster.getWidth(), poster.getHeight(), poster.getConfig());
+            result.eraseColor(Color.GRAY);
+            Canvas canvas = new Canvas(result);
+            canvas.drawBitmap(poster, 0f, 0f, null);
         }
         TraceEvent.end();
         return result;
