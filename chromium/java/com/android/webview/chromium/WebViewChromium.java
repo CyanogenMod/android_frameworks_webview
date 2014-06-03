@@ -254,7 +254,7 @@ class WebViewChromium implements WebViewProvider,
     }
 
     private void initForReal() {
-        mAwContents = new AwContents(mFactory.getBrowserContext(), mWebView,
+        mAwContents = new AwContents(mFactory.getBrowserContext(), mWebView, mWebView.getContext(),
                 new InternalAccessAdapter(), mContentsClientAdapter, mWebSettings.getAwSettings());
 
         if (mAppTargetSdkVersion >= Build.VERSION_CODES.KITKAT) {

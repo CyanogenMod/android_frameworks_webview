@@ -41,6 +41,7 @@ class DrawGLFunctor {
     }
 
     public void destroy() {
+        detach();
         if (mCleanupReference != null) {
             mCleanupReference.cleanupNow();
             mCleanupReference = null;
