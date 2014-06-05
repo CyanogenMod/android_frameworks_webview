@@ -120,6 +120,17 @@ public class ContentSettingsAdapter extends android.webkit.WebSettings {
     }
 
     @Override
+    public void setAcceptThirdPartyCookies(boolean accept) {
+        if (DebugFlags.TRACE_API) Log.d(LOGTAG, "setAcceptThirdPartyCookies=" + accept);
+        mAwSettings.setAcceptThirdPartyCookies(accept);
+    }
+
+    @Override
+    public boolean getAcceptThirdPartyCookies() {
+        return mAwSettings.getAcceptThirdPartyCookies();
+    }
+
+    @Override
     public void setEnableSmoothTransition(boolean enable) {
         // Intentional no-op.
     }
