@@ -236,6 +236,8 @@ class WebViewChromium implements WebViewProvider,
 
         if (mAppTargetSdkVersion <= Build.VERSION_CODES.KITKAT) {
             mWebSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+            // On KK and older versions we always allowed third party cookies.
+            mWebSettings.setAcceptThirdPartyCookies(true);
         }
 
         mRunQueue.addTask(new Runnable() {
