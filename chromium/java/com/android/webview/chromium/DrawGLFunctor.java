@@ -59,13 +59,13 @@ class DrawGLFunctor {
         }
         mDestroyRunnable.mViewRootImpl = viewRootImpl;
         if (canvas != null) {
-            int ret = canvas.callDrawGLFunction(mDestroyRunnable.nativeDrawGLFunctor());
+            int ret = canvas.callDrawGLFunction(mDestroyRunnable.mNativeDrawGLFunctor);
             if (ret != DisplayList.STATUS_DONE) {
                 Log.e(TAG, "callDrawGLFunction error: " + ret);
                 return false;
             }
         } else {
-            viewRootImpl.attachFunctor(mDestroyRunnable.nativeDrawGLFunctor());
+            viewRootImpl.attachFunctor(mDestroyRunnable.mNativeDrawGLFunctor);
         }
         return true;
     }
@@ -79,18 +79,9 @@ class DrawGLFunctor {
     // instance, as that will defeat GC of that object.
     private static final class DestroyRunnable implements Runnable {
         ViewRootImpl mViewRootImpl;
-        private long mNativeDrawGLFunctor;
+        long mNativeDrawGLFunctor;
         DestroyRunnable(long nativeDrawGLFunctor) {
             mNativeDrawGLFunctor = nativeDrawGLFunctor;
-        }
-
-        int nativeDrawGLFunctor() {
-            if (mNativeDrawGLFunctor <= Integer.MAX_VALUE &&
-                    mNativeDrawGLFunctor >= Integer.MIN_VALUE) {
-                return (int)mNativeDrawGLFunctor;
-            } else {
-                throw new RuntimeException("64bit not supported yet");
-            }
         }
 
         // Called when the outer DrawGLFunctor instance has been GC'ed, i.e this is its finalizer.
@@ -103,7 +94,7 @@ class DrawGLFunctor {
 
         void detachNativeFunctor() {
             if (mNativeDrawGLFunctor != 0 && mViewRootImpl != null) {
-                mViewRootImpl.detachFunctor(nativeDrawGLFunctor());
+                mViewRootImpl.detachFunctor(mNativeDrawGLFunctor);
             }
             mViewRootImpl = null;
         }
