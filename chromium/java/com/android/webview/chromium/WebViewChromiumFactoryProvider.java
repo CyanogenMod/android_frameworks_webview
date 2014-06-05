@@ -319,11 +319,6 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
                     }
 
                     @Override
-                    public void setPlatformNotificationsEnabled(boolean enable) {
-                        // noop
-                    }
-
-                    @Override
                     public String getDefaultUserAgent(Context context) {
                         return AwSettings.getDefaultUserAgent();
                     }
