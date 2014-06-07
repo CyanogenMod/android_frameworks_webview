@@ -69,7 +69,6 @@ import java.security.Principal;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
 import java.util.WeakHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * An adapter class that forwards the callbacks from {@link ContentViewClient}
@@ -856,8 +855,6 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
             return;
         }
         TraceEvent.begin();
-        /*
-        // TODO: Call new API here when it's added in frameworks/base - see http://ag/335990
         WebChromeClient.FileChooserParams p = new WebChromeClient.FileChooserParams();
         p.mode = fileChooserParams.mode;
         p.acceptTypes = fileChooserParams.acceptTypes;
@@ -865,21 +862,40 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
         p.defaultFilename = fileChooserParams.defaultFilename;
         p.capture = fileChooserParams.capture;
         if (TRACE) Log.d(TAG, "showFileChooser");
-        if (Build.VERSION.SDK_INT > VERSION_CODES.KIT_KAT &&
-               !mWebChromeClient.showFileChooser(mWebView, uploadFileCallback, p)) {
+        ValueCallback<Uri[]> callbackAdapter = new ValueCallback<Uri[]>() {
+            private boolean mCompleted;
+            @Override
+            public void onReceiveValue(Uri[] uriList) {
+                if (mCompleted) {
+                    throw new IllegalStateException("showFileChooser result was already called");
+                }
+                mCompleted = true;
+                String s[] = null;
+                if (uriList != null) {
+                    s = new String[uriList.length];
+                    for(int i = 0; i < uriList.length; i++) {
+                        s[i] = uriList[i].toString();
+                    }
+                }
+                uploadFileCallback.onReceiveValue(s);
+            }
+        };
+        if (mWebChromeClient.showFileChooser(mWebView, callbackAdapter, p)) {
             return;
         }
         if (mWebView.getContext().getApplicationInfo().targetSdkVersion >
-                Build.VERSION_CODES.KIT_KAT) {
+                Build.VERSION_CODES.KITKAT) {
             uploadFileCallback.onReceiveValue(null);
             return;
         }
-        */
         ValueCallback<Uri> innerCallback = new ValueCallback<Uri>() {
-            final AtomicBoolean completed = new AtomicBoolean(false);
+            private boolean mCompleted;
             @Override
             public void onReceiveValue(Uri uri) {
-                if (completed.getAndSet(true)) return;
+                if (mCompleted) {
+                    throw new IllegalStateException("showFileChooser result was already called");
+                }
+                mCompleted = true;
                 uploadFileCallback.onReceiveValue(
                         uri == null ? null : new String[] { uri.toString() });
             }
