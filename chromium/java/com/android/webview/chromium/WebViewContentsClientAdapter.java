@@ -63,10 +63,12 @@ import org.chromium.base.TraceEvent;
 import org.chromium.content.browser.ContentView;
 import org.chromium.content.browser.ContentViewClient;
 
+import java.lang.ref.WeakReference;
 import java.net.URISyntaxException;
 import java.security.Principal;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
+import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -108,6 +110,8 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
 
     private static final int NEW_WEBVIEW_CREATED = 100;
 
+    private WeakHashMap<AwPermissionRequest, WeakReference<PermissionRequestAdapter>>
+            mOngoingPermissionRequests;
     /**
      * Adapter constructor.
      *
@@ -576,8 +580,14 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
         TraceEvent.begin();
         if (mWebChromeClient != null) {
             if (TRACE) Log.d(TAG, "onPermissionRequest");
-            mWebChromeClient.onPermissionRequest(
-                    new AwPermissionRequestAdapter(permissionRequest));
+            if (mOngoingPermissionRequests == null) {
+                mOngoingPermissionRequests =
+                    new WeakHashMap<AwPermissionRequest, WeakReference<PermissionRequestAdapter>>();
+            }
+            PermissionRequestAdapter adapter = new PermissionRequestAdapter(permissionRequest);
+            mOngoingPermissionRequests.put(
+                    permissionRequest, new WeakReference<PermissionRequestAdapter>(adapter));
+            mWebChromeClient.onPermissionRequest(adapter);
         } else {
             // By default, we deny the permission.
             permissionRequest.deny();
@@ -588,10 +598,17 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     @Override
     public void onPermissionRequestCanceled(AwPermissionRequest permissionRequest) {
         TraceEvent.begin();
-        if (mWebChromeClient != null) {
+        if (mWebChromeClient != null && mOngoingPermissionRequests != null) {
             if (TRACE) Log.d(TAG, "onPermissionRequestCanceled");
-            mWebChromeClient.onPermissionRequestCanceled(
-                    new AwPermissionRequestAdapter(permissionRequest));
+            WeakReference<PermissionRequestAdapter> weakRef =
+                    mOngoingPermissionRequests.get(permissionRequest);
+            // We don't hold strong reference to PermissionRequestAdpater and don't expect the
+            // user only holds weak reference to it either, if so, user has no way to call
+            // grant()/deny(), and no need to be notified the cancellation of request.
+            if (weakRef != null) {
+                PermissionRequestAdapter adapter = weakRef.get();
+                if (adapter != null) mWebChromeClient.onPermissionRequestCanceled(adapter);
+            }
         }
         TraceEvent.end();
     }
@@ -970,10 +987,10 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     }
 
     // TODO: Move to the upstream once the PermissionRequest is part of SDK.
-    private static class AwPermissionRequestAdapter implements PermissionRequest {
+    private static class PermissionRequestAdapter implements PermissionRequest {
         private AwPermissionRequest mAwPermissionRequest;
 
-        public AwPermissionRequestAdapter(AwPermissionRequest awPermissionRequest) {
+        public PermissionRequestAdapter(AwPermissionRequest awPermissionRequest) {
             assert awPermissionRequest != null;
             mAwPermissionRequest = awPermissionRequest;
         }
@@ -1002,24 +1019,5 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
             mAwPermissionRequest.deny();
         }
 
-        @Override
-        public boolean equals(Object obj) {
-            /*
-             * Override equals because the PermissionRequest passed in from OnPermissionRequest
-             * will be used to compare the one passed in from OnPermissionRequest(), but we
-             * don't want to keep the AwPermissionRequestAdapter instance around. So we override
-             * equals to compare AwPermissionRequest.
-             */
-            if (obj instanceof AwPermissionRequestAdapter) {
-                AwPermissionRequestAdapter adapter = (AwPermissionRequestAdapter)obj;
-                return mAwPermissionRequest == adapter.mAwPermissionRequest;
-            }
-            return false;
-        }
-
-        @Override
-        public int hashCode() {
-            return mAwPermissionRequest.hashCode();
-        }
     }
 }
