@@ -71,7 +71,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     private static final class DataReductionProxySettingListener extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            AwContentsStatics.setDataReductionProxyEnabled(isDataReductionProxyEnabled(context));
+            EnableDataReductionProxyIfNecessary(context);
         }
     }
 
@@ -237,25 +237,31 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         mWebViewsToStart = null;
 
         // starts listening for data reduction proxy setting changes.
-        initDataReductionProxySettingListener();
+        initDataReductionProxySettingListener(ActivityThread.currentApplication());
     }
 
-    private void initDataReductionProxySettingListener() {
-        // Enable data reduction proxy if the setting is set to enabled.
-        Context context = ActivityThread.currentApplication();
-        if (context == null) {
-            Log.w(TAG, "Failed to read data reduction proxy key due to null application context");
-            return;
-        }
-        String key = Settings.Secure.getString(context.getContentResolver(),
-                Settings.Global.WEBVIEW_DATA_REDUCTION_PROXY_KEY);
-        // Set the data reduction proxy key.
-        AwContentsStatics.setDataReductionProxyKey(key);
-        AwContentsStatics.setDataReductionProxyEnabled(isDataReductionProxyEnabled(context));
+    private void initDataReductionProxySettingListener(Context context) {
+        EnableDataReductionProxyIfNecessary(context);
         IntentFilter filter = new IntentFilter();
         filter.addAction(WebView.DATA_REDUCTION_PROXY_SETTING_CHANGED);
         mProxySettingListener = new DataReductionProxySettingListener();
         context.registerReceiver(mProxySettingListener, filter);
+    }
+
+    private static void EnableDataReductionProxyIfNecessary(Context context) {
+        boolean enabled = isDataReductionProxyEnabled(context);
+        if (enabled) {
+            // Re-read the key in case it was updated.
+            String key = Settings.Secure.getString(context.getContentResolver(),
+                Settings.Global.WEBVIEW_DATA_REDUCTION_PROXY_KEY);
+            if (key == null || key.isEmpty()) {
+                Log.w(TAG, "No DRP key available");
+                return;
+            }
+            // Set the data reduction proxy key.
+            AwContentsStatics.setDataReductionProxyKey(key);
+        }
+        AwContentsStatics.setDataReductionProxyEnabled(enabled);
     }
 
     private static boolean isDataReductionProxyEnabled(Context context) {
