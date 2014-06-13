@@ -729,7 +729,7 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
         TraceEvent.end();
     }
 
-    private static class ClientCertRequestImpl implements ClientCertRequest {
+    private static class ClientCertRequestImpl extends ClientCertRequest {
 
         final private AwContentsClientBridge.ClientCertificateRequestCallback mCallback;
         final private String[] mKeyTypes;
