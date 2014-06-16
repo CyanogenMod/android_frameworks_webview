@@ -16,7 +16,9 @@
 
 package com.android.webview.chromium;
 
+import android.app.ActivityManager;
 import android.app.ActivityThread;
+import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -41,6 +43,7 @@ import org.chromium.android_webview.AwGeolocationPermissions;
 import org.chromium.android_webview.AwQuotaManagerBridge;
 import org.chromium.android_webview.AwSettings;
 import org.chromium.base.CommandLine;
+import org.chromium.base.MemoryPressureListener;
 import org.chromium.base.PathService;
 import org.chromium.base.ThreadUtils;
 import org.chromium.base.library_loader.LibraryLoader;
@@ -160,11 +163,6 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
             cl.appendSwitch("testing-webview-gl-mode");
         }
 
-        Context context = ActivityThread.currentApplication();
-        if (context.getApplicationInfo().targetSdkVersion < Build.VERSION_CODES.KITKAT) {
-            cl.appendSwitch("enable-webview-classic-workarounds");
-        }
-
         // We don't need to extract any paks because for WebView, they are
         // in the system image.
         ResourceExtractor.setMandatoryPaksToExtract("");
@@ -273,6 +271,13 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
                         if (!Build.IS_DEBUGGABLE) {
                             WebViewChromiumFactoryProvider.this.
                                     setWebContentsDebuggingEnabled(enable);
+                        }
+                    }
+
+                    public void freeMemoryForTests() {
+                        if (ActivityManager.isRunningInTestHarness()) {
+                            MemoryPressureListener.maybeNotifyMemoryPresure(
+                                    ComponentCallbacks2.TRIM_MEMORY_COMPLETE);
                         }
                     }
                 };

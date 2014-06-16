@@ -10,9 +10,10 @@
     <string name="webviewchromium_actionbar_share" msgid="8265707764014979342">"Del"</string>
     <string name="webviewchromium_actionbar_web_search" msgid="539283440381511128">"Websøgning"</string>
     <string name="webviewchromium_accessibility_content_view" msgid="4892710761369744296">"Webvisning"</string>
+    <string name="webviewchromium_date_picker_dialog_title" msgid="2526916586861043590">"Indstil dato"</string>
     <string name="webviewchromium_date_picker_dialog_set" msgid="1106446820088863527">"Angiv"</string>
     <string name="webviewchromium_date_picker_dialog_clear" msgid="6439296286509386196">"Ryd"</string>
-    <string name="webviewchromium_date_picker_dialog_title" msgid="2526916586861043590">"Indstil dato"</string>
+    <string name="webviewchromium_date_picker_dialog_other_button_label" msgid="3985479506807823488">"Andet"</string>
     <string name="webviewchromium_date_time_picker_dialog_title" msgid="1993749766330125085">"Indstil dato og tid"</string>
     <string name="webviewchromium_time_picker_dialog_title" msgid="8828361788181511983">"Indstil klokkeslæt"</string>
     <string name="webviewchromium_time_picker_dialog_am" msgid="7424804671722276100">"AM"</string>
@@ -44,7 +45,20 @@
     <string name="webviewchromium_color_picker_button_set" msgid="6981883782092158499">"Indstil"</string>
     <string name="webviewchromium_color_picker_button_cancel" msgid="11751988208172211">"Annuller"</string>
     <string name="webviewchromium_color_picker_dialog_title" msgid="709749370892752246">"Vælg farve"</string>
+    <string name="webviewchromium_color_picker_button_red" msgid="6131020724838687141">"Rød"</string>
+    <string name="webviewchromium_color_picker_button_cyan" msgid="3140315356534580408">"Cyan"</string>
+    <string name="webviewchromium_color_picker_button_blue" msgid="1572313634116404709">"Blå"</string>
+    <string name="webviewchromium_color_picker_button_green" msgid="1003720528095717795">"Grøn"</string>
+    <string name="webviewchromium_color_picker_button_magenta" msgid="2912944065975017462">"Magenta"</string>
+    <string name="webviewchromium_color_picker_button_yellow" msgid="3473794849605150015">"Gul"</string>
+    <string name="webviewchromium_color_picker_button_black" msgid="4355127282571397998">"Sort"</string>
+    <string name="webviewchromium_color_picker_button_white" msgid="1315573027769681132">"Hvid"</string>
+    <string name="webviewchromium_copy_to_clipboard_failure_message" msgid="522732862171513811">"Der kunne ikke kopieres til udklipsholderen"</string>
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"Den foregående handling kunne ikke fuldføres på grund af manglende hukommelse"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"Den valgte fil kunne ikke åbnes"</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"Denne funktion understøttes ikke i denne version af Android."</string>
+    <string name="webviewchromium_profiler_started_toast" msgid="5173879436794997552">"Profilereringsværktøjet startede"</string>
+    <string name="webviewchromium_profiler_stopped_toast" msgid="7610282533871917576">"Profileringsværktøjet blev anvendt. Resultaterne er i %1$s."</string>
+    <string name="webviewchromium_profiler_no_storage_toast" msgid="6415118515448171108">"Profileringsværktøjet kan ikke startes, fordi det eksterne lager ikke er klar"</string>
+    <string name="webviewchromium_profiler_error_toast" msgid="3020154324443664032">"Profileringsværktøjet kunne ikke startes"</string>
 </resources>

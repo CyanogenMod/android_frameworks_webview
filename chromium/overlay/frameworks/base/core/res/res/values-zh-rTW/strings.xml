@@ -10,9 +10,10 @@
     <string name="webviewchromium_actionbar_share" msgid="8265707764014979342">"分享"</string>
     <string name="webviewchromium_actionbar_web_search" msgid="539283440381511128">"網頁搜尋"</string>
     <string name="webviewchromium_accessibility_content_view" msgid="4892710761369744296">"網頁畫面"</string>
+    <string name="webviewchromium_date_picker_dialog_title" msgid="2526916586861043590">"設定日期"</string>
     <string name="webviewchromium_date_picker_dialog_set" msgid="1106446820088863527">"設定"</string>
     <string name="webviewchromium_date_picker_dialog_clear" msgid="6439296286509386196">"清除"</string>
-    <string name="webviewchromium_date_picker_dialog_title" msgid="2526916586861043590">"設定日期"</string>
+    <string name="webviewchromium_date_picker_dialog_other_button_label" msgid="3985479506807823488">"其他"</string>
     <string name="webviewchromium_date_time_picker_dialog_title" msgid="1993749766330125085">"設定日期和時間"</string>
     <string name="webviewchromium_time_picker_dialog_title" msgid="8828361788181511983">"設定時間"</string>
     <string name="webviewchromium_time_picker_dialog_am" msgid="7424804671722276100">"上午"</string>
@@ -44,7 +45,20 @@
     <string name="webviewchromium_color_picker_button_set" msgid="6981883782092158499">"設定"</string>
     <string name="webviewchromium_color_picker_button_cancel" msgid="11751988208172211">"取消"</string>
     <string name="webviewchromium_color_picker_dialog_title" msgid="709749370892752246">"選取顏色"</string>
+    <string name="webviewchromium_color_picker_button_red" msgid="6131020724838687141">"紅色"</string>
+    <string name="webviewchromium_color_picker_button_cyan" msgid="3140315356534580408">"青色"</string>
+    <string name="webviewchromium_color_picker_button_blue" msgid="1572313634116404709">"藍色"</string>
+    <string name="webviewchromium_color_picker_button_green" msgid="1003720528095717795">"綠色"</string>
+    <string name="webviewchromium_color_picker_button_magenta" msgid="2912944065975017462">"洋紅色"</string>
+    <string name="webviewchromium_color_picker_button_yellow" msgid="3473794849605150015">"黃色"</string>
+    <string name="webviewchromium_color_picker_button_black" msgid="4355127282571397998">"黑色"</string>
+    <string name="webviewchromium_color_picker_button_white" msgid="1315573027769681132">"白色"</string>
+    <string name="webviewchromium_copy_to_clipboard_failure_message" msgid="522732862171513811">"無法複製到剪貼簿"</string>
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"記憶體不足，因此無法完成前一項作業"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"無法開啟選取的檔案"</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"這個 Android 版本不支援這項功能。"</string>
+    <string name="webviewchromium_profiler_started_toast" msgid="5173879436794997552">"分析器已啟動"</string>
+    <string name="webviewchromium_profiler_stopped_toast" msgid="7610282533871917576">"分析完成，系統已將分析結果儲存在「%1$s」。"</string>
+    <string name="webviewchromium_profiler_no_storage_toast" msgid="6415118515448171108">"外部儲存裝置尚未就緒，因此無法啟動分析器"</string>
+    <string name="webviewchromium_profiler_error_toast" msgid="3020154324443664032">"無法啟動分析器"</string>
 </resources>
