@@ -10,9 +10,10 @@
     <string name="webviewchromium_actionbar_share" msgid="8265707764014979342">"공유"</string>
     <string name="webviewchromium_actionbar_web_search" msgid="539283440381511128">"웹 검색"</string>
     <string name="webviewchromium_accessibility_content_view" msgid="4892710761369744296">"웹 보기"</string>
+    <string name="webviewchromium_date_picker_dialog_title" msgid="2526916586861043590">"날짜 설정"</string>
     <string name="webviewchromium_date_picker_dialog_set" msgid="1106446820088863527">"설정"</string>
     <string name="webviewchromium_date_picker_dialog_clear" msgid="6439296286509386196">"지우기"</string>
-    <string name="webviewchromium_date_picker_dialog_title" msgid="2526916586861043590">"날짜 설정"</string>
+    <string name="webviewchromium_date_picker_dialog_other_button_label" msgid="3985479506807823488">"기타"</string>
     <string name="webviewchromium_date_time_picker_dialog_title" msgid="1993749766330125085">"날짜 및 시간 설정"</string>
     <string name="webviewchromium_time_picker_dialog_title" msgid="8828361788181511983">"시간 설정"</string>
     <string name="webviewchromium_time_picker_dialog_am" msgid="7424804671722276100">"오전"</string>
@@ -44,7 +45,20 @@
     <string name="webviewchromium_color_picker_button_set" msgid="6981883782092158499">"설정"</string>
     <string name="webviewchromium_color_picker_button_cancel" msgid="11751988208172211">"취소"</string>
     <string name="webviewchromium_color_picker_dialog_title" msgid="709749370892752246">"색상 선택"</string>
+    <string name="webviewchromium_color_picker_button_red" msgid="6131020724838687141">"빨간색"</string>
+    <string name="webviewchromium_color_picker_button_cyan" msgid="3140315356534580408">"청록색"</string>
+    <string name="webviewchromium_color_picker_button_blue" msgid="1572313634116404709">"파란색"</string>
+    <string name="webviewchromium_color_picker_button_green" msgid="1003720528095717795">"녹색"</string>
+    <string name="webviewchromium_color_picker_button_magenta" msgid="2912944065975017462">"자홍색"</string>
+    <string name="webviewchromium_color_picker_button_yellow" msgid="3473794849605150015">"노란색"</string>
+    <string name="webviewchromium_color_picker_button_black" msgid="4355127282571397998">"검은색"</string>
+    <string name="webviewchromium_color_picker_button_white" msgid="1315573027769681132">"흰색"</string>
+    <string name="webviewchromium_copy_to_clipboard_failure_message" msgid="522732862171513811">"클립보드에 복사하지 못했습니다."</string>
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"메모리가 부족하여 이전 작업을 완료할 수 없음"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"선택한 파일을 열지 못했습니다."</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"사용 중인 Android 버전에서 지원되지 않는 기능입니다."</string>
+    <string name="webviewchromium_profiler_started_toast" msgid="5173879436794997552">"프로파일러가 시작되었습니다."</string>
+    <string name="webviewchromium_profiler_stopped_toast" msgid="7610282533871917576">"프로파일러가 완료되었습니다. 결과는 %1$s에 있습니다."</string>
+    <string name="webviewchromium_profiler_no_storage_toast" msgid="6415118515448171108">"외부 저장소가 준비되지 않아 프로파일러를 시작할 수 없습니다."</string>
+    <string name="webviewchromium_profiler_error_toast" msgid="3020154324443664032">"프로파일러를 시작하지 못했습니다."</string>
 </resources>

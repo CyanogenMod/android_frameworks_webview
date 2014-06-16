@@ -25,7 +25,6 @@
 #include <cstdlib>
 #include <jni.h>
 #include <utils/Log.h>
-#include <utils/UniquePtr.h>
 #include "graphic_buffer_impl.h"
 #include "GraphicsJNI.h"
 #include "SkCanvasStateUtils.h"

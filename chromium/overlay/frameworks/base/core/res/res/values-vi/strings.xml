@@ -10,9 +10,10 @@
     <string name="webviewchromium_actionbar_share" msgid="8265707764014979342">"Chia sẻ"</string>
     <string name="webviewchromium_actionbar_web_search" msgid="539283440381511128">"Tìm kiếm trên web"</string>
     <string name="webviewchromium_accessibility_content_view" msgid="4892710761369744296">"Chế độ xem web"</string>
+    <string name="webviewchromium_date_picker_dialog_title" msgid="2526916586861043590">"Đặt ngày"</string>
     <string name="webviewchromium_date_picker_dialog_set" msgid="1106446820088863527">"Đặt"</string>
     <string name="webviewchromium_date_picker_dialog_clear" msgid="6439296286509386196">"Xóa"</string>
-    <string name="webviewchromium_date_picker_dialog_title" msgid="2526916586861043590">"Đặt ngày"</string>
+    <string name="webviewchromium_date_picker_dialog_other_button_label" msgid="3985479506807823488">"Khác"</string>
     <string name="webviewchromium_date_time_picker_dialog_title" msgid="1993749766330125085">"Đặt ngày giờ"</string>
     <string name="webviewchromium_time_picker_dialog_title" msgid="8828361788181511983">"Đặt giờ"</string>
     <string name="webviewchromium_time_picker_dialog_am" msgid="7424804671722276100">"SA"</string>
@@ -44,7 +45,20 @@
     <string name="webviewchromium_color_picker_button_set" msgid="6981883782092158499">"Đặt"</string>
     <string name="webviewchromium_color_picker_button_cancel" msgid="11751988208172211">"Hủy"</string>
     <string name="webviewchromium_color_picker_dialog_title" msgid="709749370892752246">"Chọn màu"</string>
+    <string name="webviewchromium_color_picker_button_red" msgid="6131020724838687141">"Đỏ"</string>
+    <string name="webviewchromium_color_picker_button_cyan" msgid="3140315356534580408">"Lục lam"</string>
+    <string name="webviewchromium_color_picker_button_blue" msgid="1572313634116404709">"Lam"</string>
+    <string name="webviewchromium_color_picker_button_green" msgid="1003720528095717795">"Xanh lục"</string>
+    <string name="webviewchromium_color_picker_button_magenta" msgid="2912944065975017462">"Đỏ tía"</string>
+    <string name="webviewchromium_color_picker_button_yellow" msgid="3473794849605150015">"Vàng"</string>
+    <string name="webviewchromium_color_picker_button_black" msgid="4355127282571397998">"Đen"</string>
+    <string name="webviewchromium_color_picker_button_white" msgid="1315573027769681132">"Trắng"</string>
+    <string name="webviewchromium_copy_to_clipboard_failure_message" msgid="522732862171513811">"Không sao chép vào khay nhớ tạm được"</string>
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"Không thể hoàn tất thao tác trước do sắp hết bộ nhớ"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"Không mở được tệp đã chọn"</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"Chức năng này không được hỗ trợ trong phiên bản này của Android."</string>
+    <string name="webviewchromium_profiler_started_toast" msgid="5173879436794997552">"Đã chạy profiler"</string>
+    <string name="webviewchromium_profiler_stopped_toast" msgid="7610282533871917576">"Đã hoàn tất profiler. Kết quả có trong %1$s."</string>
+    <string name="webviewchromium_profiler_no_storage_toast" msgid="6415118515448171108">"Không thể chạy profiler do bộ nhớ ngoài chưa sẵn sàng"</string>
+    <string name="webviewchromium_profiler_error_toast" msgid="3020154324443664032">"Không chạy profiler được"</string>
 </resources>

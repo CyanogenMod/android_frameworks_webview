@@ -36,6 +36,7 @@ import android.view.HardwareCanvas;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
@@ -57,8 +58,8 @@ import android.widget.TextView;
 import org.chromium.android_webview.AwBrowserContext;
 import org.chromium.android_webview.AwContents;
 import org.chromium.android_webview.AwLayoutSizer;
-import org.chromium.android_webview.AwPrintDocumentAdapter;
 import org.chromium.android_webview.AwSettings;
+import org.chromium.android_webview.AwPrintDocumentAdapter;
 import org.chromium.base.ThreadUtils;
 import org.chromium.content.browser.LoadUrlParams;
 import org.chromium.net.NetworkChangeNotifier;
@@ -258,6 +259,7 @@ class WebViewChromium implements WebViewProvider,
             AwContents.setShouldDownloadFavicons();
         }
 
+        // TODO: This assumes AwContents ignores second Paint param.
         mAwContents.setLayerType(mWebView.getLayerType(), null);
     }
 
@@ -599,16 +601,6 @@ class WebViewChromium implements WebViewProvider,
             }
         }
         loadUrlOnUiThread(loadUrlParams);
-
-        // Data url's with a base url will be resolved in Blink, and not cause an onPageStarted
-        // event to be sent. Sending the callback directly from here.
-        final String finalBaseUrl = loadUrlParams.getBaseUrl();
-        ThreadUtils.postOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mContentsClientAdapter.onPageStarted(finalBaseUrl);
-            }
-        });
     }
 
     private void loadUrlOnUiThread(final LoadUrlParams loadUrlParams) {
@@ -834,12 +826,6 @@ class WebViewChromium implements WebViewProvider,
             return ret;
         }
         return mAwContents.capturePicture();
-    }
-
-    @Override
-    public PrintDocumentAdapter createPrintDocumentAdapter() {
-        checkThread();
-        return new AwPrintDocumentAdapter(mAwContents.getPdfExporter());
     }
 
     @Override
@@ -1920,16 +1906,32 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public void setLayerType(int layerType, Paint paint) {
-        if (mAwContents != null) {
-            mAwContents.setLayerType(layerType, paint);
+    public void setLayerType(final int layerType, final Paint paint) {
+        // This can be called from WebView constructor in which case mAwContents
+        // is still null. We set the layer type in initForReal in that case.
+        if (mAwContents == null) return;
+        if (checkNeedsPost()) {
+            ThreadUtils.postOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setLayerType(layerType, paint);
+                }
+            });
+            return;
         }
+        mAwContents.setLayerType(layerType, paint);
     }
 
     // Remove from superclass
     public void preDispatchDraw(Canvas canvas) {
         // TODO(leandrogracia): remove this method from WebViewProvider if we think
         // we won't need it again.
+    }
+
+    @Override
+    public PrintDocumentAdapter createPrintDocumentAdapter() {
+        checkThread();
+        return new AwPrintDocumentAdapter(mAwContents.getPdfExporter());
     }
 
     // WebViewProvider.ScrollDelegate implementation ----------------------------------------------

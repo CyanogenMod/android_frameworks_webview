@@ -19,6 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_toStartOf="@+id/webviewchromium_color_picker_selected_color_view_border"
         android:layout_centerVertical="true"
+        android:textColor="#33B5E5"
         android:ellipsize="end"
         android:singleLine="true" />
 
@@ -26,9 +27,9 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_alignParentEnd="true"
-        android:id="@+id/selected_color_view_border"
+        android:id="@+id/webviewchromium_color_picker_selected_color_view_border"
         android:background="@drawable/webviewchromium_color_picker_border"
-        android:padding="1dp">
+        android:padding="2px">
 
         <View
             android:id="@+id/webviewchromium_color_picker_selected_color_view"

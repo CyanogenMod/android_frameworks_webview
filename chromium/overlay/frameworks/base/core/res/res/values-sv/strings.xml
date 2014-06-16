@@ -10,9 +10,10 @@
     <string name="webviewchromium_actionbar_share" msgid="8265707764014979342">"Dela"</string>
     <string name="webviewchromium_actionbar_web_search" msgid="539283440381511128">"Webbsökning"</string>
     <string name="webviewchromium_accessibility_content_view" msgid="4892710761369744296">"Webbvy"</string>
+    <string name="webviewchromium_date_picker_dialog_title" msgid="2526916586861043590">"Ange datum"</string>
     <string name="webviewchromium_date_picker_dialog_set" msgid="1106446820088863527">"Ange"</string>
     <string name="webviewchromium_date_picker_dialog_clear" msgid="6439296286509386196">"Rensa"</string>
-    <string name="webviewchromium_date_picker_dialog_title" msgid="2526916586861043590">"Ange datum"</string>
+    <string name="webviewchromium_date_picker_dialog_other_button_label" msgid="3985479506807823488">"Övrigt"</string>
     <string name="webviewchromium_date_time_picker_dialog_title" msgid="1993749766330125085">"Ange datum och tid"</string>
     <string name="webviewchromium_time_picker_dialog_title" msgid="8828361788181511983">"Ange tid"</string>
     <string name="webviewchromium_time_picker_dialog_am" msgid="7424804671722276100">"FM"</string>
@@ -44,7 +45,20 @@
     <string name="webviewchromium_color_picker_button_set" msgid="6981883782092158499">"Ange"</string>
     <string name="webviewchromium_color_picker_button_cancel" msgid="11751988208172211">"Avbryt"</string>
     <string name="webviewchromium_color_picker_dialog_title" msgid="709749370892752246">"Välj färg"</string>
+    <string name="webviewchromium_color_picker_button_red" msgid="6131020724838687141">"Röd"</string>
+    <string name="webviewchromium_color_picker_button_cyan" msgid="3140315356534580408">"Cyan"</string>
+    <string name="webviewchromium_color_picker_button_blue" msgid="1572313634116404709">"Blå"</string>
+    <string name="webviewchromium_color_picker_button_green" msgid="1003720528095717795">"Grön"</string>
+    <string name="webviewchromium_color_picker_button_magenta" msgid="2912944065975017462">"Magenta"</string>
+    <string name="webviewchromium_color_picker_button_yellow" msgid="3473794849605150015">"Gul"</string>
+    <string name="webviewchromium_color_picker_button_black" msgid="4355127282571397998">"Svart"</string>
+    <string name="webviewchromium_color_picker_button_white" msgid="1315573027769681132">"Vit"</string>
+    <string name="webviewchromium_copy_to_clipboard_failure_message" msgid="522732862171513811">"Det gick inte att kopiera till urklipp"</string>
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"Det gick inte att slutföra den tidigare åtgärden på grund av för låg minneskapacitet"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"Det gick inte att öppna vald fil"</string>
     <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"Funktionen stöds inte i den här versionen av Android."</string>
+    <string name="webviewchromium_profiler_started_toast" msgid="5173879436794997552">"Profilereraren har startat"</string>
+    <string name="webviewchromium_profiler_stopped_toast" msgid="7610282533871917576">"Profileraren är klar. Resultaten finns i %1$s."</string>
+    <string name="webviewchromium_profiler_no_storage_toast" msgid="6415118515448171108">"Det går inte att starta profileraren eftersom den externa lagningen saknas"</string>
+    <string name="webviewchromium_profiler_error_toast" msgid="3020154324443664032">"Det gick inte att starta profileraren"</string>
 </resources>
