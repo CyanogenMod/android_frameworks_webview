@@ -189,6 +189,11 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
             // security (only access to BROWSABLE activities).
             intent.addCategory(Intent.CATEGORY_BROWSABLE);
             intent.setComponent(null);
+            Intent selector = intent.getSelector();
+            if (selector != null) {
+                selector.addCategory(Intent.CATEGORY_BROWSABLE);
+                selector.setComponent(null);
+            }
             // Pass the package name as application ID so that the intent from the
             // same application can be opened in the same tab.
             intent.putExtra(Browser.EXTRA_APPLICATION_ID,
