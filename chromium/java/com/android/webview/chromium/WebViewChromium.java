@@ -250,7 +250,8 @@ class WebViewChromium implements WebViewProvider,
 
     private void initForReal() {
         mAwContents = new AwContents(mFactory.getBrowserContext(), mWebView, mWebView.getContext(),
-                new InternalAccessAdapter(), mContentsClientAdapter, mWebSettings.getAwSettings());
+                new InternalAccessAdapter(), new WebViewNativeGLDelegate(),
+                mContentsClientAdapter, mWebSettings.getAwSettings());
 
         if (mAppTargetSdkVersion >= Build.VERSION_CODES.KITKAT) {
             // On KK and above, favicons are automatically downloaded as the method
@@ -1704,9 +1705,6 @@ class WebViewChromium implements WebViewProvider,
         }
 
         mAwContents.onDetachedFromWindow();
-        if (mGLfunctor != null) {
-            mGLfunctor.detach();
-        }
     }
 
     @Override
@@ -1930,6 +1928,12 @@ class WebViewChromium implements WebViewProvider,
         // we won't need it again.
     }
 
+    @Override
+    public PrintDocumentAdapter createPrintDocumentAdapter() {
+        checkThread();
+        return new AwPrintDocumentAdapter(mAwContents.getPdfExporter());
+    }
+
     // WebViewProvider.ScrollDelegate implementation ----------------------------------------------
 
     @Override
@@ -2022,10 +2026,42 @@ class WebViewChromium implements WebViewProvider,
         mAwContents.computeScroll();
     }
 
-    @Override
-    public PrintDocumentAdapter createPrintDocumentAdapter() {
-        checkThread();
-        return new AwPrintDocumentAdapter(mAwContents.getPdfExporter());
+    // AwContents.NativeGLDelegate implementation --------------------------------------
+    private class WebViewNativeGLDelegate implements AwContents.NativeGLDelegate {
+        public boolean requestDrawGL(Canvas canvas) {
+            return requestDrawGL(canvas, false, mWebView);
+        }
+
+        // @Override
+        public boolean requestDrawGL(Canvas canvas, boolean waitForCompletion,
+                View containerView) {
+            if (mGLfunctor == null) {
+                mGLfunctor = new DrawGLFunctor(mAwContents.getAwDrawGLViewContext());
+            }
+            boolean result = mGLfunctor.requestDrawGL((HardwareCanvas)canvas,
+                    containerView.getViewRootImpl());
+            if (result && waitForCompletion) {
+                Runnable r = new Runnable() {
+                    @Override
+                    public void run() {
+                    }
+                };
+                result =  containerView.executeHardwareAction(r);
+            }
+            return result;
+        }
+
+        // @Override
+        public boolean executeHardwareAction(Runnable action) {
+            return mWebView.executeHardwareAction(action);
+        }
+
+        @Override
+        public void detachGLFunctor() {
+            if (mGLfunctor != null) {
+                mGLfunctor.detach();
+            }
+        }
     }
 
     // AwContents.InternalAccessDelegate implementation --------------------------------------
@@ -2107,33 +2143,6 @@ class WebViewChromium implements WebViewProvider,
         @Override
         public void setMeasuredDimension(int measuredWidth, int measuredHeight) {
             mWebViewPrivate.setMeasuredDimension(measuredWidth, measuredHeight);
-        }
-
-        public boolean requestDrawGL(Canvas canvas) {
-            return requestDrawGL(canvas, false);
-        }
-
-        // @Override
-        public boolean requestDrawGL(Canvas canvas, boolean waitForCompletion) {
-            if (mGLfunctor == null) {
-                mGLfunctor = new DrawGLFunctor(mAwContents.getAwDrawGLViewContext());
-            }
-            boolean result = mGLfunctor.requestDrawGL((HardwareCanvas)canvas,
-                    mWebView.getViewRootImpl());
-            if (result && waitForCompletion) {
-                Runnable r = new Runnable() {
-                    @Override
-                    public void run() {
-                    }
-                };
-                result =  mWebView.executeHardwareAction(r);
-            }
-            return result;
-        }
-
-        // @Override
-        public boolean executeHardwareAction(Runnable action) {
-            return mWebView.executeHardwareAction(action);
         }
     }
 }
