@@ -51,7 +51,7 @@ import android.webkit.WebViewClient;
 
 import org.chromium.android_webview.AwContentsClient;
 import org.chromium.android_webview.AwHttpAuthHandler;
-import org.chromium.android_webview.InterceptedRequestData;
+import org.chromium.android_webview.AwWebResourceResponse;
 import org.chromium.android_webview.JsPromptResultReceiver;
 import org.chromium.android_webview.JsResultReceiver;
 import org.chromium.base.ThreadUtils;
@@ -272,13 +272,13 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
      * @see AwContentsClient#shouldInterceptRequest(java.lang.String)
      */
     @Override
-    public InterceptedRequestData shouldInterceptRequest(String url) {
+    public AwWebResourceResponse shouldInterceptRequest(ShouldInterceptRequestParams params) {
         TraceEvent.begin();
-        if (TRACE) Log.d(TAG, "shouldInterceptRequest=" + url);
-        WebResourceResponse response = mWebViewClient.shouldInterceptRequest(mWebView, url);
+        if (TRACE) Log.d(TAG, "shouldInterceptRequest=" + params.url);
+        WebResourceResponse response = mWebViewClient.shouldInterceptRequest(mWebView, params.url);
         TraceEvent.end();
         if (response == null) return null;
-        return new InterceptedRequestData(
+        return new AwWebResourceResponse(
                 response.getMimeType(),
                 response.getEncoding(),
                 response.getData());
