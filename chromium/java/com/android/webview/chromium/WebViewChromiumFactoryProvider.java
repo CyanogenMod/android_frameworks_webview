@@ -217,6 +217,8 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         PathService.override(DIR_RESOURCE_PAKS_ANDROID,
                 "/system/framework/webview/paks");
 
+        // Make sure that ResourceProvider is initialized before starting the browser process.
+        ResourceProvider.registerResources(ActivityThread.currentApplication());
         AwBrowserProcess.start(ActivityThread.currentApplication());
         initPlatSupportLibrary();
 
