@@ -42,6 +42,7 @@ THIRD_PARTY_PROJECTS_WITH_FULL_HISTORY = [
     'third_party/freetype',
     'third_party/icu',
     'third_party/leveldatabase/src',
+    'third_party/libaddressinput/src',
     'third_party/libjingle/source/talk',
     'third_party/libphonenumber/src/phonenumbers',
     'third_party/libphonenumber/src/resources',

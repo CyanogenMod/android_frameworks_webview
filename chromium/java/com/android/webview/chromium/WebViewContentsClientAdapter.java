@@ -63,11 +63,12 @@ import org.chromium.base.TraceEvent;
 import org.chromium.content.browser.ContentView;
 import org.chromium.content.browser.ContentViewClient;
 
+import java.lang.ref.WeakReference;
 import java.net.URISyntaxException;
 import java.security.Principal;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.WeakHashMap;
 
 /**
  * An adapter class that forwards the callbacks from {@link ContentViewClient}
@@ -108,6 +109,8 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
 
     private static final int NEW_WEBVIEW_CREATED = 100;
 
+    private WeakHashMap<AwPermissionRequest, WeakReference<PermissionRequestAdapter>>
+            mOngoingPermissionRequests;
     /**
      * Adapter constructor.
      *
@@ -160,25 +163,9 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
         @Override
         public boolean shouldOverrideKeyEvent(WebView view, KeyEvent event) {
             // TODO: Investigate more and add a test case.
-            // This is a copy of what Clank does. The WebViewCore key handling code and Clank key
-            // handling code differ enough that it's not trivial to figure out how keycodes are
-            // being filtered.
+            // This is reflecting Clank's behavior.
             int keyCode = event.getKeyCode();
-            if (keyCode == KeyEvent.KEYCODE_MENU ||
-                keyCode == KeyEvent.KEYCODE_HOME ||
-                keyCode == KeyEvent.KEYCODE_BACK ||
-                keyCode == KeyEvent.KEYCODE_CALL ||
-                keyCode == KeyEvent.KEYCODE_ENDCALL ||
-                keyCode == KeyEvent.KEYCODE_POWER ||
-                keyCode == KeyEvent.KEYCODE_HEADSETHOOK ||
-                keyCode == KeyEvent.KEYCODE_CAMERA ||
-                keyCode == KeyEvent.KEYCODE_FOCUS ||
-                keyCode == KeyEvent.KEYCODE_VOLUME_DOWN ||
-                keyCode == KeyEvent.KEYCODE_VOLUME_MUTE ||
-                keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-                return true;
-            }
-            return false;
+            return !ContentViewClient.shouldPropagateKey(keyCode);
         }
 
         @Override
@@ -524,12 +511,12 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
      */
     @Override
     public boolean shouldOverrideKeyEvent(KeyEvent event) {
-        // TODO(joth): The expression here is a workaround for http://b/7697782 :-
-        // 1. The check for system key should be made in AwContents or ContentViewCore,
-        //    before shouldOverrideKeyEvent() is called at all.
+        // The check below is reflecting Clank's behavior and is a workaround for http://b/7697782.
+        // 1. The check for system key should be made in AwContents or ContentViewCore, before
+        //    shouldOverrideKeyEvent() is called at all.
         // 2. shouldOverrideKeyEvent() should be called in onKeyDown/onKeyUp, not from
         //    dispatchKeyEvent().
-        if (event.isSystem()) return true;
+        if (!ContentViewClient.shouldPropagateKey(event.getKeyCode())) return true;
         TraceEvent.begin();
         if (TRACE) Log.d(TAG, "shouldOverrideKeyEvent");
         boolean result = mWebViewClient.shouldOverrideKeyEvent(mWebView, event);
@@ -576,8 +563,14 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
         TraceEvent.begin();
         if (mWebChromeClient != null) {
             if (TRACE) Log.d(TAG, "onPermissionRequest");
-            mWebChromeClient.onPermissionRequest(
-                    new AwPermissionRequestAdapter(permissionRequest));
+            if (mOngoingPermissionRequests == null) {
+                mOngoingPermissionRequests =
+                    new WeakHashMap<AwPermissionRequest, WeakReference<PermissionRequestAdapter>>();
+            }
+            PermissionRequestAdapter adapter = new PermissionRequestAdapter(permissionRequest);
+            mOngoingPermissionRequests.put(
+                    permissionRequest, new WeakReference<PermissionRequestAdapter>(adapter));
+            mWebChromeClient.onPermissionRequest(adapter);
         } else {
             // By default, we deny the permission.
             permissionRequest.deny();
@@ -588,10 +581,17 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     @Override
     public void onPermissionRequestCanceled(AwPermissionRequest permissionRequest) {
         TraceEvent.begin();
-        if (mWebChromeClient != null) {
+        if (mWebChromeClient != null && mOngoingPermissionRequests != null) {
             if (TRACE) Log.d(TAG, "onPermissionRequestCanceled");
-            mWebChromeClient.onPermissionRequestCanceled(
-                    new AwPermissionRequestAdapter(permissionRequest));
+            WeakReference<PermissionRequestAdapter> weakRef =
+                    mOngoingPermissionRequests.get(permissionRequest);
+            // We don't hold strong reference to PermissionRequestAdpater and don't expect the
+            // user only holds weak reference to it either, if so, user has no way to call
+            // grant()/deny(), and no need to be notified the cancellation of request.
+            if (weakRef != null) {
+                PermissionRequestAdapter adapter = weakRef.get();
+                if (adapter != null) mWebChromeClient.onPermissionRequestCanceled(adapter);
+            }
         }
         TraceEvent.end();
     }
@@ -839,8 +839,6 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
             return;
         }
         TraceEvent.begin();
-        /*
-        // TODO: Call new API here when it's added in frameworks/base - see http://ag/335990
         WebChromeClient.FileChooserParams p = new WebChromeClient.FileChooserParams();
         p.mode = fileChooserParams.mode;
         p.acceptTypes = fileChooserParams.acceptTypes;
@@ -848,21 +846,40 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
         p.defaultFilename = fileChooserParams.defaultFilename;
         p.capture = fileChooserParams.capture;
         if (TRACE) Log.d(TAG, "showFileChooser");
-        if (Build.VERSION.SDK_INT > VERSION_CODES.KIT_KAT &&
-               !mWebChromeClient.showFileChooser(mWebView, uploadFileCallback, p)) {
+        ValueCallback<Uri[]> callbackAdapter = new ValueCallback<Uri[]>() {
+            private boolean mCompleted;
+            @Override
+            public void onReceiveValue(Uri[] uriList) {
+                if (mCompleted) {
+                    throw new IllegalStateException("showFileChooser result was already called");
+                }
+                mCompleted = true;
+                String s[] = null;
+                if (uriList != null) {
+                    s = new String[uriList.length];
+                    for(int i = 0; i < uriList.length; i++) {
+                        s[i] = uriList[i].toString();
+                    }
+                }
+                uploadFileCallback.onReceiveValue(s);
+            }
+        };
+        if (mWebChromeClient.showFileChooser(mWebView, callbackAdapter, p)) {
             return;
         }
         if (mWebView.getContext().getApplicationInfo().targetSdkVersion >
-                Build.VERSION_CODES.KIT_KAT) {
+                Build.VERSION_CODES.KITKAT) {
             uploadFileCallback.onReceiveValue(null);
             return;
         }
-        */
         ValueCallback<Uri> innerCallback = new ValueCallback<Uri>() {
-            final AtomicBoolean completed = new AtomicBoolean(false);
+            private boolean mCompleted;
             @Override
             public void onReceiveValue(Uri uri) {
-                if (completed.getAndSet(true)) return;
+                if (mCompleted) {
+                    throw new IllegalStateException("showFileChooser result was already called");
+                }
+                mCompleted = true;
                 uploadFileCallback.onReceiveValue(
                         uri == null ? null : new String[] { uri.toString() });
             }
@@ -970,10 +987,10 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     }
 
     // TODO: Move to the upstream once the PermissionRequest is part of SDK.
-    private static class AwPermissionRequestAdapter implements PermissionRequest {
+    private static class PermissionRequestAdapter implements PermissionRequest {
         private AwPermissionRequest mAwPermissionRequest;
 
-        public AwPermissionRequestAdapter(AwPermissionRequest awPermissionRequest) {
+        public PermissionRequestAdapter(AwPermissionRequest awPermissionRequest) {
             assert awPermissionRequest != null;
             mAwPermissionRequest = awPermissionRequest;
         }
@@ -1002,24 +1019,5 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
             mAwPermissionRequest.deny();
         }
 
-        @Override
-        public boolean equals(Object obj) {
-            /*
-             * Override equals because the PermissionRequest passed in from OnPermissionRequest
-             * will be used to compare the one passed in from OnPermissionRequest(), but we
-             * don't want to keep the AwPermissionRequestAdapter instance around. So we override
-             * equals to compare AwPermissionRequest.
-             */
-            if (obj instanceof AwPermissionRequestAdapter) {
-                AwPermissionRequestAdapter adapter = (AwPermissionRequestAdapter)obj;
-                return mAwPermissionRequest == adapter.mAwPermissionRequest;
-            }
-            return false;
-        }
-
-        @Override
-        public int hashCode() {
-            return mAwPermissionRequest.hashCode();
-        }
     }
 }

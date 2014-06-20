@@ -255,7 +255,8 @@ class WebViewChromium implements WebViewProvider,
 
     private void initForReal() {
         mAwContents = new AwContents(mFactory.getBrowserContext(), mWebView, mWebView.getContext(),
-                new InternalAccessAdapter(), mContentsClientAdapter, mWebSettings.getAwSettings());
+                new InternalAccessAdapter(), new WebViewNativeGLDelegate(),
+                mContentsClientAdapter, mWebSettings.getAwSettings());
 
         if (mAppTargetSdkVersion >= Build.VERSION_CODES.KITKAT) {
             // On KK and above, favicons are automatically downloaded as the method
@@ -1715,9 +1716,6 @@ class WebViewChromium implements WebViewProvider,
         }
 
         mAwContents.onDetachedFromWindow();
-        if (mGLfunctor != null) {
-            mGLfunctor.detach();
-        }
     }
 
     @Override
@@ -2048,6 +2046,26 @@ class WebViewChromium implements WebViewProvider,
         // TODO: implement preauthorizePermission.
     }
 
+    // AwContents.NativeGLDelegate implementation --------------------------------------
+    private class WebViewNativeGLDelegate implements AwContents.NativeGLDelegate {
+        @Override
+        public boolean requestDrawGL(Canvas canvas, boolean waitForCompletion,
+                View containerView) {
+            if (mGLfunctor == null) {
+                mGLfunctor = new DrawGLFunctor(mAwContents.getAwDrawGLViewContext());
+            }
+            return mGLfunctor.requestDrawGL(
+                    (HardwareCanvas) canvas, containerView.getViewRootImpl(), waitForCompletion);
+        }
+
+        @Override
+        public void detachGLFunctor() {
+            if (mGLfunctor != null) {
+                mGLfunctor.detach();
+            }
+        }
+    }
+
     // AwContents.InternalAccessDelegate implementation --------------------------------------
     private class InternalAccessAdapter implements AwContents.InternalAccessDelegate {
         @Override
@@ -2127,15 +2145,6 @@ class WebViewChromium implements WebViewProvider,
         @Override
         public void setMeasuredDimension(int measuredWidth, int measuredHeight) {
             mWebViewPrivate.setMeasuredDimension(measuredWidth, measuredHeight);
-        }
-
-        @Override
-        public boolean requestDrawGL(Canvas canvas, boolean waitForCompletion) {
-            if (mGLfunctor == null) {
-                mGLfunctor = new DrawGLFunctor(mAwContents.getAwDrawGLViewContext());
-            }
-            return mGLfunctor.requestDrawGL((HardwareCanvas)canvas, mWebView.getViewRootImpl(),
-                    waitForCompletion);
         }
 
         // @Override
