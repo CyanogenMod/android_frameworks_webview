@@ -65,7 +65,8 @@ class DrawGLFunctor {
 
         mDestroyRunnable.mViewRootImpl = viewRootImpl;
         if (canvas == null) {
-            return viewRootImpl.invokeFunctor(mDestroyRunnable.mNativeDrawGLFunctor, waitForCompletion);
+            viewRootImpl.invokeFunctor(mDestroyRunnable.mNativeDrawGLFunctor, waitForCompletion);
+            return true;
         }
 
         canvas.callDrawGLFunction(mDestroyRunnable.mNativeDrawGLFunctor);
