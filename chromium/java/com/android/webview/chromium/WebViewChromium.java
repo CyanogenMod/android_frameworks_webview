@@ -1413,6 +1413,17 @@ class WebViewChromium implements WebViewProvider,
         return mAwContents.zoomOut();
     }
 
+    //TODO: remove once frameworks/base is updated
+    //@Override
+    public boolean zoomBy(float factor) {
+        mFactory.startYourEngines(true);
+        // This is an L API and therefore we can enforce stricter threading constraints.
+        checkThread();
+        //TODO: remove once Chromium-side CL is merged.
+        //return mAwContents.zoomBy(factor);
+        return false;
+    }
+
     @Override
     public void dumpViewHierarchyWithProperties(BufferedWriter out, int level) {
         // Intentional no-op
