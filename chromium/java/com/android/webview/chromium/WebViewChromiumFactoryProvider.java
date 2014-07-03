@@ -92,6 +92,19 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     private DataReductionProxyManager mProxyManager;
 
     public WebViewChromiumFactoryProvider() {
+        if (Build.IS_DEBUGGABLE) {
+            CommandLine.initFromFile(COMMAND_LINE_FILE);
+        } else {
+            CommandLine.init(null);
+        }
+
+        CommandLine cl = CommandLine.getInstance();
+        // TODO: currently in a relase build the DCHECKs only log. We either need to insall
+        // a report handler with SetLogReportHandler to make them assert, or else compile
+        // them out of the build altogether (b/8284203). Either way, so long they're
+        // compiled in, we may as unconditionally enable them here.
+        cl.appendSwitch("enable-dcheck");
+
         ThreadUtils.setWillOverrideUiThread();
         // Load chromium library.
         Trace.traceBegin(Trace.TRACE_TAG_WEBVIEW, "AwBrowserProcess.loadLibrary()");
@@ -169,24 +182,6 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
 
         if (mStarted) {
             return;
-        }
-
-        if (Build.IS_DEBUGGABLE) {
-            CommandLine.initFromFile(COMMAND_LINE_FILE);
-        } else {
-            CommandLine.init(null);
-        }
-
-        CommandLine cl = CommandLine.getInstance();
-        // TODO: currently in a relase build the DCHECKs only log. We either need to insall
-        // a report handler with SetLogReportHandler to make them assert, or else compile
-        // them out of the build altogether (b/8284203). Either way, so long they're
-        // compiled in, we may as unconditionally enable them here.
-        cl.appendSwitch("enable-dcheck");
-
-        // TODO: Remove when GL is supported by default in the upstream code.
-        if (!cl.hasSwitch("disable-webview-gl-mode")) {
-            cl.appendSwitch("testing-webview-gl-mode");
         }
 
         // We don't need to extract any paks because for WebView, they are
