@@ -281,6 +281,8 @@ public class ResourceProvider {
                 com.android.internal.R.raw.nodomain);
         AwResource.setDefaultTextEncoding(
                 com.android.internal.R.string.default_text_encoding);
+        AwResource.setConfigKeySystemUuidMapping(
+                com.android.internal.R.array.config_keySystemUuidMapping);
 
         sInitialized = true;
     }
