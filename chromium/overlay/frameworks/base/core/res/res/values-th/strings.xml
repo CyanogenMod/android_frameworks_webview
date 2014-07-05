@@ -56,7 +56,7 @@
     <string name="webviewchromium_copy_to_clipboard_failure_message" msgid="522732862171513811">"ไม่สามารถคัดลอกไปยังคลิปบอร์ด"</string>
     <string name="webviewchromium_low_memory_error" msgid="1191433008801322695">"ไม่สามารถดำเนินการก่อนหน้าให้เสร็จสมบูรณ์เนื่องจากหน่วยความจำน้อย"</string>
     <string name="webviewchromium_opening_file_error" msgid="1717251611908883964">"ไม่สามารถเปิดไฟล์ที่เลือก"</string>
-    <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"ฟังก์ชันการทำงานนี้ไม่ได้รับการสนับสนุนในแอนดรอยด์เวอร์ชันนี้"</string>
+    <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"ฟังก์ชันการทำงานนี้ไม่ได้รับการสนับสนุนใน Android เวอร์ชันนี้"</string>
     <string name="webviewchromium_profiler_started_toast" msgid="5173879436794997552">"เริ่มตัวสร้างโปรไฟล์แล้ว"</string>
     <string name="webviewchromium_profiler_stopped_toast" msgid="7610282533871917576">"ตัวสร้างโปรไฟล์เสร็จสิ้นแล้ว ผลลัพธ์อยู่ใน %1$s"</string>
     <string name="webviewchromium_profiler_no_storage_toast" msgid="6415118515448171108">"ไม่สามารถเริ่มตัวสร้างโปรไฟล์ เนื่องจากที่เก็บข้อมูลภายนอกไม่พร้อม"</string>
