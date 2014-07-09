@@ -101,6 +101,9 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     private boolean mStarted;
 
     private DataReductionProxySettingListener mProxySettingListener;
+    // TODO(sgurun) Temporary. Remove this after a corresponding CL to keep this state in
+    // AwContentsStatics is merged to M37.
+    private static boolean sOptedOutDataReductionProxy = false;
 
     public WebViewChromiumFactoryProvider() {
         ThreadUtils.setWillOverrideUiThread();
@@ -267,8 +270,20 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     }
 
     private static boolean isDataReductionProxyEnabled(Context context) {
+        if (sOptedOutDataReductionProxy) {
+            return false;
+        }
         return Settings.Secure.getInt(context.getContentResolver(),
                     Settings.Secure.WEBVIEW_DATA_REDUCTION_PROXY, 0) != 0;
+    }
+
+    // TODO(sgurun) Temporary. Remove this logic after a corresponding CL to have this logic
+    // in AwContentsStatics is merged to M37.
+    private static void optOutDataReductionProxy() {
+        if (!sOptedOutDataReductionProxy) {
+            sOptedOutDataReductionProxy = true;
+            AwContentsStatics.setDataReductionProxyEnabled(false);
+        }
     }
 
     boolean hasStarted() {
@@ -352,6 +367,14 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
                             MemoryPressureListener.maybeNotifyMemoryPresure(
                                     ComponentCallbacks2.TRIM_MEMORY_COMPLETE);
                         }
+                    }
+
+                    @Override
+                    public void optOutDataReductionProxy() {
+                        // TODO(sgurun) Normally I would route this through AwContentsStatics,
+                        // however we need to merge it to M37. Due to a conflict in API deadlines vs. M37, wil
+                        // route it from WebViewChromiumFactoryProvider for now.
+                        WebViewChromiumFactoryProvider.this.optOutDataReductionProxy();
                     }
                 };
             }
