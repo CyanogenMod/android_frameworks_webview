@@ -1941,6 +1941,14 @@ class WebViewChromium implements WebViewProvider,
         // we won't need it again.
     }
 
+    public void onStartTemporaryDetach() {
+        mAwContents.onStartTemporaryDetach();
+    }
+
+    public void onFinishTemporaryDetach() {
+        mAwContents.onFinishTemporaryDetach();
+    }
+
     // WebViewProvider.ScrollDelegate implementation ----------------------------------------------
 
     @Override
