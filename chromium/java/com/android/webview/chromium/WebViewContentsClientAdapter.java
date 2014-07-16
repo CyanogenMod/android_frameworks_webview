@@ -69,6 +69,7 @@ import java.net.URISyntaxException;
 import java.security.Principal;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -312,13 +313,19 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
                 new WebResourceRequestImpl(params));
         TraceEvent.end();
         if (response == null) return null;
+
+        // AwWebResourceResponse should support null headers. b/16332774.
+        Map<String, String> responseHeaders = response.getResponseHeaders();
+        if (responseHeaders == null)
+            responseHeaders = new HashMap<String, String>();
+
         return new AwWebResourceResponse(
                 response.getMimeType(),
                 response.getEncoding(),
                 response.getData(),
                 response.getStatusCode(),
                 response.getReasonPhrase(),
-                response.getResponseHeaders());
+                responseHeaders);
     }
 
     /**
