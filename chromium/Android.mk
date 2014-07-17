@@ -22,7 +22,11 @@ CHROMIUM_PATH := external/chromium_org
 # Java glue layer JAR, calls directly into the chromium AwContents Java API.
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := webviewchromium
+LOCAL_PACKAGE_NAME := webviewchromium
+
+LOCAL_MANIFEST_FILE := AndroidManifest.xml
+
+LOCAL_PRIVILEGED_MODULE := true
 
 LOCAL_MODULE_TAGS := optional
 
@@ -97,7 +101,7 @@ LOCAL_PROGUARD_FLAG_FILES := proguard.flags
 
 LOCAL_JAVACFLAGS := -Xlint:unchecked -Werror
 
-include $(BUILD_JAVA_LIBRARY)
+include $(BUILD_PACKAGE)
 
 ifneq ($(strip $(LOCAL_JARJAR_RULES)),)
 # Add build rules to check that the jarjar'ed jar only contains whitelisted
