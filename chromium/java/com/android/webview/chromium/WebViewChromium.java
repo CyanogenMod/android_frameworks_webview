@@ -2063,12 +2063,6 @@ class WebViewChromium implements WebViewProvider,
         return new AwPrintDocumentAdapter(mAwContents.getPdfExporter(), documentName);
     }
 
-    @Override
-    public void preauthorizePermission(Uri origin, long resources) {
-        checkThread();
-        mAwContents.preauthorizePermission(origin, resources);
-    }
-
     // AwContents.NativeGLDelegate implementation --------------------------------------
     private class WebViewNativeGLDelegate implements AwContents.NativeGLDelegate {
         @Override

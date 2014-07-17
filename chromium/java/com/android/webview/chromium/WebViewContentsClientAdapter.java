@@ -69,6 +69,7 @@ import java.net.URISyntaxException;
 import java.security.Principal;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -1033,8 +1034,39 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     }
 
     // TODO: Move to the upstream once the PermissionRequest is part of SDK.
-    private static class PermissionRequestAdapter implements PermissionRequest {
+    public static class PermissionRequestAdapter extends PermissionRequest {
+        // TODO: Move the below definitions to AwPermissionRequest.
+        private static long BITMASK_RESOURCE_VIDEO_CAPTURE = 1 << 1;
+        private static long BITMASK_RESOURCE_AUDIO_CAPTURE = 1 << 2;
+        private static long BITMASK_RESOURCE_PROTECTED_MEDIA_ID = 1 << 3;
+
+        public static long toAwPermissionResources(String[] resources) {
+            long result = 0;
+            for (String resource : resources) {
+                if (resource.equals(PermissionRequest.RESOURCE_VIDEO_CAPTURE))
+                    result |= BITMASK_RESOURCE_VIDEO_CAPTURE;
+                else if (resource.equals(PermissionRequest.RESOURCE_AUDIO_CAPTURE))
+                    result |= BITMASK_RESOURCE_AUDIO_CAPTURE;
+                else if (resource.equals(PermissionRequest.RESOURCE_PROTECTED_MEDIA_ID))
+                    result |= BITMASK_RESOURCE_PROTECTED_MEDIA_ID;
+            }
+            return result;
+        }
+
+        private static String[] toPermissionResources(long resources) {
+            ArrayList<String> result = new ArrayList<String>();
+            if ((resources & BITMASK_RESOURCE_VIDEO_CAPTURE) != 0)
+                result.add(PermissionRequest.RESOURCE_VIDEO_CAPTURE);
+            if ((resources & BITMASK_RESOURCE_AUDIO_CAPTURE) != 0)
+                result.add(PermissionRequest.RESOURCE_AUDIO_CAPTURE);
+            if ((resources & BITMASK_RESOURCE_PROTECTED_MEDIA_ID) != 0)
+                result.add(PermissionRequest.RESOURCE_PROTECTED_MEDIA_ID);
+            String[] resource_array = new String[result.size()];
+            return result.toArray(resource_array);
+        }
+
         private AwPermissionRequest mAwPermissionRequest;
+        private String[] mResources;
 
         public PermissionRequestAdapter(AwPermissionRequest awPermissionRequest) {
             assert awPermissionRequest != null;
@@ -1047,14 +1079,19 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
         }
 
         @Override
-        public long getResources() {
-            return mAwPermissionRequest.getResources();
+        public String[] getResources() {
+            synchronized (this) {
+                if (mResources == null) {
+                    mResources = toPermissionResources(mAwPermissionRequest.getResources());
+                }
+                return mResources;
+            }
         }
 
         @Override
-        public void grant(long resources) {
-            long requestedResource = getResources();
-            if ((requestedResource & resources) == requestedResource)
+        public void grant(String[] resources) {
+            long requestedResource = mAwPermissionRequest.getResources();
+            if ((requestedResource & toAwPermissionResources(resources)) == requestedResource)
                 mAwPermissionRequest.grant();
             else
                 mAwPermissionRequest.deny();
