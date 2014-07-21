@@ -182,6 +182,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         PathService.override(DIR_RESOURCE_PAKS_ANDROID,
                 "/system/framework/webview/paks");
 
+        ResourceProvider.registerResources(ActivityThread.currentApplication());
         AwBrowserProcess.start(ActivityThread.currentApplication());
         initPlatSupportLibrary();
 
@@ -295,7 +296,6 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
                 mWebViewsToStart.add(new WeakReference<WebViewChromium>(wvc));
             }
         }
-        ResourceProvider.registerResources(webView.getContext());
         return wvc;
     }
 
