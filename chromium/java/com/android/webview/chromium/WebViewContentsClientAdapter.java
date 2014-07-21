@@ -48,6 +48,7 @@ import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebChromeClient.CustomViewCallback;
 import android.webkit.WebResourceResponse;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -68,6 +69,8 @@ import java.net.URISyntaxException;
 import java.security.Principal;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.WeakHashMap;
 
 /**
@@ -266,6 +269,39 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
         TraceEvent.end();
     }
 
+    private static class WebResourceRequestImpl implements WebResourceRequest {
+        private final ShouldInterceptRequestParams mParams;
+
+        public WebResourceRequestImpl(ShouldInterceptRequestParams params) {
+            mParams = params;
+        }
+
+        @Override
+        public Uri getUrl() {
+            return Uri.parse(mParams.url);
+        }
+
+        @Override
+        public boolean isForMainFrame() {
+            return mParams.isMainFrame;
+        }
+
+        @Override
+        public boolean hasUserGestureInsecure() {
+            return mParams.hasUserGesture;
+        }
+
+        @Override
+        public String getMethod() {
+            return mParams.method;
+        }
+
+        @Override
+        public Map<String, String> getRequestHeaders() {
+            return mParams.requestHeaders;
+        }
+    }
+
     /**
      * @see AwContentsClient#shouldInterceptRequest(java.lang.String)
      */
@@ -273,13 +309,23 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     public AwWebResourceResponse shouldInterceptRequest(ShouldInterceptRequestParams params) {
         TraceEvent.begin();
         if (TRACE) Log.d(TAG, "shouldInterceptRequest=" + params.url);
-        WebResourceResponse response = mWebViewClient.shouldInterceptRequest(mWebView, params.url);
+        WebResourceResponse response = mWebViewClient.shouldInterceptRequest(mWebView,
+                new WebResourceRequestImpl(params));
         TraceEvent.end();
         if (response == null) return null;
+
+        // AwWebResourceResponse should support null headers. b/16332774.
+        Map<String, String> responseHeaders = response.getResponseHeaders();
+        if (responseHeaders == null)
+            responseHeaders = new HashMap<String, String>();
+
         return new AwWebResourceResponse(
                 response.getMimeType(),
                 response.getEncoding(),
-                response.getData());
+                response.getData(),
+                response.getStatusCode(),
+                response.getReasonPhrase(),
+                responseHeaders);
     }
 
     /**

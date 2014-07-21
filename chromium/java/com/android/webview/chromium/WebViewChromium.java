@@ -236,6 +236,8 @@ class WebViewChromium implements WebViewProvider,
 
         if (mAppTargetSdkVersion <= Build.VERSION_CODES.KITKAT) {
             mWebSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+            // On KK and older versions we always allowed third party cookies.
+            mWebSettings.setAcceptThirdPartyCookies(true);
         }
 
         mRunQueue.addTask(new Runnable() {
@@ -2061,8 +2063,10 @@ class WebViewChromium implements WebViewProvider,
         return new AwPrintDocumentAdapter(mAwContents.getPdfExporter(), documentName);
     }
 
+    @Override
     public void preauthorizePermission(Uri origin, long resources) {
-        // TODO: implement preauthorizePermission.
+        checkThread();
+        mAwContents.preauthorizePermission(origin, resources);
     }
 
     // AwContents.NativeGLDelegate implementation --------------------------------------

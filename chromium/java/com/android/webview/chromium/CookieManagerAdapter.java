@@ -21,6 +21,7 @@ import android.net.WebAddress;
 import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.ValueCallback;
+import android.webkit.WebView;
 
 import org.chromium.android_webview.AwCookieManager;
 
@@ -42,6 +43,16 @@ public class CookieManagerAdapter extends CookieManager {
     @Override
     public synchronized boolean acceptCookie() {
         return mChromeCookieManager.acceptCookie();
+    }
+
+    @Override
+    public synchronized void setAcceptThirdPartyCookies(WebView webView, boolean accept) {
+        webView.getSettings().setAcceptThirdPartyCookies(accept);
+    }
+
+    @Override
+    public synchronized boolean acceptThirdPartyCookies(WebView webView) {
+        return webView.getSettings().getAcceptThirdPartyCookies();
     }
 
     @Override
@@ -118,8 +129,12 @@ public class CookieManagerAdapter extends CookieManager {
     }
 
     @Override
-    protected void flushCookieStore() {
+    public void flush() {
         mChromeCookieManager.flushCookieStore();
+    }
+
+    protected void flushCookieStore() {
+        flush();
     }
 
     @Override
