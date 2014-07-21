@@ -112,6 +112,8 @@
   <add-resource type="string" name="webviewchromium_time_picker_dialog_title" />
   <add-resource type="string" name="webviewchromium_week_picker_dialog_title" />
 
+  <add-resource type="array" name="config_keySystemUuidMapping" />
+
   <add-resource type="style" name="webviewchromium_DropdownPopupWindow" />
   <add-resource type="style" name="webviewchromium_SelectPopupDialog" />
 </resources>
