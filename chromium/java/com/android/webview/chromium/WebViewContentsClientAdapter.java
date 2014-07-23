@@ -886,12 +886,8 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
             return;
         }
         TraceEvent.begin();
-        WebChromeClient.FileChooserParams p = new WebChromeClient.FileChooserParams();
-        p.mode = fileChooserParams.mode;
-        p.acceptTypes = fileChooserParams.acceptTypes;
-        p.title = fileChooserParams.title;
-        p.defaultFilename = fileChooserParams.defaultFilename;
-        p.capture = fileChooserParams.capture;
+        FileChooserParamsAdapter adapter = new FileChooserParamsAdapter(
+                fileChooserParams, mWebView.getContext());
         if (TRACE) Log.d(TAG, "showFileChooser");
         ValueCallback<Uri[]> callbackAdapter = new ValueCallback<Uri[]>() {
             private boolean mCompleted;
@@ -911,7 +907,7 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
                 uploadFileCallback.onReceiveValue(s);
             }
         };
-        if (mWebChromeClient.showFileChooser(mWebView, callbackAdapter, p)) {
+        if (mWebChromeClient.onShowFileChooser(mWebView, callbackAdapter, adapter)) {
             return;
         }
         if (mWebView.getContext().getApplicationInfo().targetSdkVersion >
