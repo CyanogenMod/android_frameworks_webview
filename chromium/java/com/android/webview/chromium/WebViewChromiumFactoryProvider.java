@@ -152,6 +152,11 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         }
 
         CommandLine cl = CommandLine.getInstance();
+
+        // Hardware acceleration in chromium m37+ no longer works with android Kitkat, so force
+        // disable hardware acceleration. This is for AOSP only until L is open sourced.
+        cl.appendSwitch("force-auxiliary-bitmap");
+
         // TODO: currently in a relase build the DCHECKs only log. We either need to insall
         // a report handler with SetLogReportHandler to make them assert, or else compile
         // them out of the build altogether (b/8284203). Either way, so long they're
