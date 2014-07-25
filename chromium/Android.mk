@@ -43,6 +43,10 @@ LOCAL_RESOURCE_DIR := \
 LOCAL_AAPT_FLAGS := $(android_webview_aapt_flags)
 LOCAL_AAPT_FLAGS += --shared-lib
 
+LOCAL_JNI_SHARED_LIBRARIES += libwebviewchromium
+
+LOCAL_MULTILIB := both
+
 # TODO: filter webviewchromium_webkit_strings based on PRODUCT_LOCALES.
 LOCAL_REQUIRED_MODULES := \
         libwebviewchromium \
