@@ -41,40 +41,14 @@ namespace {
 void* gReservedAddress = NULL;
 size_t gReservedSize = 0;
 
-jboolean DoReserveAddressSpace(const char* lib) {
-  size_t vsize = 0;
-
-  // First check for a file which explicitly specifies the virtual size needed.
-  // The file has a .so suffix so that the package manager will extract it
-  // alongside the real library.
-  static const char vsize_suffix[] = ".vsize.so";
-  char vsize_name[strlen(lib) + sizeof(vsize_suffix)];
-  strlcpy(vsize_name, lib, sizeof(vsize_name));
-  strlcat(vsize_name, vsize_suffix, sizeof(vsize_name));
-  FILE* vsize_file = fopen(vsize_name, "r");
-  if (vsize_file != NULL) {
-    fscanf(vsize_file, "%zd", &vsize);
-    fclose(vsize_file);
-  }
-
-  // If the file didn't exist or was unparseable, just stat() the library to see
-  // how big it is.
-  if (vsize == 0) {
-    struct stat libstat;
-    if (stat(lib, &libstat) != 0) {
-      ALOGE("Failed to stat %s: %s", lib, strerror(errno));
-      return JNI_FALSE;
-    }
-    // The required memory can be larger than the file on disk due to the .bss
-    // section, and an upgraded version of the library installed later may also
-    // be larger, so we need to allocate more than the size of the file.
-    vsize = libstat.st_size * 2;
-  }
+jboolean DoReserveAddressSpace(jlong size) {
+  size_t vsize = static_cast<size_t>(size);
 
   void* addr = mmap(NULL, vsize, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   if (addr == MAP_FAILED) {
-    ALOGE("Failed to reserve %zd bytes of address space for future load of %s: %s",
-          vsize, lib, strerror(errno));
+    ALOGE("Failed to reserve %zd bytes of address space for future load of "
+          "libwebviewchromium.so: %s",
+          vsize, strerror(errno));
     return JNI_FALSE;
   }
   gReservedAddress = addr;
@@ -149,21 +123,8 @@ jboolean DoLoadWithRelroFile(const char* lib, const char* relro) {
 /* JNI wrappers - handle string lifetimes and 32/64 ABI choice                */
 /******************************************************************************/
 
-jboolean ReserveAddressSpace(JNIEnv* env, jclass, jstring lib32, jstring lib64) {
-#ifdef __LP64__
-  jstring lib = lib64;
-  (void)lib32;
-#else
-  jstring lib = lib32;
-  (void)lib64;
-#endif
-  jboolean ret = JNI_FALSE;
-  const char* lib_utf8 = env->GetStringUTFChars(lib, NULL);
-  if (lib_utf8 != NULL) {
-    ret = DoReserveAddressSpace(lib_utf8);
-    env->ReleaseStringUTFChars(lib, lib_utf8);
-  }
-  return ret;
+jboolean ReserveAddressSpace(JNIEnv*, jclass, jlong size) {
+  return DoReserveAddressSpace(size);
 }
 
 jboolean CreateRelroFile(JNIEnv* env, jclass, jstring lib32, jstring lib64,
@@ -216,7 +177,7 @@ jboolean LoadWithRelroFile(JNIEnv* env, jclass, jstring lib32, jstring lib64,
 
 const char kClassName[] = "android/webkit/WebViewFactory";
 const JNINativeMethod kJniMethods[] = {
-  { "nativeReserveAddressSpace", "(Ljava/lang/String;Ljava/lang/String;)Z",
+  { "nativeReserveAddressSpace", "(J)Z",
       reinterpret_cast<void*>(ReserveAddressSpace) },
   { "nativeCreateRelroFile",
       "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z",
