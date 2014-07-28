@@ -61,11 +61,11 @@
 -keep class com.android.org.chromium.ui.ColorSuggestion
 -keep class com.android.org.chromium.content.browser.input.DateTimeSuggestion
 -keep class com.android.org.chromium.content.browser.ContentViewCore$JavaScriptCallback
--keep class com.android.org.chromium.content.browser.NavigationController
+-keep class com.android.org.chromium.content_public.browser.NavigationController
 
 # Keep these classes as they are parameters to methods that are native entry points.
 -keep class com.android.org.chromium.android_webview.AwBrowserContext
--keep class com.android.org.chromium.content.app.Linker$LibInfo
+-keep class com.android.org.chromium.base.library_loader.Linker$LibInfo
 
 # Keep finalizer stuff from google-common used via reflection
 -keepclassmembers class com.android.org.chromium.com.google.common.** {

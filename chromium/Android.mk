@@ -33,11 +33,18 @@ LOCAL_PRIVILEGED_MODULE := true
 
 LOCAL_MODULE_TAGS := optional
 
-LOCAL_STATIC_JAVA_LIBRARIES += android_webview_java
+LOCAL_STATIC_JAVA_LIBRARIES += android_webview_java_with_new_resources
 
 LOCAL_SRC_FILES := $(call all-java-files-under, java)
 
 LOCAL_JARJAR_RULES := $(CHROMIUM_PATH)/android_webview/build/jarjar-rules.txt
+
+include $(CHROMIUM_PATH)/android_webview/build/resources_config.mk
+LOCAL_RESOURCE_DIR := \
+    $(LOCAL_PATH)/res \
+    $(android_webview_resources_dirs)
+LOCAL_AAPT_FLAGS := $(android_webview_aapt_flags)
+LOCAL_AAPT_FLAGS += --shared-lib
 
 # TODO: filter webviewchromium_webkit_strings based on PRODUCT_LOCALES.
 LOCAL_REQUIRED_MODULES := \
@@ -131,7 +138,7 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE:= libwebviewchromium_plat_support
 
-LOCAL_SRC_FILES:=       \
+LOCAL_SRC_FILES:= \
         plat_support/draw_gl_functor.cpp \
         plat_support/jni_entry_point.cpp \
         plat_support/graphics_utils.cpp \
@@ -179,5 +186,5 @@ LOCAL_MODULE_TAGS := optional
 
 include $(BUILD_SHARED_LIBRARY)
 
-
+# Build other stuff
 include $(call first-makefiles-under,$(LOCAL_PATH))
