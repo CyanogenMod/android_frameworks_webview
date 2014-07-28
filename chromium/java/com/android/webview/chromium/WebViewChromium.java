@@ -58,6 +58,7 @@ import android.widget.TextView;
 
 import org.chromium.android_webview.AwBrowserContext;
 import org.chromium.android_webview.AwContents;
+import org.chromium.android_webview.AwContentsStatics;
 import org.chromium.android_webview.AwLayoutSizer;
 import org.chromium.android_webview.AwSettings;
 import org.chromium.android_webview.AwPrintDocumentAdapter;
@@ -142,6 +143,11 @@ class WebViewChromium implements WebViewProvider,
     private final int mAppTargetSdkVersion;
 
     private WebViewChromiumFactoryProvider mFactory;
+
+    private static boolean sRecordWholeDocumentEnabledByApi = false;
+    static void enableSlowWholeDocumentDraw() {
+        sRecordWholeDocumentEnabledByApi = true;
+    }
 
     // This does not touch any global / non-threadsafe state, but note that
     // init is ofter called right after and is NOT threadsafe.
@@ -265,6 +271,9 @@ class WebViewChromium implements WebViewProvider,
             // old apps use to enable that behavior is deprecated.
             AwContents.setShouldDownloadFavicons();
         }
+
+        AwContentsStatics.setRecordFullDocument(sRecordWholeDocumentEnabledByApi ||
+                mAppTargetSdkVersion < Build.VERSION_CODES.L);
 
         if (mAppTargetSdkVersion <= Build.VERSION_CODES.KITKAT) {
             // On KK and older versions, JavaScript objects injected via addJavascriptInterface
