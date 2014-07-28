@@ -390,6 +390,11 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
                         // route it from WebViewChromiumFactoryProvider for now.
                         WebViewChromiumFactoryProvider.this.optOutDataReductionProxy();
                     }
+
+                    // TODO: Add @Override.
+                    public void enableSlowWholeDocumentDraw() {
+                        WebViewChromium.enableSlowWholeDocumentDraw();
+                    }
                 };
             }
         }
