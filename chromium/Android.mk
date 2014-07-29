@@ -42,8 +42,9 @@ LOCAL_JARJAR_RULES := $(CHROMIUM_PATH)/android_webview/build/jarjar-rules.txt
 include $(CHROMIUM_PATH)/android_webview/build/resources_config.mk
 LOCAL_RESOURCE_DIR := \
     $(LOCAL_PATH)/res \
-    $(android_webview_resources_dirs)
+    $android_webview_resources_dirs)
 LOCAL_AAPT_FLAGS := $(android_webview_aapt_flags)
+LOCAL_AAPT_FLAGS += --extra-packages com.android.webview.chromium
 LOCAL_AAPT_FLAGS += --shared-lib
 
 # TODO: filter webviewchromium_webkit_strings based on PRODUCT_LOCALES.
