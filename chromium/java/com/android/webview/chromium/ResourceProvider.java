@@ -276,13 +276,12 @@ public class ResourceProvider {
 
         // Resources needed by android_webview/
 
-        AwResource.setErrorPageResources(
-                com.android.internal.R.raw.loaderror,
-                com.android.internal.R.raw.nodomain);
+        AwResource.setErrorPageResources(android.R.raw.loaderror,
+                android.R.raw.nodomain);
         AwResource.setDefaultTextEncoding(
-                com.android.internal.R.string.default_text_encoding);
+                android.R.string.config_webSettingsDefaultTextEncoding);
         AwResource.setConfigKeySystemUuidMapping(
-                com.android.internal.R.array.config_keySystemUuidMapping);
+                android.R.array.config_keySystemUuidMapping);
 
         sInitialized = true;
     }
