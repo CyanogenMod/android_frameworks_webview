@@ -61,6 +61,9 @@ include $(BUILD_PACKAGE)
 
 $(LOCAL_BUILT_MODULE): $(android_webview_intermediates_pak_additional_deps)
 $(LOCAL_BUILT_MODULE): PRIVATE_ASSET_DIR += $(android_webview_asset_dirs)
+# This is needed to force the grd->string.xml conversion to run before we
+# attempt to generate the R.java file.
+$(R_file_stamp): $(call intermediates-dir-for,GYP,android_webview_resources)/android_webview_resources.stamp
 
 ifneq ($(strip $(LOCAL_JARJAR_RULES)),)
 # Add build rules to check that the jarjar'ed jar only contains whitelisted
