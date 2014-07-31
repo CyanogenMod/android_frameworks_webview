@@ -59,6 +59,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.WebViewProvider;
+import android.webkit.WebChromeClient.CustomViewCallback;
 import android.widget.TextView;
 
 import org.chromium.android_webview.AwBrowserContext;
@@ -1328,7 +1329,38 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void setWebChromeClient(WebChromeClient client) {
+        boolean fullscreenSupported = doesSupportFullscreen(client);
+        String msg =
+                "WebView " + (fullscreenSupported ? "does":"does not") + " support fullscreen";
+        Log.d(TAG, msg);
+
+        mWebSettings.getAwSettings().setFullscreenSupported(fullscreenSupported);
         mContentsClientAdapter.setWebChromeClient(client);
+    }
+
+    /**
+     * Returns true if the supplied {@link WebChromeClient} supports fullscreen.
+     *
+     * <p>For fullscreen support, implementations of {@link WebChromeClient#onShowCustomView}
+     * and {@link WebChromeClient#onHideCustomView()} are required.
+     */
+    private boolean doesSupportFullscreen(WebChromeClient client) {
+        if (client == null) {
+            return false;
+        }
+        // If client is not a subclass of WebChromeClient then the methods have not been
+        // implemented because WebChromeClient has empty implementations.
+        if (client.getClass().isAssignableFrom(WebChromeClient.class)) {
+            return false;
+        }
+        try {
+            client.getClass().getDeclaredMethod("onShowCustomView", View.class,
+                    CustomViewCallback.class);
+            client.getClass().getDeclaredMethod("onHideCustomView");
+            return true;
+        } catch (NoSuchMethodException e) {
+            return false;
+        }
     }
 
     @Override
