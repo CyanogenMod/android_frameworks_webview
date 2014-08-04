@@ -23,6 +23,8 @@ import android.app.ActivityThread;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Looper;
 import android.util.Log;
@@ -32,6 +34,7 @@ import android.webkit.WebIconDatabase;
 import android.webkit.WebStorage;
 import android.webkit.WebView;
 import android.webkit.WebViewDatabase;
+import android.webkit.WebViewFactory;
 import android.webkit.WebViewFactoryProvider;
 import android.webkit.WebViewProvider;
 
@@ -250,16 +253,23 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         mDevToolsServer.setRemoteDebuggingEnabled(enable);
     }
 
-    private void setUpResources(Context ctx) {
-        ResourceRewriter.rewriteRValues(ctx);
+    public static Resources getWebViewPackageResources(Context ctx) {
+        try {
+            return ctx.getPackageManager().getResourcesForApplication(
+                    WebViewFactory.getWebViewPackageName());
+        } catch (PackageManager.NameNotFoundException e) {
+            throw new RuntimeException("Could not load webview resources apk.", e);
+        }
+    }
 
-        AwResource.setResources(ctx.getResources());
+    private void setUpResources(Context ctx) {
+        AwResource.setResources(getWebViewPackageResources(ctx));
         AwResource.setErrorPageResources(com.android.internal.R.raw.loaderror,
                 com.android.internal.R.raw.nodomain);
         AwResource.setDefaultTextEncoding(
                 com.android.internal.R.string.default_text_encoding);
         AwResource.setConfigKeySystemUuidMapping(
-                com.android.internal.R.array.config_keySystemUuidMapping);
+                R.array.config_keySystemUuidMapping);
     }
 
     @Override
