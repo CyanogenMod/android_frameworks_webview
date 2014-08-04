@@ -22,7 +22,7 @@ CHROMIUM_PATH := external/chromium_org
 # Java glue layer JAR, calls directly into the chromium AwContents Java API.
 include $(CLEAR_VARS)
 
-LOCAL_PACKAGE_NAME := webviewchromium
+LOCAL_PACKAGE_NAME := webview
 
 LOCAL_MANIFEST_FILE := AndroidManifest.xml
 

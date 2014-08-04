@@ -14,17 +14,5 @@
 # limitations under the License.
 #
 
-# This package provides a layer of abstraction that allows the WebView
-# implementation to be replaced in the dependency graph.
-
-LOCAL_PATH := $(call my-dir)
-include $(CLEAR_VARS)
-
-LOCAL_MODULE := webview
-LOCAL_MODULE_TAGS := optional
-LOCAL_REQUIRED_MODULES := webviewchromium
-
-include $(BUILD_PHONY_PACKAGE)
-
 # Include all the makefiles for subdirectories.
-include $(call all-makefiles-under,$(LOCAL_PATH))
+include $(call all-subdir-makefiles)
