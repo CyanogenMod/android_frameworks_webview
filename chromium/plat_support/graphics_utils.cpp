@@ -82,22 +82,20 @@ void ReleasePixels(AwPixelInfo* pixels) {
 }
 
 jlong GetDrawSWFunctionTable(JNIEnv* env, jclass) {
-  static const AwDrawSWFunctionTable function_table = {
-      &GetPixels,
-      &ReleasePixels,
-  };
+  static AwDrawSWFunctionTable function_table;
+  function_table.access_pixels = &GetPixels;
+  function_table.release_pixels = &ReleasePixels;
   return reinterpret_cast<intptr_t>(&function_table);
 }
 
 jlong GetDrawGLFunctionTable(JNIEnv* env, jclass) {
-  static const AwDrawGLFunctionTable function_table = {
-    &GraphicBufferImpl::Create,
-    &GraphicBufferImpl::Release,
-    &GraphicBufferImpl::MapStatic,
-    &GraphicBufferImpl::UnmapStatic,
-    &GraphicBufferImpl::GetNativeBufferStatic,
-    &GraphicBufferImpl::GetStrideStatic,
-  };
+  static AwDrawGLFunctionTable function_table;
+  function_table.create_graphic_buffer = &GraphicBufferImpl::Create;
+  function_table.release_graphic_buffer = &GraphicBufferImpl::Release;
+  function_table.map = &GraphicBufferImpl::MapStatic;
+  function_table.unmap = &GraphicBufferImpl::UnmapStatic;
+  function_table.get_native_buffer = &GraphicBufferImpl::GetNativeBufferStatic;
+  function_table.get_stride = &GraphicBufferImpl::GetStrideStatic;
   return reinterpret_cast<intptr_t>(&function_table);
 }
 
