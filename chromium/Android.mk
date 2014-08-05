@@ -30,8 +30,6 @@ LOCAL_PACKAGE_NAME := webviewchromium
 
 LOCAL_MANIFEST_FILE := AndroidManifest.xml
 
-LOCAL_PRIVILEGED_MODULE := true
-
 LOCAL_MODULE_TAGS := optional
 
 LOCAL_STATIC_JAVA_LIBRARIES += android_webview_java_with_new_resources
