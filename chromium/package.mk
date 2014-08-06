@@ -19,6 +19,13 @@
 LOCAL_PATH := $(call my-dir)
 CHROMIUM_PATH := external/chromium_org
 
+ifeq (,$(wildcard $(CHROMIUM_PATH)))
+# Some branches don't have the chromium sources; they shouldn't depend on
+# webview, but just in case this is a mistake, warn about it.
+$(warning Chromium sources missing, skipping webview package build)
+else
+# Chromium sources exist, build the package.
+
 # Java glue layer JAR, calls directly into the chromium AwContents Java API.
 include $(CLEAR_VARS)
 
@@ -81,3 +88,5 @@ $(jar_check_ok): $(full_classes_jarjar_jar) $(LOCAL_PATH)/tools/jar_check.py $(L
 
 $(LOCAL_BUILT_MODULE): $(jar_check_ok)
 endif
+
+endif  # CHROMIUM_PATH existence test
