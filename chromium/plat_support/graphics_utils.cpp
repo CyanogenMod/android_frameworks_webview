@@ -83,6 +83,7 @@ void ReleasePixels(AwPixelInfo* pixels) {
 
 jlong GetDrawSWFunctionTable(JNIEnv* env, jclass) {
   static AwDrawSWFunctionTable function_table;
+  function_table.version = kAwDrawSWFunctionTableVersion;
   function_table.access_pixels = &GetPixels;
   function_table.release_pixels = &ReleasePixels;
   return reinterpret_cast<intptr_t>(&function_table);
@@ -90,6 +91,7 @@ jlong GetDrawSWFunctionTable(JNIEnv* env, jclass) {
 
 jlong GetDrawGLFunctionTable(JNIEnv* env, jclass) {
   static AwDrawGLFunctionTable function_table;
+  function_table.version = kAwDrawGLFunctionTableVersion;
   function_table.create_graphic_buffer = &GraphicBufferImpl::Create;
   function_table.release_graphic_buffer = &GraphicBufferImpl::Release;
   function_table.map = &GraphicBufferImpl::MapStatic;
