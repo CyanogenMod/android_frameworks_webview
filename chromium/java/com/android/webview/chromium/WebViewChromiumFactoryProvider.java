@@ -20,17 +20,13 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.app.ActivityManager;
 import android.app.ActivityThread;
-import android.content.BroadcastReceiver;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Looper;
 import android.os.SystemProperties;
 import android.os.Trace;
-import android.provider.Settings;
 import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.GeolocationPermissions;
@@ -68,16 +64,6 @@ import java.util.ArrayList;
 
 public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
 
-    /*
-     * Listen for DataReductionProxySetting changes and take action.
-     */
-    private static final class DataReductionProxySettingListener extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            EnableDataReductionProxyIfNecessary(context);
-        }
-    }
-
     private static final String TAG = "WebViewChromiumFactoryProvider";
 
     private static final String CHROMIUM_PREFS_NAME = "WebViewChromiumPrefs";
@@ -103,10 +89,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     // Read/write protected by mLock.
     private boolean mStarted;
 
-    private DataReductionProxySettingListener mProxySettingListener;
-    // TODO(sgurun) Temporary. Remove this after a corresponding CL to keep this state in
-    // AwContentsStatics is merged to M37.
-    private static boolean sOptedOutDataReductionProxy = false;
+    private DataReductionProxyManager mProxyManager;
 
     public WebViewChromiumFactoryProvider() {
         ThreadUtils.setWillOverrideUiThread();
@@ -167,7 +150,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         });
         while (!mStarted) {
             try {
-                // Important: wait() releases |mLock| so the UI thread can take it :-)
+                // Important: wait() releases |mLock| the UI thread can take it :-)
                 mLock.wait();
             } catch (InterruptedException e) {
                 // Keep trying... eventually the UI thread will process the task we sent it.
@@ -244,49 +227,9 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         mWebViewsToStart.clear();
         mWebViewsToStart = null;
 
-        // starts listening for data reduction proxy setting changes.
-        initDataReductionProxySettingListener(ActivityThread.currentApplication());
-    }
-
-    private void initDataReductionProxySettingListener(Context context) {
-        EnableDataReductionProxyIfNecessary(context);
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(WebView.DATA_REDUCTION_PROXY_SETTING_CHANGED);
-        mProxySettingListener = new DataReductionProxySettingListener();
-        context.registerReceiver(mProxySettingListener, filter);
-    }
-
-    private static void EnableDataReductionProxyIfNecessary(Context context) {
-        boolean enabled = isDataReductionProxyEnabled(context);
-        if (enabled) {
-            // Re-read the key in case it was updated.
-            String key = Settings.Secure.getString(context.getContentResolver(),
-                Settings.Global.WEBVIEW_DATA_REDUCTION_PROXY_KEY);
-            if (key == null || key.isEmpty()) {
-                Log.w(TAG, "No DRP key available");
-                return;
-            }
-            // Set the data reduction proxy key.
-            AwContentsStatics.setDataReductionProxyKey(key);
-        }
-        AwContentsStatics.setDataReductionProxyEnabled(enabled);
-    }
-
-    private static boolean isDataReductionProxyEnabled(Context context) {
-        if (sOptedOutDataReductionProxy) {
-            return false;
-        }
-        return Settings.Secure.getInt(context.getContentResolver(),
-                    Settings.Secure.WEBVIEW_DATA_REDUCTION_PROXY, 0) != 0;
-    }
-
-    // TODO(sgurun) Temporary. Remove this logic after a corresponding CL to have this logic
-    // in AwContentsStatics is merged to M37.
-    private static void optOutDataReductionProxy() {
-        if (!sOptedOutDataReductionProxy) {
-            sOptedOutDataReductionProxy = true;
-            AwContentsStatics.setDataReductionProxyEnabled(false);
-        }
+        // Start listening for data reduction proxy setting changes.
+        mProxyManager = new DataReductionProxyManager();
+        mProxyManager.start(ActivityThread.currentApplication());
     }
 
     boolean hasStarted() {
@@ -385,10 +328,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
 
                     @Override
                     public void optOutDataReductionProxy() {
-                        // TODO(sgurun) Normally I would route this through AwContentsStatics,
-                        // however we need to merge it to M37. Due to a conflict in API deadlines vs. M37, wil
-                        // route it from WebViewChromiumFactoryProvider for now.
-                        WebViewChromiumFactoryProvider.this.optOutDataReductionProxy();
+                        DataReductionProxyManager.optOutDataReductionProxy();
                     }
 
                     // TODO: Add @Override.
