@@ -52,6 +52,7 @@ class DrawGLFunctor : public Functor {
     }
 
     AwDrawGLInfo aw_info;
+    aw_info.version = kAwDrawGLInfoVersion;
     switch (what) {
       case DrawGlInfo::kModeDraw: {
         aw_info.mode = AwDrawGLInfo::kModeDraw;
