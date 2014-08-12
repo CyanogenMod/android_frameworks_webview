@@ -16,7 +16,9 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.webview">
-    <uses-sdk android:minSdkVersion="21"></uses-sdk>
+    <uses-sdk android:minSdkVersion="20"
+              android:targetSdkVersion="20">
+    </uses-sdk>
     <application android:label="WebView Library"
         android:icon="@mipmap/icon_webview"
         android:multiArch="true">
