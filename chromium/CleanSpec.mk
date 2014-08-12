@@ -46,6 +46,8 @@
 $(call add-clean-step, rm -rf $(TARGET_OUT_JAVA_LIBRARIES)/webviewchromium.*)
 $(call add-clean-step, rm -rf $(PRODUCT_OUT)/system/framework/webview)
 $(call add-clean-step, rm -rf $(PRODUCT_OUT)/system/framework/webviewchromium.jar)
+$(call add-clean-step, rm -rf $(PRODUCT_OUT)/system/priv-app/webviewchromium)
+$(call add-clean-step, rm -rf $(PRODUCT_OUT)/system/priv-app/webview)
 
 # ******************************************************************
 # NEWER CLEAN STEPS MUST BE AT THE END OF THE LIST ABOVE THIS BANNER

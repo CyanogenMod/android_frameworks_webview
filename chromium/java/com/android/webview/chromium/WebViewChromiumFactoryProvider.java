@@ -208,8 +208,8 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
 
         // Make sure that ResourceProvider is initialized before starting the browser process.
         setUpResources(ActivityThread.currentApplication());
-        AwBrowserProcess.start(ActivityThread.currentApplication());
         initPlatSupportLibrary();
+        AwBrowserProcess.start(ActivityThread.currentApplication());
 
         if (Build.IS_DEBUGGABLE) {
             setWebContentsDebuggingEnabled(true);

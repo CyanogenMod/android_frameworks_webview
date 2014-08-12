@@ -151,7 +151,6 @@ class WebViewChromium implements WebViewProvider,
 
     private static boolean sRecordWholeDocumentEnabledByApi = false;
     static void enableSlowWholeDocumentDraw() {
-        // TODO: Implement this in master.
         sRecordWholeDocumentEnabledByApi = true;
     }
 
@@ -312,6 +311,9 @@ class WebViewChromium implements WebViewProvider,
             // old apps use to enable that behavior is deprecated.
             AwContents.setShouldDownloadFavicons();
         }
+
+        AwContentsStatics.setRecordFullDocument(sRecordWholeDocumentEnabledByApi ||
+                mAppTargetSdkVersion < Build.VERSION_CODES.L);
 
         if (mAppTargetSdkVersion <= Build.VERSION_CODES.KITKAT) {
             // On KK and older versions, JavaScript objects injected via addJavascriptInterface
