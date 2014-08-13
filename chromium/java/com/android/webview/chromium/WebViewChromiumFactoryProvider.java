@@ -94,7 +94,9 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     public WebViewChromiumFactoryProvider() {
         ThreadUtils.setWillOverrideUiThread();
         // Load chromium library.
+        Trace.traceBegin(Trace.TRACE_TAG_WEBVIEW, "AwBrowserProcess.loadLibrary()");
         AwBrowserProcess.loadLibrary();
+        Trace.traceEnd(Trace.TRACE_TAG_WEBVIEW);
         // Load glue-layer support library.
         System.loadLibrary("webviewchromium_plat_support");
     }
