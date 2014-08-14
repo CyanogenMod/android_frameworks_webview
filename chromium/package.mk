@@ -38,6 +38,7 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_STATIC_JAVA_LIBRARIES += android_webview_java_with_new_resources
 
 LOCAL_SRC_FILES := $(call all-java-files-under, java)
+LOCAL_SRC_FILES += $(extra_java_files)
 
 LOCAL_JARJAR_RULES := $(CHROMIUM_PATH)/android_webview/build/jarjar-rules.txt
 
