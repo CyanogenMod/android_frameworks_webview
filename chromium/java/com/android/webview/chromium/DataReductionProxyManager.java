@@ -34,6 +34,8 @@ import android.webkit.WebView;
 
 import org.chromium.android_webview.AwContentsStatics;
 
+import java.lang.reflect.Field;
+
 /**
  * Controls data reduction proxy. This logic will be moved to upstream fully.
  */
@@ -46,6 +48,7 @@ public final class DataReductionProxyManager {
     // Setting type: int ( 0 = disallow, 1 = allow )
     private static final String WEBVIEW_DATA_REDUCTION_PROXY = "use_webview_data_reduction_proxy";
 
+    private static final String DRP_CLASS = "com.android.webview.chromium.Drp";
     private static final String TAG = "DataReductionProxySettingListener";
 
     /*
@@ -54,9 +57,16 @@ public final class DataReductionProxyManager {
      * remove before release.
      */
     private static final class ProxySettingListener extends BroadcastReceiver {
+
+        final String mKey;
+
+        ProxySettingListener(final String key) {
+            mKey = key;
+        }
+
         @Override
         public void onReceive(Context context, Intent intent) {
-            applyDataReductionProxySettingsAsync(context);
+            applyDataReductionProxySettingsAsync(context, mKey);
         }
     }
 
@@ -70,16 +80,20 @@ public final class DataReductionProxyManager {
     public DataReductionProxyManager() { }
 
     public void start(final Context context) {
-        applyDataReductionProxySettingsAsync(context);
+        final String key = readKey();
+        if (key == null || key.isEmpty()) {
+            return;
+        }
+        applyDataReductionProxySettingsAsync(context, key);
         IntentFilter filter = new IntentFilter();
         filter.addAction(WebView.DATA_REDUCTION_PROXY_SETTING_CHANGED);
-        mProxySettingListener = new ProxySettingListener();
+        mProxySettingListener = new ProxySettingListener(key);
         context.registerReceiver(mProxySettingListener, filter);
         ContentResolver resolver = context.getContentResolver();
         mProxySettingObserver = new ContentObserver(new Handler()) {
             @Override
             public void onChange(boolean selfChange, Uri uri) {
-                applyDataReductionProxySettingsAsync(context);
+                applyDataReductionProxySettingsAsync(context, key);
             }
         };
         resolver.registerContentObserver(
@@ -87,43 +101,44 @@ public final class DataReductionProxyManager {
                     false, mProxySettingObserver);
     }
 
-    private static class ProxySettings {
-        boolean enabled;
-        String key;
+    private String readKey() {
+        try {
+            Class<?> cls = Class.forName(DRP_CLASS);
+            Field f = cls.getField("KEY");
+            return (String) f.get(null);
+        } catch (ClassNotFoundException ex) {
+            Log.e(TAG, "No DRP key due to exception:" + ex);
+        } catch (NoSuchFieldException ex) {
+            Log.e(TAG, "No DRP key due to exception:" + ex);
+        } catch (SecurityException ex) {
+            Log.e(TAG, "No DRP key due to exception:" + ex);
+        } catch (IllegalArgumentException ex) {
+            Log.e(TAG, "No DRP key due to exception:" + ex);
+        } catch (IllegalAccessException ex) {
+            Log.e(TAG, "No DRP key due to exception:" + ex);
+        } catch (NullPointerException ex) {
+            Log.e(TAG, "No DRP key due to exception:" + ex);
+        }
+        return null;
     }
 
-    private static void applyDataReductionProxySettingsAsync(final Context context) {
-        AsyncTask<Void, Void, ProxySettings> task = new AsyncTask<Void, Void, ProxySettings>() {
+    private static void applyDataReductionProxySettingsAsync(final Context context,
+            final String key) {
+        AsyncTask<Void, Void, Boolean> task = new AsyncTask<Void, Void, Boolean>() {
             @Override
-            protected ProxySettings doInBackground(Void... params) {
-                return readProxySettings(context);
+            protected Boolean doInBackground(Void... params) {
+                return isDataReductionProxyEnabled(context);
             }
             @Override
-            protected void onPostExecute(ProxySettings settings) {
-                if (settings.enabled) {
+            protected void onPostExecute(Boolean enabled) {
+                if (enabled) {
                     // Set the data reduction proxy key.
-                    AwContentsStatics.setDataReductionProxyKey(settings.key);
+                    AwContentsStatics.setDataReductionProxyKey(key);
                 }
-                AwContentsStatics.setDataReductionProxyEnabled(settings.enabled);
+                AwContentsStatics.setDataReductionProxyEnabled(enabled);
             }
         };
         task.execute();
-    }
-
-    private static ProxySettings readProxySettings(Context context) {
-        ProxySettings settings = new ProxySettings();
-        settings.enabled = isDataReductionProxyEnabled(context);
-        if (settings.enabled) {
-            // Re-read the key in case it was updated.
-            String key = Settings.Secure.getString(context.getContentResolver(),
-                Settings.Global.WEBVIEW_DATA_REDUCTION_PROXY_KEY);
-            if (key == null || key.isEmpty()) {
-                Log.w(TAG, "No DRP key available");
-                settings.enabled = false;
-            }
-            settings.key = key;
-        }
-        return settings;
     }
 
     private static boolean isDataReductionProxyEnabled(Context context) {
