@@ -75,6 +75,7 @@ include $(BUILD_SHARED_LIBRARY)
 
 
 # Include the makefile for the main package.
+extra_java_files :=
 include $(LOCAL_PATH)/package.mk
 
 # Build other stuff
