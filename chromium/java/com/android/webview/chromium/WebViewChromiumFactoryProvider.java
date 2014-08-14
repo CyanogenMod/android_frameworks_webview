@@ -24,6 +24,7 @@ import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
+import android.os.FileUtils;
 import android.os.Looper;
 import android.os.SystemProperties;
 import android.os.Trace;
@@ -34,6 +35,7 @@ import android.webkit.WebIconDatabase;
 import android.webkit.WebStorage;
 import android.webkit.WebView;
 import android.webkit.WebViewDatabase;
+import android.webkit.WebViewFactory;
 import android.webkit.WebViewFactoryProvider;
 import android.webkit.WebViewProvider;
 
@@ -51,6 +53,7 @@ import org.chromium.android_webview.AwSettings;
 import org.chromium.base.CommandLine;
 import org.chromium.base.MemoryPressureListener;
 import org.chromium.base.PathService;
+import org.chromium.base.PathUtils;
 import org.chromium.base.ThreadUtils;
 import org.chromium.base.TraceEvent;
 import org.chromium.base.library_loader.LibraryLoader;
@@ -59,6 +62,7 @@ import org.chromium.content.app.ContentMain;
 import org.chromium.content.browser.ContentViewStatics;
 import org.chromium.content.browser.ResourceExtractor;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
@@ -67,6 +71,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     private static final String TAG = "WebViewChromiumFactoryProvider";
 
     private static final String CHROMIUM_PREFS_NAME = "WebViewChromiumPrefs";
+    private static final String VERSION_CODE_PREF = "lastVersionCodeUsed";
     private static final String COMMAND_LINE_FILE = "/data/local/tmp/webview-command-line";
 
     // Guards accees to the other members, and is notifyAll() signalled on the UI thread
@@ -90,6 +95,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     private boolean mStarted;
 
     private DataReductionProxyManager mProxyManager;
+    private SharedPreferences mWebViewPrefs;
 
     public WebViewChromiumFactoryProvider() {
         if (Build.IS_DEBUGGABLE) {
@@ -112,6 +118,24 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         Trace.traceEnd(Trace.TRACE_TAG_WEBVIEW);
         // Load glue-layer support library.
         System.loadLibrary("webviewchromium_plat_support");
+
+        // Use shared preference to check for package downgrade.
+        mWebViewPrefs = ActivityThread.currentApplication().getSharedPreferences(
+                            CHROMIUM_PREFS_NAME, Context.MODE_PRIVATE);
+        int lastVersion = mWebViewPrefs.getInt(VERSION_CODE_PREF, 0);
+        int currentVersion = WebViewFactory.getLoadedPackageInfo().versionCode;
+        if (lastVersion > currentVersion) {
+            // The WebView package has been downgraded since we last ran in this application.
+            // Delete the WebView data directory's contents.
+            String dataDir = PathUtils.getDataDirectory(ActivityThread.currentApplication());
+            Log.i(TAG, "WebView package downgraded from " + lastVersion + " to " + currentVersion +
+                       "; deleting contents of " + dataDir);
+            FileUtils.deleteContents(new File(dataDir));
+        }
+        if (lastVersion != currentVersion) {
+            mWebViewPrefs.edit().putInt(VERSION_CODE_PREF, currentVersion).apply();
+        }
+        // Now safe to use WebView data directory.
     }
 
     private void initPlatSupportLibrary() {
@@ -250,9 +274,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         assert Thread.holdsLock(mLock);
         assert mStarted;
         if (mBrowserContext == null) {
-            mBrowserContext = new AwBrowserContext(
-                    ActivityThread.currentApplication().getSharedPreferences(
-                            CHROMIUM_PREFS_NAME, Context.MODE_PRIVATE));
+            mBrowserContext = new AwBrowserContext(mWebViewPrefs);
         }
         return mBrowserContext;
     }
