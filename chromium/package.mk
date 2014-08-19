@@ -49,7 +49,9 @@ LOCAL_RESOURCE_DIR := \
 LOCAL_AAPT_FLAGS := $(android_webview_aapt_flags)
 LOCAL_AAPT_FLAGS += --extra-packages com.android.webview.chromium
 LOCAL_AAPT_FLAGS += --shared-lib
-LOCAL_AAPT_FLAGS += --version-code 2
+
+include $(LOCAL_PATH)/version.mk
+LOCAL_AAPT_FLAGS += --version-code "$(version_code)" --version-name "$(version_name)"
 
 LOCAL_JNI_SHARED_LIBRARIES += libwebviewchromium
 
