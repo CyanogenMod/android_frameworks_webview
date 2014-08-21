@@ -50,61 +50,7 @@ LOCAL_AAPT_FLAGS += --extra-packages com.android.webview.chromium
 # TODO: filter webviewchromium_webkit_strings based on PRODUCT_LOCALES.
 LOCAL_REQUIRED_MODULES := \
         libwebviewchromium \
-        libwebviewchromium_plat_support \
-        webviewchromium_pak \
-        webviewchromium_webkit_strings_am.pak \
-        webviewchromium_webkit_strings_ar.pak \
-        webviewchromium_webkit_strings_bg.pak \
-        webviewchromium_webkit_strings_bn.pak \
-        webviewchromium_webkit_strings_ca.pak \
-        webviewchromium_webkit_strings_cs.pak \
-        webviewchromium_webkit_strings_da.pak \
-        webviewchromium_webkit_strings_de.pak \
-        webviewchromium_webkit_strings_el.pak \
-        webviewchromium_webkit_strings_en-GB.pak \
-        webviewchromium_webkit_strings_en-US.pak \
-        webviewchromium_webkit_strings_es-419.pak \
-        webviewchromium_webkit_strings_es.pak \
-        webviewchromium_webkit_strings_et.pak \
-        webviewchromium_webkit_strings_fa.pak \
-        webviewchromium_webkit_strings_fil.pak \
-        webviewchromium_webkit_strings_fi.pak \
-        webviewchromium_webkit_strings_fr.pak \
-        webviewchromium_webkit_strings_gu.pak \
-        webviewchromium_webkit_strings_he.pak \
-        webviewchromium_webkit_strings_hi.pak \
-        webviewchromium_webkit_strings_hr.pak \
-        webviewchromium_webkit_strings_hu.pak \
-        webviewchromium_webkit_strings_id.pak \
-        webviewchromium_webkit_strings_it.pak \
-        webviewchromium_webkit_strings_ja.pak \
-        webviewchromium_webkit_strings_kn.pak \
-        webviewchromium_webkit_strings_ko.pak \
-        webviewchromium_webkit_strings_lt.pak \
-        webviewchromium_webkit_strings_lv.pak \
-        webviewchromium_webkit_strings_ml.pak \
-        webviewchromium_webkit_strings_mr.pak \
-        webviewchromium_webkit_strings_ms.pak \
-        webviewchromium_webkit_strings_nb.pak \
-        webviewchromium_webkit_strings_nl.pak \
-        webviewchromium_webkit_strings_pl.pak \
-        webviewchromium_webkit_strings_pt-BR.pak \
-        webviewchromium_webkit_strings_pt-PT.pak \
-        webviewchromium_webkit_strings_ro.pak \
-        webviewchromium_webkit_strings_ru.pak \
-        webviewchromium_webkit_strings_sk.pak \
-        webviewchromium_webkit_strings_sl.pak \
-        webviewchromium_webkit_strings_sr.pak \
-        webviewchromium_webkit_strings_sv.pak \
-        webviewchromium_webkit_strings_sw.pak \
-        webviewchromium_webkit_strings_ta.pak \
-        webviewchromium_webkit_strings_te.pak \
-        webviewchromium_webkit_strings_th.pak \
-        webviewchromium_webkit_strings_tr.pak \
-        webviewchromium_webkit_strings_uk.pak \
-        webviewchromium_webkit_strings_vi.pak \
-        webviewchromium_webkit_strings_zh-CN.pak \
-        webviewchromium_webkit_strings_zh-TW.pak
+        libwebviewchromium_plat_support
 
 LOCAL_PROGUARD_ENABLED := full
 LOCAL_PROGUARD_FLAG_FILES := proguard.flags
@@ -112,6 +58,9 @@ LOCAL_PROGUARD_FLAG_FILES := proguard.flags
 LOCAL_JAVACFLAGS := -Xlint:unchecked -Werror
 
 include $(BUILD_PACKAGE)
+
+$(LOCAL_BUILT_MODULE): $(android_webview_intermediates_pak_additional_deps)
+$(LOCAL_BUILT_MODULE): PRIVATE_ASSET_DIR += $(android_webview_asset_dirs)
 
 ifneq ($(strip $(LOCAL_JARJAR_RULES)),)
 # Add build rules to check that the jarjar'ed jar only contains whitelisted
