@@ -106,22 +106,29 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         // Load glue-layer support library.
         System.loadLibrary("webviewchromium_plat_support");
 
-        // Use shared preference to check for package downgrade.
-        mWebViewPrefs = ActivityThread.currentApplication().getSharedPreferences(
-                            CHROMIUM_PREFS_NAME, Context.MODE_PRIVATE);
-        int lastVersion = mWebViewPrefs.getInt(VERSION_CODE_PREF, 0);
-        int currentVersion = WebViewFactory.getLoadedPackageInfo().versionCode;
-        if (lastVersion > currentVersion) {
-            // The WebView package has been downgraded since we last ran in this application.
-            // Delete the WebView data directory's contents.
-            String dataDir = PathUtils.getDataDirectory(ActivityThread.currentApplication());
-            Log.i(TAG, "WebView package downgraded from " + lastVersion + " to " + currentVersion +
-                       "; deleting contents of " + dataDir);
-            FileUtils.deleteContents(new File(dataDir));
+        // TODO: temporary try/catch while framework builds catch up with WebView builds.
+        // Remove this.
+        try {
+            // Use shared preference to check for package downgrade.
+            mWebViewPrefs = ActivityThread.currentApplication().getSharedPreferences(
+                                CHROMIUM_PREFS_NAME, Context.MODE_PRIVATE);
+            int lastVersion = mWebViewPrefs.getInt(VERSION_CODE_PREF, 0);
+            int currentVersion = WebViewFactory.getLoadedPackageInfo().versionCode;
+            if (lastVersion > currentVersion) {
+                // The WebView package has been downgraded since we last ran in this application.
+                // Delete the WebView data directory's contents.
+                String dataDir = PathUtils.getDataDirectory(ActivityThread.currentApplication());
+                Log.i(TAG, "WebView package downgraded from " + lastVersion + " to " + currentVersion +
+                           "; deleting contents of " + dataDir);
+                FileUtils.deleteContents(new File(dataDir));
+            }
+            if (lastVersion != currentVersion) {
+                mWebViewPrefs.edit().putInt(VERSION_CODE_PREF, currentVersion).apply();
+            }
+        } catch (NoSuchMethodError e) {
+            Log.w(TAG, "Not doing version downgrade check as framework is too old.");
         }
-        if (lastVersion != currentVersion) {
-            mWebViewPrefs.edit().putInt(VERSION_CODE_PREF, currentVersion).apply();
-        }
+
         // Now safe to use WebView data directory.
     }
 
