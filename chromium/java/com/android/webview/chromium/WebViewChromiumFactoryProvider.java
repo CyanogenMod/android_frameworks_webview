@@ -264,10 +264,10 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
 
     private void setUpResources(Context ctx) {
         AwResource.setResources(getWebViewPackageResources(ctx));
-        AwResource.setErrorPageResources(com.android.internal.R.raw.loaderror,
-                com.android.internal.R.raw.nodomain);
+        AwResource.setErrorPageResources(R.raw.webviewchromium_loaderror,
+                R.raw.webviewchromium_nodomain);
         AwResource.setDefaultTextEncoding(
-                com.android.internal.R.string.default_text_encoding);
+                R.string.webviewchromium_default_text_encoding);
         AwResource.setConfigKeySystemUuidMapping(
                 R.array.config_keySystemUuidMapping);
     }
