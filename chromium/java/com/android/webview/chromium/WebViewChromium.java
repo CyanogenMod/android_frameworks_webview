@@ -255,6 +255,9 @@ class WebViewChromium implements WebViewProvider,
 
     // Wrap Context so that we can use resources from the webview resource apk.
     private static Context resourcesContextWrapper(final Context ctx) {
+        final Resources resources = WebViewChromiumFactoryProvider.getWebViewPackageResources(ctx);
+        final Resources.Theme theme = resources.newTheme();
+
         return new ContextWrapper(ctx) {
             @Override
             public ClassLoader getClassLoader() {
@@ -284,6 +287,15 @@ class WebViewChromium implements WebViewProvider,
                 }
             }
 
+            @Override
+            public Resources getResources() {
+                return resources;
+            }
+
+            @Override
+            public Resources.Theme getTheme() {
+                return theme;
+            }
         };
     }
 
