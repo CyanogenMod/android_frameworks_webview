@@ -14,5 +14,3 @@
 
 # Warning: this is actually a product definition, to be inherited from
 
-PRODUCT_PACKAGE_OVERLAYS := \
-	frameworks/webview/chromium/overlay
