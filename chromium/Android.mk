@@ -40,6 +40,10 @@ LOCAL_SRC_FILES := $(call all-java-files-under, java)
 
 LOCAL_JARJAR_RULES := $(CHROMIUM_PATH)/android_webview/build/jarjar-rules.txt
 
+LOCAL_JNI_SHARED_LIBRARIES += libwebviewchromium
+
+LOCAL_MULTILIB := both
+
 include $(CHROMIUM_PATH)/android_webview/build/resources_config.mk
 LOCAL_RESOURCE_DIR := \
     $(LOCAL_PATH)/res \
