@@ -16,11 +16,15 @@
 
 package com.android.webview.chromium;
 
+import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.app.ActivityManager;
 import android.app.ActivityThread;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Looper;
 import android.util.Log;
@@ -30,6 +34,7 @@ import android.webkit.WebIconDatabase;
 import android.webkit.WebStorage;
 import android.webkit.WebView;
 import android.webkit.WebViewDatabase;
+import android.webkit.WebViewFactory;
 import android.webkit.WebViewFactoryProvider;
 import android.webkit.WebViewProvider;
 
@@ -41,6 +46,7 @@ import org.chromium.android_webview.AwDevToolsServer;
 import org.chromium.android_webview.AwFormDatabase;
 import org.chromium.android_webview.AwGeolocationPermissions;
 import org.chromium.android_webview.AwQuotaManagerBridge;
+import org.chromium.android_webview.AwResource;
 import org.chromium.android_webview.AwSettings;
 import org.chromium.base.CommandLine;
 import org.chromium.base.MemoryPressureListener;
@@ -83,6 +89,25 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     private boolean mStarted;
 
     public WebViewChromiumFactoryProvider() {
+        if (Build.IS_DEBUGGABLE) {
+            CommandLine.initFromFile(COMMAND_LINE_FILE);
+        } else {
+            CommandLine.init(null);
+        }
+
+        CommandLine cl = CommandLine.getInstance();
+
+        // Hardware acceleration in chromium m37+ no longer works with android Kitkat, so force
+        // disable hardware acceleration. This is for AOSP only until L is open sourced.
+        cl.appendSwitch("force-auxiliary-bitmap");
+
+        // TODO: currently in a relase build the DCHECKs only log. We either need to insall
+        // a report handler with SetLogReportHandler to make them assert, or else compile
+        // them out of the build altogether (b/8284203). Either way, so long they're
+        // compiled in, we may as unconditionally enable them here.
+        cl.appendSwitch("enable-dcheck");
+
+
         // Load chromium library.
         AwBrowserProcess.loadLibrary();
         // Load glue-layer support library.
@@ -145,29 +170,6 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
             return;
         }
 
-        if (Build.IS_DEBUGGABLE) {
-            CommandLine.initFromFile(COMMAND_LINE_FILE);
-        } else {
-            CommandLine.init(null);
-        }
-
-        CommandLine cl = CommandLine.getInstance();
-
-        // Hardware acceleration in chromium m37+ no longer works with android Kitkat, so force
-        // disable hardware acceleration. This is for AOSP only until L is open sourced.
-        cl.appendSwitch("force-auxiliary-bitmap");
-
-        // TODO: currently in a relase build the DCHECKs only log. We either need to insall
-        // a report handler with SetLogReportHandler to make them assert, or else compile
-        // them out of the build altogether (b/8284203). Either way, so long they're
-        // compiled in, we may as unconditionally enable them here.
-        cl.appendSwitch("enable-dcheck");
-
-        // TODO: Remove when GL is supported by default in the upstream code.
-        if (!cl.hasSwitch("disable-webview-gl-mode")) {
-            cl.appendSwitch("testing-webview-gl-mode");
-        }
-
         // We don't need to extract any paks because for WebView, they are
         // in the system image.
         ResourceExtractor.setMandatoryPaksToExtract("");
@@ -187,7 +189,8 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         PathService.override(DIR_RESOURCE_PAKS_ANDROID,
                 "/system/framework/webview/paks");
 
-        ResourceProvider.registerResources(ActivityThread.currentApplication());
+        // Make sure that ResourceProvider is initialized before starting the browser process.
+        setUpResources(ActivityThread.currentApplication());
         AwBrowserProcess.start(ActivityThread.currentApplication());
         initPlatSupportLibrary();
 
@@ -246,6 +249,24 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         mDevToolsServer.setRemoteDebuggingEnabled(enable);
     }
 
+    public static Resources getWebViewPackageResources(Context ctx) {
+        try {
+            return ctx.getPackageManager().getResourcesForApplication(
+                    WebViewFactory.getWebViewPackageName());
+        } catch (PackageManager.NameNotFoundException e) {
+            throw new RuntimeException("Could not load webview resources apk.", e);
+        }
+    }
+
+    private void setUpResources(Context ctx) {
+        AwResource.setResources(getWebViewPackageResources(ctx));
+        AwResource.setErrorPageResources(R.raw.webviewchromium_loaderror,
+                R.raw.webviewchromium_nodomain);
+        AwResource.setDefaultTextEncoding(
+                R.string.webviewchromium_default_text_encoding);
+        AwResource.setConfigKeySystemUuidMapping(
+                R.array.config_keySystemUuidMapping);
+    }
 
     @Override
     public Statics getStatics() {
