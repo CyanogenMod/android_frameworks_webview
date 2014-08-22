@@ -1329,12 +1329,7 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void setWebChromeClient(WebChromeClient client) {
-        boolean fullscreenSupported = doesSupportFullscreen(client);
-        String msg =
-                "WebView " + (fullscreenSupported ? "does":"does not") + " support fullscreen";
-        Log.d(TAG, msg);
-
-        mWebSettings.getAwSettings().setFullscreenSupported(fullscreenSupported);
+        mWebSettings.getAwSettings().setFullscreenSupported(doesSupportFullscreen(client));
         mContentsClientAdapter.setWebChromeClient(client);
     }
 
