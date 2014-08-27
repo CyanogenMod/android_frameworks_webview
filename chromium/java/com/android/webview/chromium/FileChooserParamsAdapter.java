@@ -55,7 +55,7 @@ public class FileChooserParamsAdapter extends FileChooserParams {
     }
 
     @Override
-    public String getDefaultFilename() {
+    public String getFilenameHint() {
         return mParams.defaultFilename;
     }
 
