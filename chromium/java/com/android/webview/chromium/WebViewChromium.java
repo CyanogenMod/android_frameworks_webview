@@ -250,6 +250,7 @@ class WebViewChromium implements WebViewProvider,
             mWebSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
             // On KK and older versions we always allowed third party cookies.
             mWebSettings.setAcceptThirdPartyCookies(true);
+            mWebSettings.getAwSettings().setZeroLayoutHeightDisablesViewportQuirk(true);
         }
 
         mRunQueue.addTask(new Runnable() {
@@ -1329,12 +1330,7 @@ class WebViewChromium implements WebViewProvider,
 
     @Override
     public void setWebChromeClient(WebChromeClient client) {
-        boolean fullscreenSupported = doesSupportFullscreen(client);
-        String msg =
-                "WebView " + (fullscreenSupported ? "does":"does not") + " support fullscreen";
-        Log.d(TAG, msg);
-
-        mWebSettings.getAwSettings().setFullscreenSupported(fullscreenSupported);
+        mWebSettings.getAwSettings().setFullscreenSupported(doesSupportFullscreen(client));
         mContentsClientAdapter.setWebChromeClient(client);
     }
 
