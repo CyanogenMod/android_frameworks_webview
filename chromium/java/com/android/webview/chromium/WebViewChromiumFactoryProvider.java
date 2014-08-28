@@ -26,6 +26,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.FileUtils;
 import android.os.Looper;
+import android.os.StrictMode;
 import android.os.SystemProperties;
 import android.os.Trace;
 import android.util.Log;
@@ -203,7 +204,10 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         }
 
         if (Build.IS_DEBUGGABLE) {
+            // Suppress the StrictMode violation as this codepath is only hit on debugglable builds.
+            StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
             CommandLine.initFromFile(COMMAND_LINE_FILE);
+            StrictMode.setThreadPolicy(oldPolicy);
         } else {
             CommandLine.init(null);
         }
