@@ -17,6 +17,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.webview">
     <application android:label="WebView Library">
-        <library android:name="com.android.webview" />
     </application>
 </manifest>
