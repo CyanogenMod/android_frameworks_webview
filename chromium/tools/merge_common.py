@@ -72,7 +72,8 @@ THIRD_PARTY_PROJECTS = (THIRD_PARTY_PROJECTS_WITH_FLAT_HISTORY +
                         THIRD_PARTY_PROJECTS_WITH_FULL_HISTORY)
 
 ALL_PROJECTS = ['.'] + THIRD_PARTY_PROJECTS
-
+assert(set(ALL_PROJECTS) ==
+       set(PROJECTS_WITH_FLAT_HISTORY + PROJECTS_WITH_FULL_HISTORY))
 
 # Directories to be removed when flattening history.
 PRUNE_WHEN_FLATTENING = {
@@ -111,6 +112,11 @@ class TemporaryMergeError(MergeError):
   """A merge error that can potentially be resolved by trying again later."""
 
 
+def Abbrev(commitish):
+  """Returns the abbrev commitish for a given Git SHA."""
+  return commitish[:12]
+
+
 def GetCommandStdout(args, cwd=REPOSITORY_ROOT, ignore_errors=False):
   """Gets stdout from runnng the specified shell command.
 
@@ -122,15 +128,16 @@ def GetCommandStdout(args, cwd=REPOSITORY_ROOT, ignore_errors=False):
     cwd: The working directory to use. Defaults to REPOSITORY_ROOT.
     ignore_errors: Ignore the command's return code and stderr.
   Returns:
-    stdout from running the command.
+    A concatenation of stdout + stderr from running the command.
   Raises:
     CommandError: if the command exited with a nonzero status.
   """
   p = subprocess.Popen(args=args, cwd=cwd, stdout=subprocess.PIPE,
                        stderr=subprocess.PIPE)
   stdout, stderr = p.communicate()
+  output = stdout + ('\n===STDERR===\n' if stderr and stdout else '') + stderr
   if p.returncode == 0 or ignore_errors:
-    return stdout
+    return output
   else:
     raise CommandError(p.returncode, ' '.join(args), cwd, stdout, stderr)
 
