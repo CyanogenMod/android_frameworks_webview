@@ -157,8 +157,10 @@ def _MergeProjects(version, root_sha1, target, unattended, buildspec_url):
   if root_sha1:
     deps_content = _ReadGitFile(root_sha1, '.DEPS.git')
   else:
-    deps_content = _ReadGitFile('FETCH_HEAD', version + '/DEPS',
-                                buildspec_url, 'master')
+    deps_content = _ReadGitFile('FETCH_HEAD',
+                                'releases/' + version + '/.DEPS.git',
+                                buildspec_url,
+                                'master')
 
   deps_vars = _ParseDEPS(deps_content)
 

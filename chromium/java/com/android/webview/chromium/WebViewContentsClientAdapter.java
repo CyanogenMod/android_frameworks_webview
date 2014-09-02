@@ -48,6 +48,7 @@ import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebChromeClient.CustomViewCallback;
 import android.webkit.WebResourceResponse;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -68,6 +69,9 @@ import java.net.URISyntaxException;
 import java.security.Principal;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.WeakHashMap;
 
 /**
@@ -266,6 +270,39 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
         TraceEvent.end();
     }
 
+    private static class WebResourceRequestImpl implements WebResourceRequest {
+        private final ShouldInterceptRequestParams mParams;
+
+        public WebResourceRequestImpl(ShouldInterceptRequestParams params) {
+            mParams = params;
+        }
+
+        @Override
+        public Uri getUrl() {
+            return Uri.parse(mParams.url);
+        }
+
+        @Override
+        public boolean isForMainFrame() {
+            return mParams.isMainFrame;
+        }
+
+        @Override
+        public boolean hasUserGestureInsecure() {
+            return mParams.hasUserGesture;
+        }
+
+        @Override
+        public String getMethod() {
+            return mParams.method;
+        }
+
+        @Override
+        public Map<String, String> getRequestHeaders() {
+            return mParams.requestHeaders;
+        }
+    }
+
     /**
      * @see AwContentsClient#shouldInterceptRequest(java.lang.String)
      */
@@ -273,13 +310,23 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     public AwWebResourceResponse shouldInterceptRequest(ShouldInterceptRequestParams params) {
         TraceEvent.begin();
         if (TRACE) Log.d(TAG, "shouldInterceptRequest=" + params.url);
-        WebResourceResponse response = mWebViewClient.shouldInterceptRequest(mWebView, params.url);
+        WebResourceResponse response = mWebViewClient.shouldInterceptRequest(mWebView,
+                new WebResourceRequestImpl(params));
         TraceEvent.end();
         if (response == null) return null;
+
+        // AwWebResourceResponse should support null headers. b/16332774.
+        Map<String, String> responseHeaders = response.getResponseHeaders();
+        if (responseHeaders == null)
+            responseHeaders = new HashMap<String, String>();
+
         return new AwWebResourceResponse(
                 response.getMimeType(),
                 response.getEncoding(),
-                response.getData());
+                response.getData(),
+                response.getStatusCode(),
+                response.getReasonPhrase(),
+                responseHeaders);
     }
 
     /**
@@ -839,12 +886,8 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
             return;
         }
         TraceEvent.begin();
-        WebChromeClient.FileChooserParams p = new WebChromeClient.FileChooserParams();
-        p.mode = fileChooserParams.mode;
-        p.acceptTypes = fileChooserParams.acceptTypes;
-        p.title = fileChooserParams.title;
-        p.defaultFilename = fileChooserParams.defaultFilename;
-        p.capture = fileChooserParams.capture;
+        FileChooserParamsAdapter adapter = new FileChooserParamsAdapter(
+                fileChooserParams, mWebView.getContext());
         if (TRACE) Log.d(TAG, "showFileChooser");
         ValueCallback<Uri[]> callbackAdapter = new ValueCallback<Uri[]>() {
             private boolean mCompleted;
@@ -864,7 +907,7 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
                 uploadFileCallback.onReceiveValue(s);
             }
         };
-        if (mWebChromeClient.showFileChooser(mWebView, callbackAdapter, p)) {
+        if (mWebChromeClient.onShowFileChooser(mWebView, callbackAdapter, adapter)) {
             return;
         }
         if (mWebView.getContext().getApplicationInfo().targetSdkVersion >
@@ -945,7 +988,7 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
             // background.
             Bitmap poster = BitmapFactory.decodeResource(
                     mWebView.getContext().getResources(),
-                    com.android.internal.R.drawable.ic_media_video_poster);
+                    R.drawable.ic_media_video_poster);
             result = Bitmap.createBitmap(poster.getWidth(), poster.getHeight(), poster.getConfig());
             result.eraseColor(Color.GRAY);
             Canvas canvas = new Canvas(result);
@@ -987,8 +1030,39 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     }
 
     // TODO: Move to the upstream once the PermissionRequest is part of SDK.
-    private static class PermissionRequestAdapter implements PermissionRequest {
+    public static class PermissionRequestAdapter extends PermissionRequest {
+        // TODO: Move the below definitions to AwPermissionRequest.
+        private static long BITMASK_RESOURCE_VIDEO_CAPTURE = 1 << 1;
+        private static long BITMASK_RESOURCE_AUDIO_CAPTURE = 1 << 2;
+        private static long BITMASK_RESOURCE_PROTECTED_MEDIA_ID = 1 << 3;
+
+        public static long toAwPermissionResources(String[] resources) {
+            long result = 0;
+            for (String resource : resources) {
+                if (resource.equals(PermissionRequest.RESOURCE_VIDEO_CAPTURE))
+                    result |= BITMASK_RESOURCE_VIDEO_CAPTURE;
+                else if (resource.equals(PermissionRequest.RESOURCE_AUDIO_CAPTURE))
+                    result |= BITMASK_RESOURCE_AUDIO_CAPTURE;
+                else if (resource.equals(PermissionRequest.RESOURCE_PROTECTED_MEDIA_ID))
+                    result |= BITMASK_RESOURCE_PROTECTED_MEDIA_ID;
+            }
+            return result;
+        }
+
+        private static String[] toPermissionResources(long resources) {
+            ArrayList<String> result = new ArrayList<String>();
+            if ((resources & BITMASK_RESOURCE_VIDEO_CAPTURE) != 0)
+                result.add(PermissionRequest.RESOURCE_VIDEO_CAPTURE);
+            if ((resources & BITMASK_RESOURCE_AUDIO_CAPTURE) != 0)
+                result.add(PermissionRequest.RESOURCE_AUDIO_CAPTURE);
+            if ((resources & BITMASK_RESOURCE_PROTECTED_MEDIA_ID) != 0)
+                result.add(PermissionRequest.RESOURCE_PROTECTED_MEDIA_ID);
+            String[] resource_array = new String[result.size()];
+            return result.toArray(resource_array);
+        }
+
         private AwPermissionRequest mAwPermissionRequest;
+        private String[] mResources;
 
         public PermissionRequestAdapter(AwPermissionRequest awPermissionRequest) {
             assert awPermissionRequest != null;
@@ -1001,14 +1075,19 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
         }
 
         @Override
-        public long getResources() {
-            return mAwPermissionRequest.getResources();
+        public String[] getResources() {
+            synchronized (this) {
+                if (mResources == null) {
+                    mResources = toPermissionResources(mAwPermissionRequest.getResources());
+                }
+                return mResources;
+            }
         }
 
         @Override
-        public void grant(long resources) {
-            long requestedResource = getResources();
-            if ((requestedResource & resources) == requestedResource)
+        public void grant(String[] resources) {
+            long requestedResource = mAwPermissionRequest.getResources();
+            if ((requestedResource & toAwPermissionResources(resources)) == requestedResource)
                 mAwPermissionRequest.grant();
             else
                 mAwPermissionRequest.deny();

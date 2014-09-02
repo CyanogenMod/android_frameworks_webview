@@ -52,6 +52,7 @@ class DrawGLFunctor : public Functor {
     }
 
     AwDrawGLInfo aw_info;
+    aw_info.version = kAwDrawGLInfoVersion;
     switch (what) {
       case DrawGlInfo::kModeDraw: {
         aw_info.mode = AwDrawGLInfo::kModeDraw;
@@ -76,8 +77,10 @@ class DrawGLFunctor : public Functor {
         aw_info.mode = AwDrawGLInfo::kModeProcess;
         break;
       case DrawGlInfo::kModeProcessNoContext:
-        // TODO: Fix once ProcessNoContext is in chromium.
-        aw_info.mode = AwDrawGLInfo::kModeProcess;
+        aw_info.mode = AwDrawGLInfo::kModeProcessNoContext;
+        break;
+      case DrawGlInfo::kModeSync:
+        aw_info.mode = AwDrawGLInfo::kModeSync;
         break;
       default:
         ALOGE("Unexpected DrawGLInfo type %d", what);
