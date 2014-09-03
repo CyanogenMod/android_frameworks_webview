@@ -345,11 +345,6 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
                         }
                     }
 
-                    @Override
-                    public void optOutDataReductionProxy() {
-                        DataReductionProxyManager.optOutDataReductionProxy();
-                    }
-
                     // TODO: Add @Override.
                     public void enableSlowWholeDocumentDraw() {
                         WebViewChromium.enableSlowWholeDocumentDraw();

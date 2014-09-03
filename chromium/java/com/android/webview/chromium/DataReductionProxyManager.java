@@ -70,9 +70,6 @@ public final class DataReductionProxyManager {
         }
     }
 
-    // Accessed from multiple threads.
-    private volatile static boolean sOptedOutDataReductionProxy = false;
-
     private ProxySettingListener mProxySettingListener;
 
     private ContentObserver mProxySettingObserver;
@@ -142,10 +139,6 @@ public final class DataReductionProxyManager {
     }
 
     private static boolean isDataReductionProxyEnabled(Context context) {
-        if (sOptedOutDataReductionProxy) {
-            return false;
-        }
-
         boolean enabled = getProxySetting(context.getContentResolver(),
                     WEBVIEW_DATA_REDUCTION_PROXY) != 0;
         // intentional fallback. remove before L release.
@@ -179,13 +172,5 @@ public final class DataReductionProxyManager {
             Log.e(TAG, "cannot parse" + value, e);
         }
         return enabled;
-    }
-
-    // UI thread
-    public static void optOutDataReductionProxy() {
-        if (!sOptedOutDataReductionProxy) {
-            sOptedOutDataReductionProxy = true;
-            AwContentsStatics.setDataReductionProxyEnabled(false);
-        }
     }
 }
