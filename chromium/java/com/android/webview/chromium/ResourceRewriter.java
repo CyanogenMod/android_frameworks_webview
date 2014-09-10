@@ -34,15 +34,15 @@ class ResourceRewriter {
         // Rewrite the R 'constants' for all library apks.
         SparseArray<String> packageIdentifiers = ctx.getResources().getAssets()
                 .getAssignedPackageIdentifiers();
+
         final int N = packageIdentifiers.size();
         for (int i = 0; i < N; i++) {
             final int id = packageIdentifiers.keyAt(i);
-            final String name = packageIdentifiers.valueAt(i);
             if (id == 0x01 || id == 0x7f) {
                 continue;
             }
 
-            // TODO(mkosiba): We should use jarjar to remove the redundant R classes here, but due
+            // TODO: We should use jarjar to remove the redundant R classes here, but due
             // to a bug in jarjar it's not possible to rename classes with '$' in their name.
             // See b/15684775.
             rewriteRValues(com.android.webview.chromium.R.class, id);
@@ -65,7 +65,8 @@ class ResourceRewriter {
                     " is not rewritable");
         }
 
-        if (field.getType() != int.class && field.getType() != Integer.class) {
+        Class<?> fieldType = field.getType();
+        if (fieldType != int.class && fieldType != Integer.class) {
             throw new IllegalArgumentException("Field " + field.getName() +
                     " is not an integer");
         }
@@ -80,53 +81,18 @@ class ResourceRewriter {
         }
     }
 
-    private static void rewriteIntArrayField(Field field, int packageId) {
-        int requiredModifiers = Modifier.STATIC | Modifier.PUBLIC;
-
-        if ((field.getModifiers() & requiredModifiers) != requiredModifiers) {
-            throw new IllegalArgumentException("Field " + field.getName() +
-                    " is not rewritable");
-        }
-
-        if (field.getType() != int[].class) {
-            throw new IllegalArgumentException("Field " + field.getName() +
-                    " is not an integer array");
-        }
-
-        try {
-            int[] array = (int[]) field.get(null);
-            for (int i = 0; i < array.length; i++) {
-                array[i] = (array[i] & 0x00ffffff) | (packageId << 24);
-            }
-        } catch (IllegalAccessException e) {
-            // This should not occur (we check above if we can write to it)
-            throw new IllegalArgumentException(e);
-        }
-    }
-
     private static void rewriteRValues(final Class<?> rClazz, int id) {
         try {
-            Class<?>[] declaredClasses = rClazz.getDeclaredClasses();
-            for (Class<?> clazz : declaredClasses) {
+            for (Class<?> clazz : rClazz.getDeclaredClasses()) {
                 try {
-                    if (clazz.getSimpleName().equals("styleable")) {
-                        for (Field field : clazz.getDeclaredFields()) {
-                            if (field.getType() == int[].class) {
-                                rewriteIntArrayField(field, id);
-                            }
-                        }
-
-                    } else {
-                        for (Field field : clazz.getDeclaredFields()) {
+                    for (Field field : clazz.getDeclaredFields()) {
                             rewriteIntField(field, id);
-                        }
                     }
                 } catch (Exception e) {
                     throw new IllegalArgumentException("Failed to rewrite R values for " +
                             clazz.getName(), e);
                 }
             }
-
         } catch (Exception e) {
             throw new IllegalArgumentException("Failed to rewrite R values", e);
         }
