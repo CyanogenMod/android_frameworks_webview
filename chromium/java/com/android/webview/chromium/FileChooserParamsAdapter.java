@@ -16,20 +16,34 @@
 
 package com.android.webview.chromium;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.webkit.WebChromeClient.FileChooserParams;
-import android.webkit.WebChromeClient.UploadHelper;
 
 import org.chromium.android_webview.AwContentsClient;
 
 public class FileChooserParamsAdapter extends FileChooserParams {
     private AwContentsClient.FileChooserParams mParams;
-    private Context mContext;
+
+    public static Uri[] parseFileChooserResult(int resultCode, Intent intent) {
+        if (resultCode == Activity.RESULT_CANCELED) {
+            return null;
+        }
+        Uri result = intent == null || resultCode != Activity.RESULT_OK ? null
+                : intent.getData();
+
+        Uri[] uris = null;
+        if (result != null) {
+            uris = new Uri[1];
+            uris[0] = result;
+        }
+        return uris;
+    }
 
     FileChooserParamsAdapter(AwContentsClient.FileChooserParams params, Context context) {
         mParams = params;
-        mContext = context;
     }
 
     @Override
@@ -60,7 +74,16 @@ public class FileChooserParamsAdapter extends FileChooserParams {
     }
 
     @Override
-    public UploadHelper getUploadHelper() {
-        return new UploadHelperImpl(mParams, mContext);
+    public Intent createIntent() {
+        // TODO: Move this code to Aw. Once code is moved
+        // and merged to M37 get rid of this.
+        String mimeType = "*/*";
+        if (mParams.acceptTypes != null && !mParams.acceptTypes.trim().isEmpty())
+            mimeType = mParams.acceptTypes.split(";")[0];
+
+        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+        i.addCategory(Intent.CATEGORY_OPENABLE);
+        i.setType(mimeType);
+        return i;
     }
 }

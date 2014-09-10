@@ -22,7 +22,9 @@ import android.app.ActivityManager;
 import android.app.ActivityThread;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.os.FileUtils;
 import android.os.Looper;
@@ -365,6 +367,11 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
                     // TODO: Add @Override.
                     public void enableSlowWholeDocumentDraw() {
                         WebViewChromium.enableSlowWholeDocumentDraw();
+                    }
+
+                    @Override
+                    public Uri[] parseFileChooserResult(int resultCode, Intent intent) {
+                        return FileChooserParamsAdapter.parseFileChooserResult(resultCode, intent);
                     }
                 };
             }
