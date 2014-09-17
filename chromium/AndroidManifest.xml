@@ -20,7 +20,7 @@
               android:targetSdkVersion="20">
     </uses-sdk>
     <application android:label="Android System WebView"
-        android:icon="@mipmap/icon_webview"
+        android:icon="@drawable/icon_webview"
         android:multiArch="true">
     </application>
 </manifest>
