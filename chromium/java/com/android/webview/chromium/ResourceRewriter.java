@@ -19,9 +19,6 @@ package com.android.webview.chromium;
 import android.content.Context;
 import android.util.SparseArray;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-
 /**
  * Helper class used to fix up resource ids.
  * This is mostly a copy of the code in frameworks/base/core/java/android/app/LoadedApk.java.
@@ -31,25 +28,28 @@ import java.lang.reflect.Modifier;
 class ResourceRewriter {
 
     public static void rewriteRValues(Context ctx) {
-        // Rewrite the R 'constants' for all library apks.
+        // Rewrite the R 'constants' for the WebView library apk.
         SparseArray<String> packageIdentifiers = ctx.getResources().getAssets()
                 .getAssignedPackageIdentifiers();
 
         final int N = packageIdentifiers.size();
         for (int i = 0; i < N; i++) {
-            final int id = packageIdentifiers.keyAt(i);
-            if (id == 0x01 || id == 0x7f) {
-                continue;
+            final String name = packageIdentifiers.valueAt(i);
+
+            // The resources are always called com.android.webview even if the manifest has had the
+            // package renamed.
+            if ("com.android.webview".equals(name)) {
+                final int id = packageIdentifiers.keyAt(i);
+
+                // TODO: We should use jarjar to remove the redundant R classes here, but due
+                // to a bug in jarjar it's not possible to rename classes with '$' in their name.
+                // See b/15684775.
+                com.android.webview.chromium.R.onResourcesLoaded(id);
+                org.chromium.ui.R.onResourcesLoaded(id);
+                org.chromium.content.R.onResourcesLoaded(id);
+
+                break;
             }
-
-            // TODO: We should use jarjar to remove the redundant R classes here, but due
-            // to a bug in jarjar it's not possible to rename classes with '$' in their name.
-            // See b/15684775.
-            com.android.webview.chromium.R.onResourcesLoaded(id);
-            org.chromium.ui.R.onResourcesLoaded(id);
-            org.chromium.content.R.onResourcesLoaded(id);
-
-            break;
         }
     }
 }
