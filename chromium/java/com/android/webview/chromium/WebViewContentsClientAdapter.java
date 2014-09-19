@@ -287,10 +287,7 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
             return mParams.isMainFrame;
         }
 
-        public boolean hasUserGestureInsecure() {
-            return mParams.hasUserGesture;
-        }
-
+        @Override
         public boolean hasGesture() {
             return mParams.hasUserGesture;
         }
