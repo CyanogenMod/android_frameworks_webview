@@ -391,6 +391,15 @@ def _GetGitAbbrevSHA1(git_branch, revision):
 
   upstream = git_branch if revision == 'HEAD' else revision
 
+  # Make sure the remote and the branch exist locally.
+  try:
+    merge_common.GetCommandStdout([
+        'git', 'show-ref', '--verify', '--quiet', git_branch])
+  except merge_common.CommandError:
+    raise merge_common.TemporaryMergeError(
+        'Cannot find the branch %s. Have you sync\'d master-chromium in this '
+        'checkout?' % git_branch)
+
   # Make sure the |upstream| Git object has been mirrored.
   try:
     merge_common.GetCommandStdout([
@@ -539,6 +548,13 @@ def main():
   if 'ANDROID_BUILD_TOP' not in os.environ:
     print >>sys.stderr, 'You need to run the Android envsetup.sh and lunch.'
     return 1
+
+  if os.environ.get('GYP_DEFINES'):
+    print >>sys.stderr, (
+        'The environment is defining GYP_DEFINES (=%s). It will affect the '
+        ' generated makefiles.' % os.environ['GYP_DEFINES'])
+    if not options.unattended and raw_input('Continue? [y/N]') != 'y':
+      return 1
 
   logging.basicConfig(format='%(message)s', level=logging.DEBUG,
                       stream=sys.stdout)
