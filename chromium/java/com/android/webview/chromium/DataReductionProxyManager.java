@@ -33,6 +33,7 @@ import android.util.Log;
 import android.webkit.WebView;
 
 import org.chromium.android_webview.AwContentsStatics;
+import org.chromium.base.CommandLine;
 
 import java.lang.reflect.Field;
 
@@ -50,6 +51,11 @@ public final class DataReductionProxyManager {
 
     private static final String DRP_CLASS = "com.android.webview.chromium.Drp";
     private static final String TAG = "DataReductionProxySettingListener";
+
+    // This is the same as Chromium data_reduction_proxy::switches::kEnableDataReductionProxy.
+    private static final String ENABLE_DATA_REDUCTION_PROXY = "enable-spdy-proxy-auth";
+    // This is the same as Chromium data_reduction_proxy::switches::kDataReductionProxyKey.
+    private static final String DATA_REDUCTION_PROXY_KEY = "spdy-proxy-auth-value";
 
     /*
      * Listen for DataReductionProxySetting changes and take action.
@@ -77,20 +83,43 @@ public final class DataReductionProxyManager {
     public DataReductionProxyManager() { }
 
     public void start(final Context context) {
-        final String key = readKey();
-        if (key == null || key.isEmpty()) {
+        // This is the drp key embedded in WebView apk.
+        final String embeddedKey = readKey();
+
+        // Developers could test DRP by passing ENABLE_DATA_REDUCTION_PROXY and (optionally)
+        // DATA_REDUCTION_PROXY_KEY to the commandline switches.  In this case, we will try to
+        // initialize DRP from commandline. And ignore user's preference.  If
+        // DATA_REDUCTION_PROXY_KEY is specified in commandline, use it.  Otherwise, use the key
+        // embedded in WebView apk.
+        CommandLine cl = CommandLine.getInstance();
+        if (cl.hasSwitch(ENABLE_DATA_REDUCTION_PROXY)) {
+            String key = cl.getSwitchValue(DATA_REDUCTION_PROXY_KEY, embeddedKey);
+            if (key == null || key.isEmpty()) {
+                return;
+            }
+
+            // Now we will enable DRP because we've got a commandline switch to enable it.
+            // We won't listen to Google Settings preference change because commandline switches
+            // trump that.
+            AwContentsStatics.setDataReductionProxyKey(key);
+            AwContentsStatics.setDataReductionProxyEnabled(true);
             return;
         }
-        applyDataReductionProxySettingsAsync(context, key);
+
+        if (embeddedKey == null || embeddedKey.isEmpty()) {
+            return;
+        }
+
+        applyDataReductionProxySettingsAsync(context, embeddedKey);
         IntentFilter filter = new IntentFilter();
         filter.addAction(WebView.DATA_REDUCTION_PROXY_SETTING_CHANGED);
-        mProxySettingListener = new ProxySettingListener(key);
+        mProxySettingListener = new ProxySettingListener(embeddedKey);
         context.registerReceiver(mProxySettingListener, filter);
         ContentResolver resolver = context.getContentResolver();
         mProxySettingObserver = new ContentObserver(new Handler()) {
             @Override
             public void onChange(boolean selfChange, Uri uri) {
-                applyDataReductionProxySettingsAsync(context, key);
+                applyDataReductionProxySettingsAsync(context, embeddedKey);
             }
         };
         resolver.registerContentObserver(
