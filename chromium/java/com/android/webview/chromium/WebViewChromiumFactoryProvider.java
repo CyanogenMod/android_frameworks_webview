@@ -28,6 +28,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.FileUtils;
 import android.os.Looper;
+import android.os.StrictMode;
 import android.os.SystemProperties;
 import android.os.Trace;
 import android.util.Log;
@@ -56,13 +57,13 @@ import org.chromium.base.CommandLine;
 import org.chromium.base.MemoryPressureListener;
 import org.chromium.base.PathService;
 import org.chromium.base.PathUtils;
+import org.chromium.base.ResourceExtractor;
 import org.chromium.base.ThreadUtils;
 import org.chromium.base.TraceEvent;
 import org.chromium.base.library_loader.LibraryLoader;
 import org.chromium.base.library_loader.ProcessInitException;
 import org.chromium.content.app.ContentMain;
 import org.chromium.content.browser.ContentViewStatics;
-import org.chromium.content.browser.ResourceExtractor;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -101,7 +102,10 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
 
     public WebViewChromiumFactoryProvider() {
         if (Build.IS_DEBUGGABLE) {
+            // Suppress the StrictMode violation as this codepath is only hit on debugglable builds.
+            StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
             CommandLine.initFromFile(COMMAND_LINE_FILE);
+            StrictMode.setThreadPolicy(oldPolicy);
         } else {
             CommandLine.init(null);
         }

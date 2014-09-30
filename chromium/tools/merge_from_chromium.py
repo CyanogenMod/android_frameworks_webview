@@ -140,6 +140,9 @@ def _MergeProjects(version, root_sha1, target, unattended, buildspec_url):
     target: The target branch to merge to.
     unattended: Run in unattended mode.
     buildspec_url: URL for buildspec repository, when merging a branch.
+  Returns:
+    The abbrev sha1 merged. It will be either |root_sha1| itself (when merging
+    chromium trunk) or the upstream sha1 of the release.
   Raises:
     TemporaryMergeError: If incompatibly licensed code is left after pruning.
   """
@@ -205,15 +208,17 @@ def _MergeProjects(version, root_sha1, target, unattended, buildspec_url):
   if not root_sha1:
     merge_info = _GetProjectMergeInfo([''], deps_vars)
     url = merge_info['']['url']
-    root_sha1 = merge_info['']['sha1']
-    merge_common.GetCommandStdout(['git', 'fetch', url, root_sha1])
-    merge_msg_version = '%s (%s)' % (version, root_sha1)
+    merged_sha1 = merge_info['']['sha1']
+    merge_common.GetCommandStdout(['git', 'fetch', url, merged_sha1])
+    merged_sha1 = merge_common.Abbrev(merged_sha1)
+    merge_msg_version = '%s (%s)' % (version, merged_sha1)
   else:
     merge_msg_version = root_sha1
+    merged_sha1 = root_sha1
 
-  logging.debug('Merging Chromium at %s ...', root_sha1)
+  logging.debug('Merging Chromium at %s ...', merged_sha1)
   # Merge conflicts make git merge return 1, so ignore errors
-  merge_common.GetCommandStdout(['git', 'merge', '--no-commit', root_sha1],
+  merge_common.GetCommandStdout(['git', 'merge', '--no-commit', merged_sha1],
                                 ignore_errors=True)
   merge_common.CheckNoConflictsAndCommitMerge(
       'Merge Chromium at %s\n\n%s'
@@ -241,6 +246,8 @@ def _MergeProjects(version, root_sha1, target, unattended, buildspec_url):
       merge_common.GetCommandStdout(['git', 'commit', '-m',
                                      'Exclude unwanted directories'],
                                     cwd=dest_dir)
+  assert(root_sha1 is None or root_sha1 == merged_sha1)
+  return merged_sha1
 
 
 def _CheckLicenses():
@@ -384,6 +391,15 @@ def _GetGitAbbrevSHA1(git_branch, revision):
 
   upstream = git_branch if revision == 'HEAD' else revision
 
+  # Make sure the remote and the branch exist locally.
+  try:
+    merge_common.GetCommandStdout([
+        'git', 'show-ref', '--verify', '--quiet', git_branch])
+  except merge_common.CommandError:
+    raise merge_common.TemporaryMergeError(
+        'Cannot find the branch %s. Have you sync\'d master-chromium in this '
+        'checkout?' % git_branch)
+
   # Make sure the |upstream| Git object has been mirrored.
   try:
     merge_common.GetCommandStdout([
@@ -439,7 +455,8 @@ def Snapshot(root_sha1, release, target, unattended, buildspec_url):
   logging.info('Snapshotting Chromium at %s (%s)', version, root_sha1)
 
   # 1. Merge, accounting for excluded directories
-  _MergeProjects(version, root_sha1, target, unattended, buildspec_url)
+  merged_sha1 = _MergeProjects(version, root_sha1, target, unattended,
+                               buildspec_url)
 
   # 2. Generate Android makefiles
   _GenerateMakefiles(version, unattended)
@@ -451,7 +468,7 @@ def Snapshot(root_sha1, release, target, unattended, buildspec_url):
   _GenerateNoticeFile(version)
 
   # 5. Generate LASTCHANGE file
-  _GenerateLastChange(version, root_sha1)
+  _GenerateLastChange(version, merged_sha1)
 
   return True
 
@@ -531,6 +548,13 @@ def main():
   if 'ANDROID_BUILD_TOP' not in os.environ:
     print >>sys.stderr, 'You need to run the Android envsetup.sh and lunch.'
     return 1
+
+  if os.environ.get('GYP_DEFINES'):
+    print >>sys.stderr, (
+        'The environment is defining GYP_DEFINES (=%s). It will affect the '
+        ' generated makefiles.' % os.environ['GYP_DEFINES'])
+    if not options.unattended and raw_input('Continue? [y/N]') != 'y':
+      return 1
 
   logging.basicConfig(format='%(message)s', level=logging.DEBUG,
                       stream=sys.stdout)
