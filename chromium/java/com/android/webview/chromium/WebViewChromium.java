@@ -17,10 +17,8 @@
 package com.android.webview.chromium;
 
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -38,7 +36,6 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.HardwareCanvas;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.MeasureSpec;
@@ -66,7 +63,7 @@ import org.chromium.android_webview.AwLayoutSizer;
 import org.chromium.android_webview.AwSettings;
 import org.chromium.android_webview.AwPrintDocumentAdapter;
 import org.chromium.base.ThreadUtils;
-import org.chromium.content.browser.LoadUrlParams;
+import org.chromium.content_public.browser.LoadUrlParams;
 import org.chromium.net.NetworkChangeNotifier;
 
 import java.io.BufferedWriter;
@@ -253,54 +250,8 @@ class WebViewChromium implements WebViewProvider,
         });
     }
 
-    // Wrap Context so that we can use resources from the webview resource apk.
-    private static Context resourcesContextWrapper(final Context ctx) {
-        final Resources resources = WebViewChromiumFactoryProvider.getWebViewPackageResources(ctx);
-        final Resources.Theme theme = resources.newTheme();
-
-        return new ContextWrapper(ctx) {
-            @Override
-            public ClassLoader getClassLoader() {
-                final ClassLoader appCl = getBaseContext().getClassLoader();
-                final ClassLoader webViewCl = this.getClass().getClassLoader();
-                return new ClassLoader() {
-                    @Override
-                    protected Class<?> findClass(String name) throws ClassNotFoundException {
-                        // First look in the WebViewProvider class loader.
-                        try {
-                            return webViewCl.loadClass(name);
-                        } catch (ClassNotFoundException e) {
-                            // Look in the app class loader; allowing it to throw ClassNotFoundException.
-                            return appCl.loadClass(name);
-                        }
-                    }
-                };
-            }
-
-            @Override
-            public Object getSystemService(String name) {
-                if (name.equals(Context.LAYOUT_INFLATER_SERVICE)) {
-                    LayoutInflater i = (LayoutInflater) getBaseContext().getSystemService(name);
-                    return i.cloneInContext(this);
-                } else {
-                    return getBaseContext().getSystemService(name);
-                }
-            }
-
-            @Override
-            public Resources getResources() {
-                return resources;
-            }
-
-            @Override
-            public Resources.Theme getTheme() {
-                return theme;
-            }
-        };
-    }
-
     private void initForReal() {
-        Context ctx = resourcesContextWrapper(mWebView.getContext());
+        Context ctx = ResourcesContextWrapperFactory.get(mWebView.getContext());
         mAwContents = new AwContents(mFactory.getBrowserContext(), mWebView, ctx,
                 new InternalAccessAdapter(), new WebViewNativeGLDelegate(),
                 mContentsClientAdapter, mWebSettings.getAwSettings());
