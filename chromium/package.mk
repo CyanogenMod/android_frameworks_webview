@@ -57,9 +57,6 @@ LOCAL_JNI_SHARED_LIBRARIES += libwebviewchromium
 
 LOCAL_MULTILIB := both
 
-# See Bug 17409149.
-LOCAL_DEX_PREOPT := false
-
 # TODO: filter webviewchromium_webkit_strings based on PRODUCT_LOCALES.
 LOCAL_REQUIRED_MODULES := \
         libwebviewchromium \
