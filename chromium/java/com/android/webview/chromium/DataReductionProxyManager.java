@@ -77,36 +77,11 @@ public final class DataReductionProxyManager {
     public DataReductionProxyManager() { }
 
     public void start(final Context context) {
-        // This is the DRP key embedded in WebView apk.
-        final String embeddedKey = readKey();
-
-        // Developers could test DRP by passing ENABLE_DATA_REDUCTION_PROXY and (optionally)
-        // DATA_REDUCTION_PROXY_KEY to the commandline switches.  In this case, we will try to
-        // initialize DRP from commandline. And ignore user's preference.  If
-        // DATA_REDUCTION_PROXY_KEY is specified in commandline, use it.  Otherwise, use the key
-        // embedded in WebView apk.
-        CommandLine cl = CommandLine.getInstance();
-        if (cl.hasSwitch(ENABLE_DATA_REDUCTION_PROXY)) {
-            String key = cl.getSwitchValue(DATA_REDUCTION_PROXY_KEY, embeddedKey);
-            if (key == null || key.isEmpty()) {
-                return;
-            }
-
-            // Now we will enable DRP because we've got a commandline switch to enable it.
-            // We won't listen to Google Settings preference change because commandline switches
-            // trump that.
-            AwContentsStatics.setDataReductionProxyKey(key);
-            AwContentsStatics.setDataReductionProxyEnabled(true);
+        final String key = readKey();
+        if (key == null || key.isEmpty()) {
             return;
         }
-
-        // Now, there is no commandline switches to enable DRP, and reading the
-        // DRP key from WebView apk failed. Just return and leave DRP disabled.
-        if (embeddedKey == null || embeddedKey.isEmpty()) {
-            return;
-        }
-
-        applyDataReductionProxySettingsAsync(context, embeddedKey);
+        applyDataReductionProxySettingsAsync(context, key);
         IntentFilter filter = new IntentFilter();
         filter.addAction(WebView.DATA_REDUCTION_PROXY_SETTING_CHANGED);
         mProxySettingListener = new ProxySettingListener(key);
