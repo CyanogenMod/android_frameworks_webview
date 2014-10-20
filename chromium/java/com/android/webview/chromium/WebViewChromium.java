@@ -1882,7 +1882,7 @@ class WebViewChromium implements WebViewProvider,
             });
             return;
         }
-        mAwContents.onContainerViewScrolled(l, t, oldl, oldt);
+        mAwContents.onContainerViewScrollChanged(l, t, oldl, oldt);
     }
 
     @Override
