@@ -1348,19 +1348,27 @@ class WebViewChromium implements WebViewProvider,
         if (client == null) {
             return false;
         }
-        // If client is not a subclass of WebChromeClient then the methods have not been
-        // implemented because WebChromeClient has empty implementations.
-        if (client.getClass().isAssignableFrom(WebChromeClient.class)) {
-            return false;
+        Class<?> clientClass = client.getClass();
+        boolean foundShowMethod = false;
+        boolean foundHideMethod = false;
+        while (clientClass != WebChromeClient.class && (!foundShowMethod || !foundHideMethod)) {
+            if (!foundShowMethod) {
+                try {
+                    clientClass.getDeclaredMethod("onShowCustomView", View.class,
+                            CustomViewCallback.class);
+                    foundShowMethod = true;
+                } catch (NoSuchMethodException e) { }
+            }
+
+            if (!foundHideMethod) {
+                try {
+                    clientClass.getDeclaredMethod("onHideCustomView");
+                    foundHideMethod = true;
+                } catch (NoSuchMethodException e) { }
+            }
+            clientClass = clientClass.getSuperclass();
         }
-        try {
-            client.getClass().getDeclaredMethod("onShowCustomView", View.class,
-                    CustomViewCallback.class);
-            client.getClass().getDeclaredMethod("onHideCustomView");
-            return true;
-        } catch (NoSuchMethodException e) {
-            return false;
-        }
+        return foundShowMethod && foundHideMethod;
     }
 
     @Override
