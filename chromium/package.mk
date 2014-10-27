@@ -62,11 +62,12 @@ LOCAL_MULTILIB := both
 # See Bug 17409149.
 LOCAL_DEX_PREOPT := false
 
-# TODO: filter webviewchromium_webkit_strings based on PRODUCT_LOCALES.
+# If this build is just for apps, skip building the platform-side dependencies.
+ifeq ($(TARGET_BUILD_APPS),)
 LOCAL_REQUIRED_MODULES := \
-        libwebviewchromium \
         libwebviewchromium_loader \
         libwebviewchromium_plat_support
+endif
 
 LOCAL_PROGUARD_ENABLED := full
 LOCAL_PROGUARD_FLAG_FILES := proguard.flags
