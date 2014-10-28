@@ -58,6 +58,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.webkit.WebViewFactory;
 import android.webkit.WebViewProvider;
 import android.webkit.WebChromeClient.CustomViewCallback;
 import android.widget.TextView;
@@ -165,6 +166,8 @@ class WebViewChromium implements WebViewProvider,
         mAppTargetSdkVersion = mWebView.getContext().getApplicationInfo().targetSdkVersion;
         mFactory = factory;
         mRunQueue = new WebViewChromiumRunQueue();
+        String webViewAssetPath = WebViewFactory.getLoadedPackageInfo().applicationInfo.sourceDir;
+        mWebView.getContext().getAssets().addAssetPath(webViewAssetPath);
     }
 
     static void completeWindowCreation(WebView parent, WebView child) {
