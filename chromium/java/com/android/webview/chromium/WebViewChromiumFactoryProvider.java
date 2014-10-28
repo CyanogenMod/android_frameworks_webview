@@ -27,7 +27,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
-import android.os.FileUtils;
 import android.os.Looper;
 import android.os.StrictMode;
 import android.os.SystemProperties;
@@ -144,12 +143,26 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
             String dataDir = PathUtils.getDataDirectory(ActivityThread.currentApplication());
             Log.i(TAG, "WebView package downgraded from " + lastVersion + " to " + currentVersion +
                        "; deleting contents of " + dataDir);
-            FileUtils.deleteContents(new File(dataDir));
+            deleteContents(new File(dataDir));
         }
         if (lastVersion != currentVersion) {
             mWebViewPrefs.edit().putInt(VERSION_CODE_PREF, currentVersion).apply();
         }
         // Now safe to use WebView data directory.
+    }
+
+    private static void deleteContents(File dir) {
+        File[] files = dir.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    deleteContents(file);
+                }
+                if (!file.delete()) {
+                    Log.w(TAG, "Failed to delete " + file);
+                }
+            }
+        }
     }
 
     private void initPlatSupportLibrary() {
