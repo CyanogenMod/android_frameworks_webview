@@ -101,7 +101,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     private SharedPreferences mWebViewPrefs;
 
     public WebViewChromiumFactoryProvider() {
-        if (Build.IS_DEBUGGABLE) {
+        if (isBuildDebuggable()) {
             // Suppress the StrictMode violation as this codepath is only hit on debugglable builds.
             StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
             CommandLine.initFromFile(COMMAND_LINE_FILE);
@@ -149,6 +149,10 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
             mWebViewPrefs.edit().putInt(VERSION_CODE_PREF, currentVersion).apply();
         }
         // Now safe to use WebView data directory.
+    }
+
+    private static boolean isBuildDebuggable() {
+        return !Build.TYPE.equals("user");
     }
 
     private static void deleteContents(File dir) {
