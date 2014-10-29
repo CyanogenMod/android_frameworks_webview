@@ -38,7 +38,6 @@ import android.print.PrintDocumentAdapter;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
-import android.view.HardwareCanvas;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -168,8 +167,7 @@ class WebViewChromium implements WebViewProvider,
         mAppTargetSdkVersion = mWebView.getContext().getApplicationInfo().targetSdkVersion;
         mFactory = factory;
         mRunQueue = new WebViewChromiumRunQueue();
-        String webViewAssetPath = WebViewFactory.getLoadedPackageInfo().applicationInfo.sourceDir;
-        mWebView.getContext().getAssets().addAssetPath(webViewAssetPath);
+        factory.getWebViewDelegate().addWebViewAssetPath(mWebView.getContext());
     }
 
     static void completeWindowCreation(WebView parent, WebView child) {
@@ -246,7 +244,8 @@ class WebViewChromium implements WebViewProvider,
         final boolean areLegacyQuirksEnabled =
                 mAppTargetSdkVersion < Build.VERSION_CODES.KITKAT;
 
-        mContentsClientAdapter = new WebViewContentsClientAdapter(mWebView);
+        mContentsClientAdapter = new WebViewContentsClientAdapter(
+                mWebView, mFactory.getWebViewDelegate());
         mWebSettings = new ContentSettingsAdapter(new AwSettings(
                 mWebView.getContext(), isAccessFromFileURLsGrantedByDefault,
                 areLegacyQuirksEnabled));
@@ -2153,10 +2152,10 @@ class WebViewChromium implements WebViewProvider,
         public boolean requestDrawGL(Canvas canvas, boolean waitForCompletion,
                 View containerView) {
             if (mGLfunctor == null) {
-                mGLfunctor = new DrawGLFunctor(mAwContents.getAwDrawGLViewContext());
+                mGLfunctor = new DrawGLFunctor(mAwContents.getAwDrawGLViewContext(),
+                        mFactory.getWebViewDelegate());
             }
-            return mGLfunctor.requestDrawGL(
-                    (HardwareCanvas) canvas, containerView.getViewRootImpl(), waitForCompletion);
+            return mGLfunctor.requestDrawGL(canvas, containerView, waitForCompletion);
         }
 
         @Override

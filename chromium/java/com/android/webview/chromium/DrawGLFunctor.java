@@ -16,9 +16,11 @@
 
 package com.android.webview.chromium;
 
-import android.view.HardwareCanvas;
-import android.view.ViewRootImpl;
+import android.view.View;
+import android.graphics.Canvas;
 import android.util.Log;
+
+import com.android.webview.chromium.WebViewDelegateFactory.WebViewDelegate;
 
 import org.chromium.content.common.CleanupReference;
 
@@ -34,10 +36,12 @@ class DrawGLFunctor {
     // Pointer to native side instance
     private CleanupReference mCleanupReference;
     private DestroyRunnable mDestroyRunnable;
+    private WebViewDelegate mWebViewDelegate;
 
-    public DrawGLFunctor(long viewContext) {
-        mDestroyRunnable = new DestroyRunnable(nativeCreateGLFunctor(viewContext));
+    public DrawGLFunctor(long viewContext, WebViewDelegate webViewDelegate) {
+        mDestroyRunnable = new DestroyRunnable(nativeCreateGLFunctor(viewContext), webViewDelegate);
         mCleanupReference = new CleanupReference(this, mDestroyRunnable);
+        mWebViewDelegate = webViewDelegate;
     }
 
     public void destroy() {
@@ -46,6 +50,7 @@ class DrawGLFunctor {
             mCleanupReference.cleanupNow();
             mCleanupReference = null;
             mDestroyRunnable = null;
+            mWebViewDelegate = null;
         }
     }
 
@@ -53,7 +58,7 @@ class DrawGLFunctor {
         mDestroyRunnable.detachNativeFunctor();
     }
 
-    public boolean requestDrawGL(HardwareCanvas canvas, ViewRootImpl viewRootImpl,
+    public boolean requestDrawGL(Canvas canvas, View containerView,
             boolean waitForCompletion) {
         if (mDestroyRunnable.mNativeDrawGLFunctor == 0) {
             throw new RuntimeException("requested DrawGL on already destroyed DrawGLFunctor");
@@ -63,18 +68,19 @@ class DrawGLFunctor {
             throw new IllegalArgumentException("requested a blocking DrawGL with a not null canvas.");
         }
 
-        if (viewRootImpl == null) {
-            // Can happen during teardown when window is leaked.
+        if (!mWebViewDelegate.canInvokeDrawGlFunctor(containerView)) {
             return false;
         }
 
-        mDestroyRunnable.mViewRootImpl = viewRootImpl;
+        mDestroyRunnable.mContainerView = containerView;
+
         if (canvas == null) {
-            viewRootImpl.invokeFunctor(mDestroyRunnable.mNativeDrawGLFunctor, waitForCompletion);
+            mWebViewDelegate.invokeDrawGlFunctor(containerView,
+                    mDestroyRunnable.mNativeDrawGLFunctor, waitForCompletion);
             return true;
         }
 
-        canvas.callDrawGLFunction(mDestroyRunnable.mNativeDrawGLFunctor);
+        mWebViewDelegate.callDrawGlFunction(canvas, mDestroyRunnable.mNativeDrawGLFunctor);
         return true;
     }
 
@@ -86,10 +92,12 @@ class DrawGLFunctor {
     // IMPORTANT: this class must not hold any reference back to the outer DrawGLFunctor
     // instance, as that will defeat GC of that object.
     private static final class DestroyRunnable implements Runnable {
-        ViewRootImpl mViewRootImpl;
+        private WebViewDelegate mWebViewDelegate;
+        View mContainerView;
         long mNativeDrawGLFunctor;
-        DestroyRunnable(long nativeDrawGLFunctor) {
+        DestroyRunnable(long nativeDrawGLFunctor, WebViewDelegate webViewDelegate) {
             mNativeDrawGLFunctor = nativeDrawGLFunctor;
+            mWebViewDelegate = webViewDelegate;
         }
 
         // Called when the outer DrawGLFunctor instance has been GC'ed, i.e this is its finalizer.
@@ -101,10 +109,12 @@ class DrawGLFunctor {
         }
 
         void detachNativeFunctor() {
-            if (mNativeDrawGLFunctor != 0 && mViewRootImpl != null) {
-                mViewRootImpl.detachFunctor(mNativeDrawGLFunctor);
+            if (mNativeDrawGLFunctor != 0 && mContainerView != null
+                    && mWebViewDelegate != null) {
+                mWebViewDelegate.detachDrawGlFunctor(mContainerView, mNativeDrawGLFunctor);
             }
-            mViewRootImpl = null;
+            mContainerView = null;
+            mWebViewDelegate = null;
         }
     }
 
