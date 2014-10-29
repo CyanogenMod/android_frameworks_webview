@@ -986,8 +986,9 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
         if (result == null) {
             // The ic_media_video_poster icon is transparent so we need to draw it on a gray
             // background.
+            Context ctx = ResourcesContextWrapperFactory.get(mWebView.getContext());
             Bitmap poster = BitmapFactory.decodeResource(
-                    mWebView.getContext().getResources(),
+                    ctx.getResources(),
                     R.drawable.ic_media_video_poster);
             result = Bitmap.createBitmap(poster.getWidth(), poster.getHeight(), poster.getConfig());
             result.eraseColor(Color.GRAY);
