@@ -170,14 +170,8 @@ public final class DataReductionProxyManager {
     }
 
     private static boolean isDataReductionProxyEnabled(Context context) {
-        boolean enabled = getProxySetting(context.getContentResolver(),
+        return getProxySetting(context.getContentResolver(),
                     WEBVIEW_DATA_REDUCTION_PROXY) != 0;
-        // intentional fallback. remove before L release.
-        if (!enabled) {
-            enabled = Settings.Secure.getInt(context.getContentResolver(),
-                        Settings.Secure.WEBVIEW_DATA_REDUCTION_PROXY, 0) != 0;
-        }
-        return enabled;
     }
 
     // Read query setting from GoogleSettings.
