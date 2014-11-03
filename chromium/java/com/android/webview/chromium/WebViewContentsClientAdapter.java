@@ -95,7 +95,7 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     // TAG is chosen for consistency with classic webview tracing.
     private static final String TAG = "WebViewCallback";
     // Enables API callback tracing
-    private static final boolean TRACE = android.webkit.DebugFlags.TRACE_CALLBACK;
+    private static final boolean TRACE = false;
     // The WebView instance that this adapter is serving.
     private final WebView mWebView;
     // The WebViewClient instance that was passed to WebView.setWebViewClient().
