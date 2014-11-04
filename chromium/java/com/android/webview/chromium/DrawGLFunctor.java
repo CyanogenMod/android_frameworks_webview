@@ -58,6 +58,11 @@ class DrawGLFunctor {
         if (mDestroyRunnable.mNativeDrawGLFunctor == 0) {
             throw new RuntimeException("requested DrawGL on already destroyed DrawGLFunctor");
         }
+
+        if (canvas != null && waitForCompletion) {
+            throw new IllegalArgumentException("requested a blocking DrawGL with a not null canvas.");
+        }
+
         if (viewRootImpl == null) {
             // Can happen during teardown when window is leaked.
             return false;
@@ -70,10 +75,6 @@ class DrawGLFunctor {
         }
 
         canvas.callDrawGLFunction(mDestroyRunnable.mNativeDrawGLFunctor);
-        if (waitForCompletion) {
-            viewRootImpl.invokeFunctor(mDestroyRunnable.mNativeDrawGLFunctor,
-                    waitForCompletion);
-        }
         return true;
     }
 
