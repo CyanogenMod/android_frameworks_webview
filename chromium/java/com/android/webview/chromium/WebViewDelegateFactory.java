@@ -1,20 +1,15 @@
 package com.android.webview.chromium;
 
-import android.app.ActivityThread;
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Canvas;
-import android.net.http.ErrorStrings;
-import android.os.SystemProperties;
 import android.os.Trace;
 import android.util.Log;
 import android.util.SparseArray;
-import android.view.HardwareCanvas;
 import android.view.View;
-import android.view.ViewRootImpl;
 import android.webkit.WebViewFactory;
 
 import java.lang.reflect.InvocationTargetException;
