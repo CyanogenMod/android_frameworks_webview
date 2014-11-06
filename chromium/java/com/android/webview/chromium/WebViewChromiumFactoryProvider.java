@@ -261,7 +261,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         initPlatSupportLibrary();
         AwBrowserProcess.start(mWebViewDelegate.getApplication());
 
-        if (Build.IS_DEBUGGABLE) {
+        if (isBuildDebuggable()) {
             setWebContentsDebuggingEnabled(true);
         }
 
@@ -362,7 +362,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
                     @Override
                     public void setWebContentsDebuggingEnabled(boolean enable) {
                         // Web Contents debugging is always enabled on debug builds.
-                        if (!Build.IS_DEBUGGABLE) {
+                        if (!isBuildDebuggable()) {
                             WebViewChromiumFactoryProvider.this.
                                     setWebContentsDebuggingEnabled(enable);
                         }
