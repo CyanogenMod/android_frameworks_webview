@@ -286,7 +286,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
 
         // Start listening for data reduction proxy setting changes.
         mProxyManager = new DataReductionProxyManager();
-        mProxyManager.start(ActivityThread.currentApplication());
+        mProxyManager.start(mWebViewDelegate.getApplication());
     }
 
     boolean hasStarted() {
