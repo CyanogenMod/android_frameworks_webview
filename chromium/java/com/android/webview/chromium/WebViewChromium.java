@@ -32,12 +32,12 @@ import android.net.http.SslCertificate;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
+import android.os.Handler;
 import android.os.Message;
 import android.print.PrintDocumentAdapter;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
-import android.view.HardwareCanvas;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -58,6 +58,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.webkit.WebViewFactory;
 import android.webkit.WebViewProvider;
 import android.webkit.WebChromeClient.CustomViewCallback;
 import android.widget.TextView;
@@ -69,6 +70,7 @@ import org.chromium.android_webview.AwLayoutSizer;
 import org.chromium.android_webview.AwSettings;
 import org.chromium.android_webview.AwPrintDocumentAdapter;
 import org.chromium.base.ThreadUtils;
+import org.chromium.content.browser.SmartClipProvider;
 import org.chromium.content_public.browser.LoadUrlParams;
 import org.chromium.net.NetworkChangeNotifier;
 
@@ -92,7 +94,7 @@ import java.util.Queue;
  * and a small set of no-op deprecated APIs.
  */
 class WebViewChromium implements WebViewProvider,
-          WebViewProvider.ScrollDelegate, WebViewProvider.ViewDelegate {
+          WebViewProvider.ScrollDelegate, WebViewProvider.ViewDelegate, SmartClipProvider {
 
     private class WebViewChromiumRunQueue {
         public WebViewChromiumRunQueue() {
@@ -165,6 +167,7 @@ class WebViewChromium implements WebViewProvider,
         mAppTargetSdkVersion = mWebView.getContext().getApplicationInfo().targetSdkVersion;
         mFactory = factory;
         mRunQueue = new WebViewChromiumRunQueue();
+        factory.getWebViewDelegate().addWebViewAssetPath(mWebView.getContext());
     }
 
     static void completeWindowCreation(WebView parent, WebView child) {
@@ -241,7 +244,8 @@ class WebViewChromium implements WebViewProvider,
         final boolean areLegacyQuirksEnabled =
                 mAppTargetSdkVersion < Build.VERSION_CODES.KITKAT;
 
-        mContentsClientAdapter = new WebViewContentsClientAdapter(mWebView);
+        mContentsClientAdapter = new WebViewContentsClientAdapter(
+                mWebView, mFactory.getWebViewDelegate());
         mWebSettings = new ContentSettingsAdapter(new AwSettings(
                 mWebView.getContext(), isAccessFromFileURLsGrantedByDefault,
                 areLegacyQuirksEnabled));
@@ -315,7 +319,7 @@ class WebViewChromium implements WebViewProvider,
         }
 
         AwContentsStatics.setRecordFullDocument(sRecordWholeDocumentEnabledByApi ||
-                mAppTargetSdkVersion < Build.VERSION_CODES.L);
+                mAppTargetSdkVersion < Build.VERSION_CODES.LOLLIPOP);
 
         if (mAppTargetSdkVersion <= Build.VERSION_CODES.KITKAT) {
             // On KK and older versions, JavaScript objects injected via addJavascriptInterface
@@ -1344,19 +1348,27 @@ class WebViewChromium implements WebViewProvider,
         if (client == null) {
             return false;
         }
-        // If client is not a subclass of WebChromeClient then the methods have not been
-        // implemented because WebChromeClient has empty implementations.
-        if (client.getClass().isAssignableFrom(WebChromeClient.class)) {
-            return false;
+        Class<?> clientClass = client.getClass();
+        boolean foundShowMethod = false;
+        boolean foundHideMethod = false;
+        while (clientClass != WebChromeClient.class && (!foundShowMethod || !foundHideMethod)) {
+            if (!foundShowMethod) {
+                try {
+                    clientClass.getDeclaredMethod("onShowCustomView", View.class,
+                            CustomViewCallback.class);
+                    foundShowMethod = true;
+                } catch (NoSuchMethodException e) { }
+            }
+
+            if (!foundHideMethod) {
+                try {
+                    clientClass.getDeclaredMethod("onHideCustomView");
+                    foundHideMethod = true;
+                } catch (NoSuchMethodException e) { }
+            }
+            clientClass = clientClass.getSuperclass();
         }
-        try {
-            client.getClass().getDeclaredMethod("onShowCustomView", View.class,
-                    CustomViewCallback.class);
-            client.getClass().getDeclaredMethod("onHideCustomView");
-            return true;
-        } catch (NoSuchMethodException e) {
-            return false;
-        }
+        return foundShowMethod && foundHideMethod;
     }
 
     @Override
@@ -2143,10 +2155,10 @@ class WebViewChromium implements WebViewProvider,
         public boolean requestDrawGL(Canvas canvas, boolean waitForCompletion,
                 View containerView) {
             if (mGLfunctor == null) {
-                mGLfunctor = new DrawGLFunctor(mAwContents.getAwDrawGLViewContext());
+                mGLfunctor = new DrawGLFunctor(mAwContents.getAwDrawGLViewContext(),
+                        mFactory.getWebViewDelegate());
             }
-            return mGLfunctor.requestDrawGL(
-                    (HardwareCanvas) canvas, containerView.getViewRootImpl(), waitForCompletion);
+            return mGLfunctor.requestDrawGL(canvas, containerView, waitForCompletion);
         }
 
         @Override
@@ -2243,4 +2255,19 @@ class WebViewChromium implements WebViewProvider,
             return mWebViewPrivate.super_onHoverEvent(event);
         }
     }
+
+    // Implements SmartClipProvider
+    @Override
+    public void extractSmartClipData(int x, int y, int width, int height) {
+        checkThread();
+        mAwContents.extractSmartClipData(x, y, width, height);
+    }
+
+    // Implements SmartClipProvider
+    @Override
+    public void setSmartClipResultHandler(final Handler resultHandler) {
+        checkThread();
+        mAwContents.setSmartClipResultHandler(resultHandler);
+    }
+
 }

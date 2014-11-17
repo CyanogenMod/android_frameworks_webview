@@ -7,5 +7,5 @@
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="webviewchromium_private_browsing_warning" msgid="5444325116504635857">"‏הפונקציונליות הזו אינה נתמכת בגרסה הזו של Android."</string>
+    <string name="webviewchromium_private_browsing_warning" msgid="4489411236472600535">"פעולה לא נתמכת בגרסה זו."</string>
 </resources>

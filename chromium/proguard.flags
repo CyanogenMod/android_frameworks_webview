@@ -80,6 +80,12 @@
   *** startFinalizer(java.lang.Class,java.lang.Object);
 }
 
+# Keep support framework support for SmartClip.
+-keep class com.android.webview.chromium.WebViewChromium {
+  public void extractSmartClipData(int,int,int,int);
+  public void setSmartClipResultHandler(android.os.Handler);
+}
+
 # We need to explicitly keep classes and constructors referenced only in
 # layout resources.
 -keep class com.android.org.chromium.ui.ColorPickerAdvanced {
