@@ -61,9 +61,6 @@ LOCAL_JNI_SHARED_LIBRARIES += libwebviewchromium
 
 LOCAL_MULTILIB := both
 
-# See Bug 17409149.
-LOCAL_DEX_PREOPT := false
-
 # If this build is just for apps, skip building the platform-side dependencies.
 ifeq ($(TARGET_BUILD_APPS),)
 LOCAL_REQUIRED_MODULES := \
