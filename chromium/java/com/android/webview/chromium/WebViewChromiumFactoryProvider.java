@@ -131,6 +131,12 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         cl.appendSwitch("enable-dcheck");
 
         ThreadUtils.setWillOverrideUiThread();
+
+        // TODO: Remove when GL is supported by default in the upstream code.
+        if (!cl.hasSwitch("disable-webview-gl-mode")) {
+            cl.appendSwitch("testing-webview-gl-mode");
+        }
+
         // Load chromium library.
         AwBrowserProcess.loadLibrary();
         // Load glue-layer support library.
