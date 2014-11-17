@@ -911,14 +911,23 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
                 uploadFileCallback.onReceiveValue(s);
             }
         };
+
+        // Invoke the new callback introduced in Lollipop. If the app handles
+        // it, we're done here.
         if (mWebChromeClient.onShowFileChooser(mWebView, callbackAdapter, adapter)) {
             return;
         }
-        if (mWebView.getContext().getApplicationInfo().targetSdkVersion >
-                Build.VERSION_CODES.KITKAT) {
+
+        // If the app did not handle it and we are running on Lollipop or newer, then
+        // abort.
+        if (mWebView.getContext().getApplicationInfo().targetSdkVersion >=
+                Build.VERSION_CODES.LOLLIPOP) {
             uploadFileCallback.onReceiveValue(null);
             return;
         }
+
+        // Otherwise, for older apps, attempt to invoke the legacy (hidden) API for
+        // backwards compatibility.
         ValueCallback<Uri> innerCallback = new ValueCallback<Uri>() {
             private boolean mCompleted;
             @Override
