@@ -20,18 +20,14 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.app.ActivityManager;
-import android.app.ActivityThread;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
-import android.os.FileUtils;
 import android.os.Looper;
 import android.os.StrictMode;
-import android.os.SystemProperties;
-import android.os.Trace;
 import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.GeolocationPermissions;
@@ -42,6 +38,8 @@ import android.webkit.WebViewDatabase;
 import android.webkit.WebViewFactory;
 import android.webkit.WebViewFactoryProvider;
 import android.webkit.WebViewProvider;
+
+import com.android.webview.chromium.WebViewDelegateFactory.WebViewDelegate;
 
 import org.chromium.android_webview.AwBrowserContext;
 import org.chromium.android_webview.AwBrowserProcess;
@@ -100,9 +98,25 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
 
     private DataReductionProxyManager mProxyManager;
     private SharedPreferences mWebViewPrefs;
+    private WebViewDelegate mWebViewDelegate;
 
+    /**
+     * Constructor called by the API 21 version of {@link WebViewFactory} and earlier.
+     */
     public WebViewChromiumFactoryProvider() {
-        if (Build.IS_DEBUGGABLE) {
+        initialize(WebViewDelegateFactory.createApi21CompatibilityDelegate());
+    }
+
+    /**
+     * Constructor called by the API 22 version of {@link WebViewFactory} and later.
+     */
+    public WebViewChromiumFactoryProvider(android.webkit.WebViewDelegate delegate) {
+        initialize(WebViewDelegateFactory.createProxyDelegate(delegate));
+    }
+
+    private void initialize(WebViewDelegate webViewDelegate) {
+        mWebViewDelegate = webViewDelegate;
+        if (isBuildDebuggable()) {
             // Suppress the StrictMode violation as this codepath is only hit on debugglable builds.
             StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
             CommandLine.initFromFile(COMMAND_LINE_FILE);
@@ -120,9 +134,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
 
         ThreadUtils.setWillOverrideUiThread();
         // Load chromium library.
-        Trace.traceBegin(Trace.TRACE_TAG_WEBVIEW, "AwBrowserProcess.loadLibrary()");
         AwBrowserProcess.loadLibrary();
-        Trace.traceEnd(Trace.TRACE_TAG_WEBVIEW);
 
         final PackageInfo packageInfo = WebViewFactory.getLoadedPackageInfo();
 
@@ -134,17 +146,17 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         System.loadLibrary("webviewchromium_plat_support");
 
         // Use shared preference to check for package downgrade.
-        mWebViewPrefs = ActivityThread.currentApplication().getSharedPreferences(
+        mWebViewPrefs = mWebViewDelegate.getApplication().getSharedPreferences(
                             CHROMIUM_PREFS_NAME, Context.MODE_PRIVATE);
         int lastVersion = mWebViewPrefs.getInt(VERSION_CODE_PREF, 0);
         int currentVersion = packageInfo.versionCode;
         if (lastVersion > currentVersion) {
             // The WebView package has been downgraded since we last ran in this application.
             // Delete the WebView data directory's contents.
-            String dataDir = PathUtils.getDataDirectory(ActivityThread.currentApplication());
+            String dataDir = PathUtils.getDataDirectory(mWebViewDelegate.getApplication());
             Log.i(TAG, "WebView package downgraded from " + lastVersion + " to " + currentVersion +
                        "; deleting contents of " + dataDir);
-            FileUtils.deleteContents(new File(dataDir));
+            deleteContents(new File(dataDir));
         }
         if (lastVersion != currentVersion) {
             mWebViewPrefs.edit().putInt(VERSION_CODE_PREF, currentVersion).apply();
@@ -152,25 +164,28 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         // Now safe to use WebView data directory.
     }
 
+    private static boolean isBuildDebuggable() {
+        return !Build.TYPE.equals("user");
+    }
+
+    private static void deleteContents(File dir) {
+        File[] files = dir.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    deleteContents(file);
+                }
+                if (!file.delete()) {
+                    Log.w(TAG, "Failed to delete " + file);
+                }
+            }
+        }
+    }
+
     private void initPlatSupportLibrary() {
         DrawGLFunctor.setChromiumAwDrawGLFunction(AwContents.getAwDrawGLFunction());
         AwContents.setAwDrawSWFunctionTable(GraphicsUtils.getDrawSWFunctionTable());
         AwContents.setAwDrawGLFunctionTable(GraphicsUtils.getDrawGLFunctionTable());
-    }
-
-    private static void initTraceEvent() {
-        syncATraceState();
-        SystemProperties.addChangeCallback(new Runnable() {
-            @Override
-            public void run() {
-                syncATraceState();
-            }
-        });
-    }
-
-    private static void syncATraceState() {
-        long enabledFlags = SystemProperties.getLong("debug.atrace.tags.enableflags", 0);
-        TraceEvent.setATraceEnabled((enabledFlags & Trace.TRACE_TAG_WEBVIEW) != 0);
     }
 
     private void ensureChromiumStartedLocked(boolean onMainThread) {
@@ -242,15 +257,22 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
                 "/system/framework/webview/paks");
 
         // Make sure that ResourceProvider is initialized before starting the browser process.
-        setUpResources(ActivityThread.currentApplication());
+        setUpResources(mWebViewDelegate.getApplication());
         initPlatSupportLibrary();
-        AwBrowserProcess.start(ActivityThread.currentApplication());
+        AwBrowserProcess.start(mWebViewDelegate.getApplication());
 
         if (Build.IS_DEBUGGABLE) {
             setWebContentsDebuggingEnabled(true);
         }
 
-        initTraceEvent();
+        TraceEvent.setATraceEnabled(mWebViewDelegate.isTraceTagEnabled());
+        mWebViewDelegate.setOnTraceEnabledChangeListener(
+                new WebViewDelegate.OnTraceEnabledChangeListener() {
+                    @Override
+                    public void onTraceEnabledChange(boolean enabled) {
+                        TraceEvent.setATraceEnabled(enabled);
+                    }
+                });
         mStarted = true;
 
         for (WeakReference<WebViewChromium> wvc : mWebViewsToStart) {
@@ -264,7 +286,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
 
         // Start listening for data reduction proxy setting changes.
         mProxyManager = new DataReductionProxyManager();
-        mProxyManager.start(ActivityThread.currentApplication());
+        mProxyManager.start(mWebViewDelegate.getApplication());
     }
 
     boolean hasStarted() {
@@ -305,10 +327,13 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         mDevToolsServer.setRemoteDebuggingEnabled(enable);
     }
 
-    private void setUpResources(Context ctx) {
-        ResourceRewriter.rewriteRValues(ctx);
+    private void setUpResources(Context context) {
+        // The resources are always called com.android.webview even if the manifest has had the
+        // package renamed.
+        ResourceRewriter.rewriteRValues(
+                mWebViewDelegate.getPackageId(context.getResources(), "com.android.webview"));
 
-        AwResource.setResources(ctx.getResources());
+        AwResource.setResources(context.getResources());
         AwResource.setErrorPageResources(android.R.raw.loaderror,
                 android.R.raw.nodomain);
         AwResource.setConfigKeySystemUuidMapping(
@@ -406,7 +431,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
                     // will bring up just the parts it needs to make this work on a temporary
                     // basis until Chromium is started for real. The temporary cookie manager
                     // needs the application context to have been set.
-                    ContentMain.initApplicationContext(ActivityThread.currentApplication());
+                    ContentMain.initApplicationContext(mWebViewDelegate.getApplication());
                 }
                 mCookieManager = new CookieManagerAdapter(new AwCookieManager());
             }
@@ -448,5 +473,9 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
             }
         }
         return mWebViewDatabase;
+    }
+
+    WebViewDelegate getWebViewDelegate() {
+        return mWebViewDelegate;
     }
 }
