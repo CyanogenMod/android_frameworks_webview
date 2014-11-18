@@ -319,7 +319,7 @@ class WebViewChromium implements WebViewProvider,
         }
 
         AwContentsStatics.setRecordFullDocument(sRecordWholeDocumentEnabledByApi ||
-                mAppTargetSdkVersion < Build.VERSION_CODES.L);
+                mAppTargetSdkVersion < Build.VERSION_CODES.LOLLIPOP);
 
         if (mAppTargetSdkVersion <= Build.VERSION_CODES.KITKAT) {
             // On KK and older versions, JavaScript objects injected via addJavascriptInterface
