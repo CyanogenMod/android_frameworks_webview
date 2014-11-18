@@ -12,21 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-local_target_dir := $(TARGET_OUT_DATA)/local/tmp
 LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
+LOCAL_PACKAGE_NAME := UbWebViewJankTests
 LOCAL_SRC_FILES := $(call all-java-files-under, src)
-LOCAL_MODULE := WebViewJankTests
-
-LOCAL_JAVA_LIBRARIES := uiautomator
-LOCAL_STATIC_JAVA_LIBRARIES := webview-janktesthelper
 LOCAL_MODULE_TAGS := tests
-include $(BUILD_JAVA_LIBRARY)
 
-####
-# TODO: remove our copy of JTH prebuilt (b/13743200)
-include $(CLEAR_VARS)
-LOCAL_PREBUILT_STATIC_JAVA_LIBRARIES := webview-janktesthelper:../prebuilts/android-janktesthelper.jar
+LOCAL_STATIC_JAVA_LIBRARIES := ub-uiautomator ub-janktesthelper
 
-include $(BUILD_MULTI_PREBUILT)
+LOCAK_SDK_VERSION := current
+
+include $(BUILD_PACKAGE)
