@@ -59,11 +59,15 @@ LOCAL_JNI_SHARED_LIBRARIES += libwebviewchromium
 
 LOCAL_MULTILIB := both
 
-# TODO: filter webviewchromium_webkit_strings based on PRODUCT_LOCALES.
+# See Bug 17409149.
+LOCAL_DEX_PREOPT := false
+
+# If this build is just for apps, skip building the platform-side dependencies.
+ifeq ($(TARGET_BUILD_APPS),)
 LOCAL_REQUIRED_MODULES := \
-        libwebviewchromium \
         libwebviewchromium_loader \
         libwebviewchromium_plat_support
+endif
 
 LOCAL_PROGUARD_ENABLED := full
 LOCAL_PROGUARD_FLAG_FILES := proguard.flags

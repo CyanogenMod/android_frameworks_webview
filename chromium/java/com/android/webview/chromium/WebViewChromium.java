@@ -32,6 +32,7 @@ import android.net.http.SslCertificate;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
+import android.os.Handler;
 import android.os.Message;
 import android.print.PrintDocumentAdapter;
 import android.text.TextUtils;
@@ -58,6 +59,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.webkit.WebViewFactory;
 import android.webkit.WebViewProvider;
 import android.webkit.WebChromeClient.CustomViewCallback;
 import android.widget.TextView;
@@ -69,6 +71,7 @@ import org.chromium.android_webview.AwLayoutSizer;
 import org.chromium.android_webview.AwSettings;
 import org.chromium.android_webview.AwPrintDocumentAdapter;
 import org.chromium.base.ThreadUtils;
+import org.chromium.content.browser.SmartClipProvider;
 import org.chromium.content_public.browser.LoadUrlParams;
 import org.chromium.net.NetworkChangeNotifier;
 
@@ -92,7 +95,7 @@ import java.util.Queue;
  * and a small set of no-op deprecated APIs.
  */
 class WebViewChromium implements WebViewProvider,
-          WebViewProvider.ScrollDelegate, WebViewProvider.ViewDelegate {
+          WebViewProvider.ScrollDelegate, WebViewProvider.ViewDelegate, SmartClipProvider {
 
     private class WebViewChromiumRunQueue {
         public WebViewChromiumRunQueue() {
@@ -165,6 +168,8 @@ class WebViewChromium implements WebViewProvider,
         mAppTargetSdkVersion = mWebView.getContext().getApplicationInfo().targetSdkVersion;
         mFactory = factory;
         mRunQueue = new WebViewChromiumRunQueue();
+        String webViewAssetPath = WebViewFactory.getLoadedPackageInfo().applicationInfo.sourceDir;
+        mWebView.getContext().getAssets().addAssetPath(webViewAssetPath);
     }
 
     static void completeWindowCreation(WebView parent, WebView child) {
@@ -1872,7 +1877,17 @@ class WebViewChromium implements WebViewProvider,
     }
 
     @Override
-    public void onScrollChanged(int l, int t, int oldl, int oldt) {
+    public void onScrollChanged(final int l, final int t, final int oldl, final int oldt) {
+        if (checkNeedsPost()) {
+            mRunQueue.addTask(new Runnable() {
+                @Override
+                public void run() {
+                    onScrollChanged(l, t, oldl, oldt);
+                }
+            });
+            return;
+        }
+        mAwContents.onContainerViewScrollChanged(l, t, oldl, oldt);
     }
 
     @Override
@@ -2243,4 +2258,19 @@ class WebViewChromium implements WebViewProvider,
             return mWebViewPrivate.super_onHoverEvent(event);
         }
     }
+
+    // Implements SmartClipProvider
+    @Override
+    public void extractSmartClipData(int x, int y, int width, int height) {
+        checkThread();
+        mAwContents.extractSmartClipData(x, y, width, height);
+    }
+
+    // Implements SmartClipProvider
+    @Override
+    public void setSmartClipResultHandler(final Handler resultHandler) {
+        checkThread();
+        mAwContents.setSmartClipResultHandler(resultHandler);
+    }
+
 }

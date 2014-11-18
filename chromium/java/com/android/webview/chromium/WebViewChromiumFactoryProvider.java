@@ -16,6 +16,7 @@
 
 package com.android.webview.chromium;
 
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.app.ActivityManager;
@@ -97,11 +98,10 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     // Read/write protected by mLock.
     private boolean mStarted;
 
+    private DataReductionProxyManager mProxyManager;
     private SharedPreferences mWebViewPrefs;
 
     public WebViewChromiumFactoryProvider() {
-        ThreadUtils.setWillOverrideUiThread();
-
         if (Build.IS_DEBUGGABLE) {
             // Suppress the StrictMode violation as this codepath is only hit on debugglable builds.
             StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
@@ -118,41 +118,37 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         // compiled in, we may as unconditionally enable them here.
         cl.appendSwitch("enable-dcheck");
 
-        // TODO: Remove when GL is supported by default in the upstream code.
-        if (!cl.hasSwitch("disable-webview-gl-mode")) {
-            cl.appendSwitch("testing-webview-gl-mode");
-        }
-
+        ThreadUtils.setWillOverrideUiThread();
         // Load chromium library.
         Trace.traceBegin(Trace.TRACE_TAG_WEBVIEW, "AwBrowserProcess.loadLibrary()");
         AwBrowserProcess.loadLibrary();
         Trace.traceEnd(Trace.TRACE_TAG_WEBVIEW);
+
+        final PackageInfo packageInfo = WebViewFactory.getLoadedPackageInfo();
+
+        // Register the handler that will append the WebView version to logcat in case of a crash.
+        AwContentsStatics.registerCrashHandler(
+                "Version " + packageInfo.versionName + " (code " + packageInfo.versionCode + ")");
+
         // Load glue-layer support library.
         System.loadLibrary("webviewchromium_plat_support");
 
-        // TODO: temporary try/catch while framework builds catch up with WebView builds.
-        // Remove this.
-        try {
-            // Use shared preference to check for package downgrade.
-            mWebViewPrefs = ActivityThread.currentApplication().getSharedPreferences(
-                                CHROMIUM_PREFS_NAME, Context.MODE_PRIVATE);
-            int lastVersion = mWebViewPrefs.getInt(VERSION_CODE_PREF, 0);
-            int currentVersion = WebViewFactory.getLoadedPackageInfo().versionCode;
-            if (lastVersion > currentVersion) {
-                // The WebView package has been downgraded since we last ran in this application.
-                // Delete the WebView data directory's contents.
-                String dataDir = PathUtils.getDataDirectory(ActivityThread.currentApplication());
-                Log.i(TAG, "WebView package downgraded from " + lastVersion + " to " + currentVersion +
-                           "; deleting contents of " + dataDir);
-                FileUtils.deleteContents(new File(dataDir));
-            }
-            if (lastVersion != currentVersion) {
-                mWebViewPrefs.edit().putInt(VERSION_CODE_PREF, currentVersion).apply();
-            }
-        } catch (NoSuchMethodError e) {
-            Log.w(TAG, "Not doing version downgrade check as framework is too old.");
+        // Use shared preference to check for package downgrade.
+        mWebViewPrefs = ActivityThread.currentApplication().getSharedPreferences(
+                            CHROMIUM_PREFS_NAME, Context.MODE_PRIVATE);
+        int lastVersion = mWebViewPrefs.getInt(VERSION_CODE_PREF, 0);
+        int currentVersion = packageInfo.versionCode;
+        if (lastVersion > currentVersion) {
+            // The WebView package has been downgraded since we last ran in this application.
+            // Delete the WebView data directory's contents.
+            String dataDir = PathUtils.getDataDirectory(ActivityThread.currentApplication());
+            Log.i(TAG, "WebView package downgraded from " + lastVersion + " to " + currentVersion +
+                       "; deleting contents of " + dataDir);
+            FileUtils.deleteContents(new File(dataDir));
         }
-
+        if (lastVersion != currentVersion) {
+            mWebViewPrefs.edit().putInt(VERSION_CODE_PREF, currentVersion).apply();
+        }
         // Now safe to use WebView data directory.
     }
 
@@ -265,6 +261,10 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         }
         mWebViewsToStart.clear();
         mWebViewsToStart = null;
+
+        // Start listening for data reduction proxy setting changes.
+        mProxyManager = new DataReductionProxyManager();
+        mProxyManager.start(ActivityThread.currentApplication());
     }
 
     boolean hasStarted() {
