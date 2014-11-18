@@ -96,7 +96,6 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
     // Read/write protected by mLock.
     private boolean mStarted;
 
-    private DataReductionProxyManager mProxyManager;
     private SharedPreferences mWebViewPrefs;
     private WebViewDelegate mWebViewDelegate;
 
@@ -283,10 +282,6 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         }
         mWebViewsToStart.clear();
         mWebViewsToStart = null;
-
-        // Start listening for data reduction proxy setting changes.
-        mProxyManager = new DataReductionProxyManager();
-        mProxyManager.start(mWebViewDelegate.getApplication());
     }
 
     boolean hasStarted() {

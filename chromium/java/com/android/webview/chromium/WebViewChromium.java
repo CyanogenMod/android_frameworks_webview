@@ -250,9 +250,9 @@ class WebViewChromium implements WebViewProvider,
                 mWebView.getContext(), isAccessFromFileURLsGrantedByDefault,
                 areLegacyQuirksEnabled));
 
-        if (mAppTargetSdkVersion <= Build.VERSION_CODES.KITKAT) {
+        if (mAppTargetSdkVersion < Build.VERSION_CODES.LOLLIPOP) {
+            // Prior to Lollipop we always allowed third party cookies and mixed content.
             mWebSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-            // On KK and older versions we always allowed third party cookies.
             mWebSettings.setAcceptThirdPartyCookies(true);
             mWebSettings.getAwSettings().setZeroLayoutHeightDisablesViewportQuirk(true);
         }
@@ -321,8 +321,8 @@ class WebViewChromium implements WebViewProvider,
         AwContentsStatics.setRecordFullDocument(sRecordWholeDocumentEnabledByApi ||
                 mAppTargetSdkVersion < Build.VERSION_CODES.LOLLIPOP);
 
-        if (mAppTargetSdkVersion <= Build.VERSION_CODES.KITKAT) {
-            // On KK and older versions, JavaScript objects injected via addJavascriptInterface
+        if (mAppTargetSdkVersion < Build.VERSION_CODES.LOLLIPOP) {
+            // Prior to Lollipop, JavaScript objects injected via addJavascriptInterface
             // were not inspectable.
             mAwContents.disableJavascriptInterfacesInspection();
         }
@@ -1348,19 +1348,27 @@ class WebViewChromium implements WebViewProvider,
         if (client == null) {
             return false;
         }
-        // If client is not a subclass of WebChromeClient then the methods have not been
-        // implemented because WebChromeClient has empty implementations.
-        if (client.getClass().isAssignableFrom(WebChromeClient.class)) {
-            return false;
+        Class<?> clientClass = client.getClass();
+        boolean foundShowMethod = false;
+        boolean foundHideMethod = false;
+        while (clientClass != WebChromeClient.class && (!foundShowMethod || !foundHideMethod)) {
+            if (!foundShowMethod) {
+                try {
+                    clientClass.getDeclaredMethod("onShowCustomView", View.class,
+                            CustomViewCallback.class);
+                    foundShowMethod = true;
+                } catch (NoSuchMethodException e) { }
+            }
+
+            if (!foundHideMethod) {
+                try {
+                    clientClass.getDeclaredMethod("onHideCustomView");
+                    foundHideMethod = true;
+                } catch (NoSuchMethodException e) { }
+            }
+            clientClass = clientClass.getSuperclass();
         }
-        try {
-            client.getClass().getDeclaredMethod("onShowCustomView", View.class,
-                    CustomViewCallback.class);
-            client.getClass().getDeclaredMethod("onHideCustomView");
-            return true;
-        } catch (NoSuchMethodException e) {
-            return false;
-        }
+        return foundShowMethod && foundHideMethod;
     }
 
     @Override
