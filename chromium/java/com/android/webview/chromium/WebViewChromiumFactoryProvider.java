@@ -16,6 +16,7 @@
 
 package com.android.webview.chromium;
 
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.app.ActivityManager;
@@ -132,13 +133,15 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
 
         ThreadUtils.setWillOverrideUiThread();
 
-        // TODO: Remove when GL is supported by default in the upstream code.
-        if (!cl.hasSwitch("disable-webview-gl-mode")) {
-            cl.appendSwitch("testing-webview-gl-mode");
-        }
-
         // Load chromium library.
         AwBrowserProcess.loadLibrary();
+
+        final PackageInfo packageInfo = WebViewFactory.getLoadedPackageInfo();
+
+        // Register the handler that will append the WebView version to logcat in case of a crash.
+        AwContentsStatics.registerCrashHandler(
+                "Version " + packageInfo.versionName + " (code " + packageInfo.versionCode + ")");
+
         // Load glue-layer support library.
         System.loadLibrary("webviewchromium_plat_support");
 
@@ -146,7 +149,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         mWebViewPrefs = mWebViewDelegate.getApplication().getSharedPreferences(
                             CHROMIUM_PREFS_NAME, Context.MODE_PRIVATE);
         int lastVersion = mWebViewPrefs.getInt(VERSION_CODE_PREF, 0);
-        int currentVersion = WebViewFactory.getLoadedPackageInfo().versionCode;
+        int currentVersion = packageInfo.versionCode;
         if (lastVersion > currentVersion) {
             // The WebView package has been downgraded since we last ran in this application.
             // Delete the WebView data directory's contents.

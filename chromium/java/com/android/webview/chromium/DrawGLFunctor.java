@@ -64,6 +64,10 @@ class DrawGLFunctor {
             throw new RuntimeException("requested DrawGL on already destroyed DrawGLFunctor");
         }
 
+        if (canvas != null && waitForCompletion) {
+            throw new IllegalArgumentException("requested a blocking DrawGL with a not null canvas.");
+        }
+
         if (!mWebViewDelegate.canInvokeDrawGlFunctor(containerView)) {
             return false;
         }
@@ -77,10 +81,6 @@ class DrawGLFunctor {
         }
 
         mWebViewDelegate.callDrawGlFunction(canvas, mDestroyRunnable.mNativeDrawGLFunctor);
-        if (waitForCompletion) {
-            mWebViewDelegate.invokeDrawGlFunctor(containerView,
-                    mDestroyRunnable.mNativeDrawGLFunctor, waitForCompletion);
-        }
         return true;
     }
 
