@@ -32,7 +32,6 @@ LOCAL_SRC_FILES:= \
         plat_support/graphic_buffer_impl.cpp \
 
 LOCAL_C_INCLUDES:= \
-        $(CHROMIUM_PATH) \
         external/skia/include/core \
         frameworks/base/core/jni/android/graphics \
         frameworks/native/include/ui \
