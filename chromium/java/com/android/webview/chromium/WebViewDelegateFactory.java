@@ -7,12 +7,9 @@ import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.os.Trace;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
-import android.webkit.WebViewFactory;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
