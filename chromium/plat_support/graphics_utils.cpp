@@ -19,8 +19,8 @@
 
 #define LOG_TAG "webviewchromium_plat_support"
 
-#include "android_webview/public/browser/draw_gl.h"
-#include "android_webview/public/browser/draw_sw.h"
+#include "draw_gl.h"
+#include "draw_sw.h"
 
 #include <cstdlib>
 #include <jni.h>

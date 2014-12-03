@@ -256,9 +256,10 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
                 "/system/framework/webview/paks");
 
         // Make sure that ResourceProvider is initialized before starting the browser process.
-        setUpResources(mWebViewDelegate.getApplication());
+        Context context = getWrappedCurrentApplicationContext();
+        setUpResources(context);
         initPlatSupportLibrary();
-        AwBrowserProcess.start(mWebViewDelegate.getApplication());
+        AwBrowserProcess.start(context);
 
         if (isBuildDebuggable()) {
             setWebContentsDebuggingEnabled(true);
@@ -293,6 +294,10 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
             ensureChromiumStartedLocked(onMainThread);
 
         }
+    }
+
+    private Context getWrappedCurrentApplicationContext() {
+        return ResourcesContextWrapperFactory.get(mWebViewDelegate.getApplication());
     }
 
     AwBrowserContext getBrowserContext() {
@@ -426,7 +431,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
                     // will bring up just the parts it needs to make this work on a temporary
                     // basis until Chromium is started for real. The temporary cookie manager
                     // needs the application context to have been set.
-                    ContentMain.initApplicationContext(mWebViewDelegate.getApplication());
+                    ContentMain.initApplicationContext(getWrappedCurrentApplicationContext());
                 }
                 mCookieManager = new CookieManagerAdapter(new AwCookieManager());
             }
