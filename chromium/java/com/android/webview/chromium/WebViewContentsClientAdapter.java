@@ -99,6 +99,8 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
     private static final boolean TRACE = false;
     // The WebView instance that this adapter is serving.
     private final WebView mWebView;
+    // The Context to use. This is different from mWebView.getContext(), which should not be used.
+    private final Context mContext;
     // The WebViewClient instance that was passed to WebView.setWebViewClient().
     private WebViewClient mWebViewClient;
     // The WebChromeClient instance that was passed to WebView.setContentViewClient().
@@ -123,11 +125,17 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
      *
      * @param webView the {@link WebView} instance that this adapter is serving.
      */
-    WebViewContentsClientAdapter(WebView webView, WebViewDelegate webViewDelegate) {
+    WebViewContentsClientAdapter(WebView webView, Context context,
+            WebViewDelegate webViewDelegate) {
         if (webView == null || webViewDelegate == null) {
-            throw new IllegalArgumentException("webView or delegate can't be null");
+            throw new IllegalArgumentException("webView or delegate can't be null.");
         }
 
+        if (context == null) {
+            throw new IllegalArgumentException("context can't be null.");
+        }
+
+        mContext = context;
         mWebView = webView;
         mWebViewDelegate = webViewDelegate;
         setWebViewClient(null);
@@ -535,7 +543,7 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
             // ErrorStrings is @hidden, so we can't do this in AwContents.
             // Normally the net/ layer will set a valid description, but for synthesized callbacks
             // (like in the case for intercepted requests) AwContents will pass in null.
-            description = mWebViewDelegate.getErrorString(mWebView.getContext(), errorCode);
+            description = mWebViewDelegate.getErrorString(mContext, errorCode);
         }
         TraceEvent.begin();
         if (TRACE) Log.d(TAG, "onReceivedError=" + failingUrl);
@@ -693,7 +701,7 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
             if (TRACE) Log.d(TAG, "onJsAlert");
             if (!mWebChromeClient.onJsAlert(mWebView, url, message, res)) {
                 new JsDialogHelper(res, JsDialogHelper.ALERT, null, message, url)
-                        .showDialog(mWebView.getContext());
+                        .showDialog(mContext);
             }
         } else {
             receiver.cancel();
@@ -710,7 +718,7 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
             if (TRACE) Log.d(TAG, "onJsBeforeUnload");
             if (!mWebChromeClient.onJsBeforeUnload(mWebView, url, message, res)) {
                 new JsDialogHelper(res, JsDialogHelper.UNLOAD, null, message, url)
-                        .showDialog(mWebView.getContext());
+                        .showDialog(mContext);
             }
         } else {
             receiver.cancel();
@@ -727,7 +735,7 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
             if (TRACE) Log.d(TAG, "onJsConfirm");
             if (!mWebChromeClient.onJsConfirm(mWebView, url, message, res)) {
                 new JsDialogHelper(res, JsDialogHelper.CONFIRM, null, message, url)
-                        .showDialog(mWebView.getContext());
+                        .showDialog(mContext);
             }
         } else {
             receiver.cancel();
@@ -745,7 +753,7 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
             if (TRACE) Log.d(TAG, "onJsPrompt");
             if (!mWebChromeClient.onJsPrompt(mWebView, url, message, defaultValue, res)) {
                 new JsDialogHelper(res, JsDialogHelper.PROMPT, defaultValue, message, url)
-                        .showDialog(mWebView.getContext());
+                        .showDialog(mContext);
             }
         } else {
             receiver.cancel();
@@ -891,7 +899,7 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
         }
         TraceEvent.begin();
         FileChooserParamsAdapter adapter = new FileChooserParamsAdapter(
-                fileChooserParams, mWebView.getContext());
+                fileChooserParams, mContext);
         if (TRACE) Log.d(TAG, "showFileChooser");
         ValueCallback<Uri[]> callbackAdapter = new ValueCallback<Uri[]>() {
             private boolean mCompleted;
@@ -920,7 +928,7 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
 
         // If the app did not handle it and we are running on Lollipop or newer, then
         // abort.
-        if (mWebView.getContext().getApplicationInfo().targetSdkVersion >=
+        if (mContext.getApplicationInfo().targetSdkVersion >=
                 Build.VERSION_CODES.LOLLIPOP) {
             uploadFileCallback.onReceiveValue(null);
             return;
@@ -1000,7 +1008,7 @@ public class WebViewContentsClientAdapter extends AwContentsClient {
             // The ic_media_video_poster icon is transparent so we need to draw it on a gray
             // background.
             Bitmap poster = BitmapFactory.decodeResource(
-                    mWebView.getContext().getResources(),
+                    mContext.getResources(),
                     R.drawable.ic_media_video_poster);
             result = Bitmap.createBitmap(poster.getWidth(), poster.getHeight(), poster.getConfig());
             result.eraseColor(Color.GRAY);

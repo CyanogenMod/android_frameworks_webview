@@ -17,10 +17,8 @@
 package com.android.webview.chromium;
 
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -39,7 +37,6 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.MeasureSpec;
@@ -138,6 +135,8 @@ class WebViewChromium implements WebViewProvider,
     WebView.PrivateAccess mWebViewPrivate;
     // The client adapter class.
     private WebViewContentsClientAdapter mContentsClientAdapter;
+    // The wrapped Context.
+    private Context mContext;
 
     // Variables for functionality provided by this adapter ---------------------------------------
     private ContentSettingsAdapter mWebSettings;
@@ -164,7 +163,8 @@ class WebViewChromium implements WebViewProvider,
         mWebView = webView;
         mWebViewPrivate = webViewPrivate;
         mHitTestResult = new WebView.HitTestResult();
-        mAppTargetSdkVersion = mWebView.getContext().getApplicationInfo().targetSdkVersion;
+        mContext = ResourcesContextWrapperFactory.get(mWebView.getContext());
+        mAppTargetSdkVersion = mContext.getApplicationInfo().targetSdkVersion;
         mFactory = factory;
         mRunQueue = new WebViewChromiumRunQueue();
         factory.getWebViewDelegate().addWebViewAssetPath(mWebView.getContext());
@@ -219,8 +219,8 @@ class WebViewChromium implements WebViewProvider,
                 throw new IllegalArgumentException(msg);
             } else {
                 Log.w(TAG, msg);
-                TextView warningLabel = new TextView(mWebView.getContext());
-                warningLabel.setText(mWebView.getContext().getString(
+                TextView warningLabel = new TextView(mContext);
+                warningLabel.setText(mContext.getString(
                         R.string.webviewchromium_private_browsing_warning));
                 mWebView.addView(warningLabel);
             }
@@ -245,9 +245,9 @@ class WebViewChromium implements WebViewProvider,
                 mAppTargetSdkVersion < Build.VERSION_CODES.KITKAT;
 
         mContentsClientAdapter = new WebViewContentsClientAdapter(
-                mWebView, mFactory.getWebViewDelegate());
+                mWebView, mContext, mFactory.getWebViewDelegate());
         mWebSettings = new ContentSettingsAdapter(new AwSettings(
-                mWebView.getContext(), isAccessFromFileURLsGrantedByDefault,
+                mContext, isAccessFromFileURLsGrantedByDefault,
                 areLegacyQuirksEnabled));
 
         if (mAppTargetSdkVersion < Build.VERSION_CODES.LOLLIPOP) {
@@ -272,43 +272,8 @@ class WebViewChromium implements WebViewProvider,
         });
     }
 
-    // Wrap Context so that we can use resources from the webview resource apk.
-    private static Context resourcesContextWrapper(final Context ctx) {
-        return new ContextWrapper(ctx) {
-            @Override
-            public ClassLoader getClassLoader() {
-                final ClassLoader appCl = getBaseContext().getClassLoader();
-                final ClassLoader webViewCl = this.getClass().getClassLoader();
-                return new ClassLoader() {
-                    @Override
-                    protected Class<?> findClass(String name) throws ClassNotFoundException {
-                        // First look in the WebViewProvider class loader.
-                        try {
-                            return webViewCl.loadClass(name);
-                        } catch (ClassNotFoundException e) {
-                            // Look in the app class loader; allowing it to throw ClassNotFoundException.
-                            return appCl.loadClass(name);
-                        }
-                    }
-                };
-            }
-
-            @Override
-            public Object getSystemService(String name) {
-                if (name.equals(Context.LAYOUT_INFLATER_SERVICE)) {
-                    LayoutInflater i = (LayoutInflater) getBaseContext().getSystemService(name);
-                    return i.cloneInContext(this);
-                } else {
-                    return getBaseContext().getSystemService(name);
-                }
-            }
-
-        };
-    }
-
     private void initForReal() {
-        Context ctx = resourcesContextWrapper(mWebView.getContext());
-        mAwContents = new AwContents(mFactory.getBrowserContext(), mWebView, ctx,
+        mAwContents = new AwContents(mFactory.getBrowserContext(), mWebView, mContext,
                 new InternalAccessAdapter(), new WebViewNativeGLDelegate(),
                 mContentsClientAdapter, mWebSettings.getAwSettings());
 
@@ -1261,7 +1226,7 @@ class WebViewChromium implements WebViewProvider,
             return false;
         }
 
-        FindActionModeCallback findAction = new FindActionModeCallback(mWebView.getContext());
+        FindActionModeCallback findAction = new FindActionModeCallback(mContext);
         if (findAction == null) {
             return false;
         }
@@ -1453,7 +1418,7 @@ class WebViewChromium implements WebViewProvider,
         // This was deprecated in 2009 and hidden in JB MR1, so just provide the minimum needed
         // to stop very out-dated applications from crashing.
         Log.w(TAG, "WebView doesn't support getZoomControls");
-        return mAwContents.getSettings().supportZoom() ? new View(mWebView.getContext()) : null;
+        return mAwContents.getSettings().supportZoom() ? new View(mContext) : null;
     }
 
     @Override
