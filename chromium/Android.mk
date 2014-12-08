@@ -72,12 +72,5 @@ LOCAL_MODULE_TAGS := optional
 
 include $(BUILD_SHARED_LIBRARY)
 
-
-# Include the makefile for the main package unless we are using a prebuilt.
-ifneq ($(PRODUCT_PREBUILT_WEBVIEWCHROMIUM),yes)
-extra_java_files :=
-include $(LOCAL_PATH)/package.mk
-endif
-
 # Build other stuff
 include $(call first-makefiles-under,$(LOCAL_PATH))
