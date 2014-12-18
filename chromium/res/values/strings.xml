@@ -9,4 +9,6 @@
     <!-- Contextual action bar item for sharing a block of text via email, or
          other method. [CHAR-LIMIT=128] -->
     <string name="webviewchromium_private_browsing_warning">This functionality is not supported in this version of Android.</string>
+    <!-- The title of the activity that displays licenses of WebView. [CHAR-LIMIT=50] -->
+    <string name="webviewchromium_license_activity_title">System WebView licenses</string>
 </resources>
