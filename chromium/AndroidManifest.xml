@@ -23,7 +23,7 @@
     <uses-feature android:name="android.hardware.touchscreen"
             android:required="false"/>
 
-    <application android:label="Android System WebView"
+    <application android:label="Android WebView"
         android:icon="@drawable/icon_webview"
         android:multiArch="true">
     </application>
