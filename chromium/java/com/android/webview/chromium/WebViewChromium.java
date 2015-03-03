@@ -55,8 +55,6 @@ import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
 import android.webkit.WebBackForwardList;
 import android.webkit.WebChromeClient;
-import android.webkit.WebMessage;
-import android.webkit.WebMessagePort;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -1411,16 +1409,6 @@ class WebViewChromium implements WebViewProvider,
             return;
         }
         mAwContents.removeJavascriptInterface(interfaceName);
-    }
-
-    @Override
-    public WebMessagePort[] createWebMessageChannel() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void postMessageToMainFrame(WebMessage message, Uri targetOrigin) {
-        throw new UnsupportedOperationException();
     }
 
     @Override
