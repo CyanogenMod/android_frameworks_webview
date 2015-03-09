@@ -21,7 +21,7 @@ import android.net.Uri;
 import android.os.SystemClock;
 import android.support.test.jank.JankTest;
 import android.support.test.jank.JankTestBase;
-import android.support.test.jank.JankType;
+import android.support.test.jank.WindowContentFrameStatsMonitor;
 import android.support.test.uiautomator.By;
 import android.support.test.uiautomator.Direction;
 import android.support.test.uiautomator.UiDevice;
@@ -93,7 +93,8 @@ public class WebViewFlingTest extends JankTestBase {
         SystemClock.sleep(TEST_DELAY_TIME_MS);
     }
 
-    @JankTest(type=JankType.CONTENT_FRAMES, expectedFrames=MIN_DATA_SIZE)
+    @JankTest(expectedFrames=MIN_DATA_SIZE)
+    @WindowContentFrameStatsMonitor
     public void testBrowserPageFling() throws IOException {
         mDevice.findObject(By.res(RES_PACKAGE, "container")).fling(Direction.DOWN);
         SystemClock.sleep(DEFAULT_ANIMATION_TIME);
