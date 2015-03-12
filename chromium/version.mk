@@ -26,6 +26,7 @@
 #           1 : armv7-a
 #           2 : armv8-a (arm64)
 #           4 : mips
+#           5 : mips64
 #           7 : x86
 #           8 : x86_64
 #        64-bit architectures must be higher than their corresponding 32-bit
@@ -54,6 +55,8 @@ ifeq "$(TARGET_ARCH)" "x86_64"
   version_arch := 8
 else ifeq "$(TARGET_ARCH)" "x86"
   version_arch := 7
+else ifeq "$(TARGET_ARCH)" "mips64"
+  version_arch := 5
 else ifeq "$(TARGET_ARCH)" "mips"
   version_arch := 4
 else ifeq "$(TARGET_ARCH)" "arm64"
