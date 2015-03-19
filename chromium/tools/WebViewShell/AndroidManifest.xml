@@ -20,7 +20,7 @@
     android:versionName="1.0" >
 
     <uses-sdk android:minSdkVersion="17"
-      android:targetSdkVersion="19" />
+      android:targetSdkVersion="22" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
@@ -31,28 +31,31 @@
         android:theme="@android:style/Theme.Light" >
         <activity
             android:name=".TelemetryActivity"
-            android:label="@string/title_activity_telemetry" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:label="@string/title_activity_telemetry"
+            android:exported="true">
         </activity>
         <activity
             android:name=".JankActivity"
             android:label="@string/title_activity_jank"
-            android:noHistory="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:noHistory="true"
+            android:exported="true">
         </activity>
         <activity
             android:name=".StartupTimeActivity"
             android:label="@string/title_activity_startup_time"
-            android:noHistory="true">
+            android:noHistory="true"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".WebViewBrowserActivity"
+            android:label="@string/title_activity_browser"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
             </intent-filter>
         </activity>
     </application>
