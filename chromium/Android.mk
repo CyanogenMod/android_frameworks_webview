@@ -34,6 +34,7 @@ LOCAL_SRC_FILES:= \
 LOCAL_C_INCLUDES:= \
         external/skia/include/core \
         frameworks/base/core/jni/android/graphics \
+        frameworks/base/libs/hwui \
         frameworks/native/include/ui \
 
 LOCAL_SHARED_LIBRARIES += \
@@ -43,6 +44,7 @@ LOCAL_SHARED_LIBRARIES += \
         libskia \
         libui \
         libutils \
+        libhwui \
 
 LOCAL_MODULE_TAGS := optional
 

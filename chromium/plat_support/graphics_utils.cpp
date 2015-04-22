@@ -55,7 +55,11 @@ PixelInfo::~PixelInfo() {
 }
 
 AwPixelInfo* GetPixels(JNIEnv* env, jobject java_canvas) {
-  SkCanvas* canvas = GraphicsJNI::getNativeCanvas(env, java_canvas);
+  android::Canvas* nativeCanvas = GraphicsJNI::getNativeCanvas(env, java_canvas);
+  if (!nativeCanvas)
+    return NULL;
+
+  SkCanvas* canvas = nativeCanvas->asSkCanvas();
   if (!canvas)
     return NULL;
 
