@@ -250,9 +250,9 @@ class WebViewChromium implements WebViewProvider,
                 mWebView.getContext(), isAccessFromFileURLsGrantedByDefault,
                 areLegacyQuirksEnabled));
 
-        if (mAppTargetSdkVersion <= Build.VERSION_CODES.KITKAT) {
+        if (mAppTargetSdkVersion < Build.VERSION_CODES.LOLLIPOP) {
+            // Prior to Lollipop we always allowed third party cookies and mixed content.
             mWebSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-            // On KK and older versions we always allowed third party cookies.
             mWebSettings.setAcceptThirdPartyCookies(true);
             mWebSettings.getAwSettings().setZeroLayoutHeightDisablesViewportQuirk(true);
         }
@@ -321,8 +321,8 @@ class WebViewChromium implements WebViewProvider,
         AwContentsStatics.setRecordFullDocument(sRecordWholeDocumentEnabledByApi ||
                 mAppTargetSdkVersion < Build.VERSION_CODES.LOLLIPOP);
 
-        if (mAppTargetSdkVersion <= Build.VERSION_CODES.KITKAT) {
-            // On KK and older versions, JavaScript objects injected via addJavascriptInterface
+        if (mAppTargetSdkVersion < Build.VERSION_CODES.LOLLIPOP) {
+            // Prior to Lollipop, JavaScript objects injected via addJavascriptInterface
             // were not inspectable.
             mAwContents.disableJavascriptInterfacesInspection();
         }
