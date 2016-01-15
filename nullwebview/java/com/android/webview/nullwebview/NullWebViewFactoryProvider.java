@@ -19,6 +19,7 @@ package com.android.webview.nullwebview;
 import android.content.Context;
 import android.webkit.CookieManager;
 import android.webkit.GeolocationPermissions;
+import android.webkit.TokenBindingService;
 import android.webkit.WebIconDatabase;
 import android.webkit.WebStorage;
 import android.webkit.WebView;
@@ -49,6 +50,11 @@ public class NullWebViewFactoryProvider implements WebViewFactoryProvider {
 
     @Override
     public CookieManager getCookieManager() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public TokenBindingService getTokenBindingService() {
         throw new UnsupportedOperationException();
     }
 
